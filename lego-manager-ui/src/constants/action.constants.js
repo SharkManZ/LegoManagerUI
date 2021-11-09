@@ -1,0 +1,12 @@
+export const SET_TOTAL_COUNT = "SET_TOTAL_COUNT";
+export const SET_LOADING = "SET_LOADING";
+export const FETCH_DATA = "FETCH_DATE";
+export const SET_SEARCH = "SET_SEARCH";
+export const SET_PAGE = "SET_PAGE";
+export const SET_ROWS_PER_PAGE = "SET_ROWS_PER_PAGE";
+export const SET_ORDER_BY = "SET_ORDER_BY";
+export const SET_ORDER_DIRECTION = "SET_ORDER_DIRECTION";
+export const SET_FORM_OPEN = "SET_FORM_OPEN";
+export const SET_DELETE_CONFIRM_OPEN = "SET_DELETE_CONFIRM_OPEN";
+export const SET_ACTION_ANCHOR_EL = "SET_ACTION_ANCHOR_EL";
+export const SET_CURRENT_ROW = "SET_CURRENT_ROW";
