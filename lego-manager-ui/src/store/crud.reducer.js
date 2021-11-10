@@ -1,4 +1,4 @@
-import * as types from '../constants/action.constants';
+import * as types from '../constants/crud.action.constants';
 const defaultState = {
     rows: [],
     loading: true,

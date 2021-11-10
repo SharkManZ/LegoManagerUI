@@ -3,7 +3,7 @@ import CenterGridItem from "./grid.item.component";
 
 function TotalCard({img, caption, totalCount, inStock}) {
     return (
-        <Grid container mt={2} border={1} borderRadius={3} borderColor="#FFCF00" boxShadow={5}>
+        <Grid container mt={2} border={1} borderRadius={3} borderColor="#FFCF00" boxShadow={5} height={280}>
 
             <Grid item xs={12}>
                 <Box m={2}>
