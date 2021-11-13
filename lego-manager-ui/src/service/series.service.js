@@ -12,6 +12,7 @@ export async function getSeries({...params}) {
             field: params.orderBy,
             direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'}];
     }
+
     const result = await httpClient.post("/lego-manager/series/list", requestParams)
         .then(res => res.data)
         .catch(error => {

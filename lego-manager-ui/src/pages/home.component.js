@@ -17,7 +17,6 @@ function Home() {
     const [totals, setTotals] = useState(emptyTotals);
     useEffect(() => {
         getTotals({enqueueSnackbar, emptyTotals}).then(res => {
-            console.log(res);
             if (res == null) {
                 enqueueSnackbar('Отсутствуют данные для отображения.', {variant:'error'});
                 return;
