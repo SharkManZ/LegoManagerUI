@@ -14,7 +14,7 @@ const defaultState = {
     actionAnchorEl: null,
     currentRow: null
 }
-export default function crudReducer(state = defaultState, action) {
+export default function gridCrudReducer(state = defaultState, action) {
     const {branch, type} = action;
 
     switch (type) {

@@ -41,7 +41,7 @@ function App() {
                         </Grid>
                     </Paper>
                 </Grid>
-                <Grid container mt={5}>
+                <Grid container mt={3}>
                     <Grid item xs={2}/>
                     <Grid item xs={8}>
                         <Paper sx={{p:1}}>

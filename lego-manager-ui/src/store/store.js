@@ -1,10 +1,9 @@
-import {combineReducers} from "redux";
-import {createStore, applyMiddleware} from "redux";
-import crudReducer from './crud.reducer';
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
+import imageListCrudReducer from "./imagelist.crud.reducer";
 
-function branchReducer (reducerFunction, name) {
+function branchReducer(reducerFunction, name) {
     return (state, action) => {
         const {branch} = action;
 
@@ -17,7 +16,7 @@ function branchReducer (reducerFunction, name) {
 }
 
 const rootReducer = combineReducers({
-    series: branchReducer(crudReducer, 'series')
+    series: branchReducer(imageListCrudReducer, 'series')
 })
 
 export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));

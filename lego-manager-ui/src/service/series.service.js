@@ -16,7 +16,13 @@ export async function getSeries({...params}) {
     const result = await httpClient.post("/lego-manager/series/list", requestParams)
         .then(res => res.data)
         .catch(error => {
-            params.enqueueSnackbar(params.listError + ': ' + error, {variant:'error'});
+            params.enqueueSnackbar(error, {variant:'error'});
+            return {
+                body: {
+                    data: [],
+                    totalCount: 0
+                }
+            }
         });
     return {
         data: result.body.data,
