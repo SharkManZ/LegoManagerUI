@@ -36,5 +36,6 @@ export async function saveSeries({...params}) {
 }
 
 export async function deleteSeries({...params}) {
-    await httpClient.post("/lego=manager/series/" + params.id + "/delete");
+    const result = await httpClient.post("/lego-manager/series/" + params.id + "/delete");
+    return result.data;
 }

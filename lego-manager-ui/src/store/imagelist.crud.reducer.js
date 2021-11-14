@@ -8,8 +8,7 @@ const defaultState = {
     formOpen: false,
     formTitle: null,
     deleteConfirmOpen: false,
-    actionAnchorEl: null,
-    currentRow: null
+    actionAnchorEl: null
 }
 export default function imageListCrudReducer(state = defaultState, action) {
     const {branch, type} = action;
@@ -50,11 +49,6 @@ export default function imageListCrudReducer(state = defaultState, action) {
             return {
                 ...state,
                 actionAnchorEl: action.payload
-            }
-        case `${branch}/${types.SET_CURRENT_ROW}`:
-            return {
-                ...state,
-                currentRow: action.payload
             }
         default:
             return state;

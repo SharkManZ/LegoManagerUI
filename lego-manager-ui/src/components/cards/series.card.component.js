@@ -17,7 +17,7 @@ const useStyles = makeStyles({
         transform: "scale(1.1)"
     }
 });
-function SeriesCard({item}) {
+function SeriesCard({item, onEdit, onDelete}) {
     const classes = useStyles();
     const [cardZoom, setCardZoom] = useState(false);
 
@@ -28,6 +28,15 @@ function SeriesCard({item}) {
     const changeCardZoom = (value) => {
         setCardZoom(value);
     }
+
+    const editClick = () => {
+        onEdit(item);
+    }
+
+    const deleteClick = () => {
+        onDelete(item.id);
+    }
+
     return (
         <Grid container border={1} borderRadius={3} borderColor="#FFCF00" boxShadow={5}
               onMouseOver={()=>changeCardZoom(true)}
@@ -50,10 +59,10 @@ function SeriesCard({item}) {
                         <Typography variant="h6">{item.setsCount}</Typography>
                     </Grid>
                     <Grid container item xs={4} alignItems="center" justifyContent="center">
-                        <IconButton color="secondary" aria-label="Редактировать">
+                        <IconButton color="secondary" aria-label="Редактировать" onClick={editClick}>
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="secondary" aria-label="Удалить">
+                        <IconButton color="secondary" aria-label="Удалить" onClick={deleteClick}>
                             <DeleteIcon />
                         </IconButton>
                     </Grid>

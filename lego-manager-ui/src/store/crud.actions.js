@@ -62,15 +62,3 @@ export const setDeleteConfirmOpenAction = (deleteConfirmOpen, branch) => ({
     type: `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`,
     payload: deleteConfirmOpen
 })
-
-export const setActionAnchorElAction = (anchorEl, branch) => ({
-    branch,
-    type: `${branch}/${types.SET_ACTION_ANCHOR_EL}`,
-    payload: anchorEl
-})
-
-export const setCurrentRowAction = (currentRow, branch) => ({
-    branch,
-    type: `${branch}/${types.SET_CURRENT_ROW}`,
-    payload: currentRow
-})
