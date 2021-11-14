@@ -13,7 +13,7 @@ import {useSnackbar} from "notistack";
 import {Box, TextField} from "@mui/material";
 import {PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
 
-const itemsPerPage = 3;
+const itemsPerPage = 9;
 const branch = "series";
 const initFormValues = {
     id: null,
