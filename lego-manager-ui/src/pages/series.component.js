@@ -13,7 +13,7 @@ import {useSnackbar} from "notistack";
 import {Box, TextField} from "@mui/material";
 import {PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
 
-const itemsPerPage = 9;
+const itemsPerPage = 16;
 const branch = "series";
 const initFormValues = {
     id: null,
@@ -94,7 +94,7 @@ function SeriesPage() {
             onDelete={onDelete}
         >
             <Box m={2}>
-                <TextField name="name" fullWidth label="Название" onChange={onFormInput}
+                <TextField name="name" autoFocus fullWidth label="Название" onChange={onFormInput}
                            value={formValues.name}/>
             </Box>
         </SeriesImageList>

@@ -53,8 +53,8 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
 
     return (
         <div>
-            <ImageList gap={30} cols={3} style={{overflow: "hidden", padding: 10}}>
-                <ImageListItem key="subheader" cols={3}>
+            <ImageList gap={30} cols={4} style={{overflow: "hidden", padding: 10}}>
+                <ImageListItem key="subheader" cols={4}>
                     <ListSubheader component="div">
                         <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
                             <Typography variant="h4">Серии наборов</Typography>

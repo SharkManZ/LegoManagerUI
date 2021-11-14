@@ -5,13 +5,13 @@ import {makeStyles} from "@mui/styles";
 import {useState} from "react";
 const useStyles = makeStyles({
     root: {
-        height: 200,
+        height: 150,
         width: '100%',
         transformOrigin: "scale(1)",
         transition: "transform .5s, visibility .5s ease-in"
     },
     cardHovered: {
-        height: 200,
+        height: 150,
         width: '100%',
         transition: "transform .5s, visibility .5s ease-in",
         transform: "scale(1.1)"
@@ -53,10 +53,10 @@ function SeriesCard({item, onEdit, onDelete}) {
                 <ImageListItemBar title={item.name} position="top">test</ImageListItemBar>
                 <Grid container ml={2} alignItems="center" justifyContent="center" >
                     <Grid item xs={5}>
-                        <Typography variant="h6">Наборов в серии</Typography>
+                        <Typography variant="h8">Наборов</Typography>
                     </Grid>
                     <Grid container item xs={3} alignItems="center" justifyContent="center">
-                        <Typography variant="h6">{item.setsCount}</Typography>
+                        <Typography variant="h7">{item.setsCount}</Typography>
                     </Grid>
                     <Grid container item xs={4} alignItems="center" justifyContent="center">
                         <IconButton color="secondary" aria-label="Редактировать" onClick={editClick}>
