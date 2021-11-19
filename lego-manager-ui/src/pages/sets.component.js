@@ -71,6 +71,7 @@ function SetsPage() {
 
     const onAdd = (event) => {
         setFormValues(initFormValues);
+        setSelectedSeries(null);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
 
