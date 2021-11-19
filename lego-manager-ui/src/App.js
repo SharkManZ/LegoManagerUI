@@ -6,6 +6,7 @@ import HoverMenu from "material-ui-popup-state/HoverMenu";
 import {Route, Switch, useHistory} from "react-router-dom";
 import SeriesPage from "./pages/series.component";
 import Home from "./pages/home.component";
+import SetsPage from "./pages/sets.component";
 
 function App() {
     const popupState = usePopupState({variant: 'popover', popupId: 'demoMenu'})
@@ -34,7 +35,7 @@ function App() {
                                        anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
                                        transformOrigin={{vertical: 'top', horizontal: 'left'}}>
                                 <MenuItem onClick={() => navigateTo("/series")} to="/series" component={Link}>Серии</MenuItem>
-                                <MenuItem onClick={popupState.close}>Наборы</MenuItem>
+                                <MenuItem onClick={() => navigateTo("/sets")} to="/sets" component={Link}>Наборы</MenuItem>
                                 <MenuItem onClick={popupState.close}>Части</MenuItem>
                                 <MenuItem onClick={popupState.close}>Цвета</MenuItem>
                             </HoverMenu>
@@ -47,6 +48,7 @@ function App() {
                         <Paper sx={{p:1}}>
                             <Switch>
                                 <Route exact path="/series" component={SeriesPage}/>
+                                <Route exact path="/sets" component={SetsPage}/>
                                 <Route exact path="/" component={Home}/>
                             </Switch>
                         </Paper>

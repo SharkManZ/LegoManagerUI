@@ -30,6 +30,18 @@ export async function getSeries({...params}) {
     }
 }
 
+export async function getAllSeries({...params}) {
+    const result = await httpClient.post("/lego-manager/series/list/all")
+        .then(res => res.data.body)
+        .catch(error => {
+            params.enqueueSnackbar(error, {variant:'error'});
+            return {
+                body: []
+            }
+        });
+    return result;
+}
+
 export async function saveSeries({...params}) {
     const result = await httpClient.post("/lego-manager/series/save", params);
     return result.data;
