@@ -1,4 +1,4 @@
-import {Autocomplete, Box, Grid, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -15,6 +15,7 @@ import {useEffect, useState} from "react";
 import {deleteSet, getSets, saveSet} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
+import AutocompleteControl from "../components/fields/autocomplete.control.component";
 
 const initFormValues = {
     id: null,
@@ -22,11 +23,19 @@ const initFormValues = {
     number: '',
     year: null
 }
+const initFilters = {
+    year: "",
+    series: {
+        id: null,
+        name: ""
+    }
+}
 const branch = 'sets';
 
 function SetsPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    // grid
     const currentRow = useSelector(state => state[branch].currentRow);
     const search = useSelector(state => state[branch].search);
     const page = useSelector(state => state[branch].page);
@@ -34,9 +43,16 @@ function SetsPage() {
     const orderBy = useSelector(state => state[branch].orderBy);
     const orderDirection = useSelector(state => state[branch].orderDirection);
 
-    const [formValues, setFormValues] = useState(initFormValues);
     const [series, setSeries] = useState([]);
+
+    // crud
+    const [formValues, setFormValues] = useState(initFormValues);
     const [selectedSeries, setSelectedSeries] = useState();
+
+    // filters
+    const [filters, setFilters] = useState();
+    const [filterFields, setFilterFields] = useState(initFilters);
+    const [filterSeries, setFilterSeries] = useState({});
 
     const fetchData = () => {
         getSets({
@@ -45,6 +61,7 @@ function SetsPage() {
             search: search,
             orderBy: orderBy,
             orderDirection: orderDirection,
+            filters: filters,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
         })
@@ -60,7 +77,7 @@ function SetsPage() {
 
     useEffect(() => {
         fetchData();
-    }, [search, page, rowsPerPage, orderBy, orderDirection])
+    }, [search, page, rowsPerPage, orderBy, orderDirection, JSON.stringify(filters)])
 
     useEffect(() => {
         getAllSeries({enqueueSnackbar})
@@ -68,6 +85,16 @@ function SetsPage() {
                 setSeries(res);
             })
     }, [])
+
+    useEffect(() => {
+        console.log("series filter changed ");
+        const newFilterFields = {
+            ...filterFields,
+            series: filterSeries
+        };
+        console.log(newFilterFields);
+        setFilterFields(newFilterFields)
+    }, [filterSeries])
 
     const onAdd = (event) => {
         setFormValues(initFormValues);
@@ -120,6 +147,14 @@ function SetsPage() {
         })
     }
 
+    const onFilterInput = (event) => {
+        const {name, value} = event.target;
+        setFilterFields({
+            ...filters,
+            [name]: value
+        })
+    }
+
     const rowActions = [
         {
             title: 'Редактировать',
@@ -158,45 +193,48 @@ function SetsPage() {
             <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"} mt={3}>
                 <Typography variant="h4">Наборы</Typography>
             </Grid>
-            <MainTable rowActions={rowActions}
-                       columns={columns}
-                       branch={branch}
-                       onAdd={onAdd}
-                       onDelete={onDelete}
-                       onSave={onSave}
-            >
-                <Box>
-                    <Stack direction="column" spacing={2} mt={2}>
-                        <Autocomplete options={series}
-                                      value={selectedSeries}
-                                      onChange={(event, value) => setSelectedSeries(value)}
-                                      getOptionLabel={(option) => option.name}
-                                      renderInput={(params) => (
-                                          <TextField
-                                              {...params}
-                                              label="Серия"
-                                              value=""
-                                              inputProps={{
-                                                  ...params.inputProps,
-                                                  autoComplete: 'new-password', // disable autocomplete and autofill
-                                              }}
-                                          />)}
-                                      renderOption={(props, option) => (
-                                          <Box component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
-                                              {option.name}
-                                          </Box>
-                                      )}
-                        />
-                        <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
-                                   value={formValues.number}/>
-                        <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
-                                   value={formValues.name}/>
-                        <TextField required name="year" fullWidth label="Год выпуска" onChange={onFormInput}
-                                   type="number" value={formValues.year}/>
-                    </Stack>
-                </Box>
-            </MainTable>
-
+            <Grid container>
+                <Grid container item xs={3} width="100%" pt={2} pb={2}>
+                    <Paper style={{width: "100%", textAlign: "center", padding: 10}}>
+                        <Typography color={"deepskyblue"} variant="h5">Фильтры</Typography>
+                        <Stack direction="column" mt={2} spacing={3}>
+                            <AutocompleteControl options={series} selectedValue={filterSeries}
+                                                 label="Серия" setOption={setFilterSeries}/>
+                            <TextField name="year" fullWidth type="number" label="Год выпуска" value={filterFields.year}
+                                       onChange={onFilterInput}/>
+                        </Stack>
+                        <Stack direction="row" mt={2} spacing={2} justifyContent="center">
+                            <Button variant="contained" onClick={() => setFilters(filterFields)}>Применить</Button>
+                            <Button variant="contained" onClick={() => {
+                                setFilters({});
+                                setFilterFields(initFilters)
+                            }}>Очистить</Button>
+                        </Stack>
+                    </Paper>
+                </Grid>
+                <Grid container item xs={9}>
+                    <MainTable rowActions={rowActions}
+                               columns={columns}
+                               branch={branch}
+                               onAdd={onAdd}
+                               onDelete={onDelete}
+                               onSave={onSave}
+                    >
+                        <Box>
+                            <Stack direction="column" spacing={2} mt={2}>
+                                <AutocompleteControl options={series} selectedValue={selectedSeries}
+                                                     label="Серия" setOption={setSelectedSeries}/>
+                                <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
+                                           value={formValues.number}/>
+                                <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
+                                           value={formValues.name}/>
+                                <TextField required name="year" fullWidth label="Год выпуска" onChange={onFormInput}
+                                           type="number" value={formValues.year}/>
+                            </Stack>
+                        </Box>
+                    </MainTable>
+                </Grid>
+            </Grid>
         </Box>
     )
 }

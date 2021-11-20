@@ -4,6 +4,7 @@ import TotalCard from "../components/cards/total.card.component";
 import CenterGridItem from "../components/cards/grid.item.component";
 import {getTotals} from "../service/total.service";
 import {useSnackbar} from "notistack";
+import {useHistory} from "react-router-dom";
 
 const emptyTotals = {
     series: {total: 0, inStock: 0},
@@ -15,6 +16,7 @@ const emptyTotals = {
 function Home() {
     const {enqueueSnackbar} = useSnackbar();
     const [totals, setTotals] = useState(emptyTotals);
+    const history = useHistory();
     useEffect(() => {
         getTotals({enqueueSnackbar, emptyTotals}).then(res => {
             if (res == null) {
@@ -30,11 +32,15 @@ function Home() {
         <Grid container direction="row">
             <CenterGridItem xs={6}>
                 <TotalCard img={"/series_small.jpg"} caption="Серии наборов"
-                           totalCount={totals.series.total} inStock={totals.series.inStock}/>
+                           totalCount={totals.series.total} inStock={totals.series.inStock}
+                           onClick={() => history.push("/series")}
+                />
             </CenterGridItem>
             <CenterGridItem xs={6}>
                 <TotalCard img={"/sets_small.jpg"} caption="Наборы"
-                           totalCount={totals.sets.total} inStock={totals.sets.inStock}/>
+                           totalCount={totals.sets.total} inStock={totals.sets.inStock}
+                           onClick={() => history.push("/sets")}
+                />
             </CenterGridItem>
             <CenterGridItem xs={6}>
                 <TotalCard img={"/diff_parts.png"} caption="Виды деталей"

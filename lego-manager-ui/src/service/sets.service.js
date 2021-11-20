@@ -12,6 +12,28 @@ export async function getSets({...params}) {
             field: params.orderBy,
             direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'}];
     }
+    if (params.filters !== undefined) {
+        if (!!params.filters.year) {
+            requestParams.filters = [
+                {
+                    field: 'year',
+                    operator: '=',
+                    value: params.filters.year
+                }
+            ]
+        }
+        if (!!params.filters.series && !!params.filters.series.id) {
+            if (requestParams.filters === undefined) {
+                requestParams.filters = []
+            }
+            requestParams.filters.push({
+                field: 'series.id',
+                operator: '=',
+                value: params.filters.series.id
+            })
+        }
+    }
+    console.log(params);
 
     const result = await httpClient.post("/lego-manager/sets/list", requestParams)
         .then(res => res.data)
