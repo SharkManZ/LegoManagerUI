@@ -16,6 +16,7 @@ import {deleteSet, getSets, saveSet} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
+import {useParams} from "react-router-dom";
 
 const initFormValues = {
     id: null,
@@ -30,9 +31,32 @@ const initFilters = {
         name: ""
     }
 }
+const columns = [
+    {
+        title: 'Серия',
+        field: 'series.name',
+        sortable: false
+    },
+    {
+        title: 'Номер',
+        field: 'number',
+        sortable: true
+    },
+    {
+        title: 'Название',
+        field: 'name',
+        sortable: true
+    },
+    {
+        title: 'Год выпуска',
+        field: 'year',
+        sortable: true
+    }
+]
 const branch = 'sets';
 
 function SetsPage() {
+    const {seriesId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     // grid
@@ -55,13 +79,15 @@ function SetsPage() {
     const [filterSeries, setFilterSeries] = useState({});
 
     const fetchData = () => {
+        const currentFilters = (seriesId !== undefined && seriesId !== null) ? {...filters, ...{series: {id: seriesId}}} : filters;
+        console.log(currentFilters);
         getSets({
             page: page,
             rowsPerPage: rowsPerPage,
             search: search,
             orderBy: orderBy,
             orderDirection: orderDirection,
-            filters: filters,
+            filters: currentFilters,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
         })
@@ -75,10 +101,12 @@ function SetsPage() {
             });
     }
 
+    // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров
     useEffect(() => {
         fetchData();
     }, [search, page, rowsPerPage, orderBy, orderDirection, JSON.stringify(filters)])
 
+    // запрос всех серий - один раз
     useEffect(() => {
         getAllSeries({enqueueSnackbar})
             .then(res => {
@@ -86,15 +114,28 @@ function SetsPage() {
             })
     }, [])
 
+    // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
     useEffect(() => {
-        console.log("series filter changed ");
-        const newFilterFields = {
+        if (seriesId !== undefined && seriesId !== null) {
+            setFilterSeries(series.find(item => item.id == seriesId));
+        }
+    }, [series])
+
+    // добавляем к фильтрам серию, при выборе из списка
+    useEffect(() => {
+        setFilterFields({
             ...filterFields,
             series: filterSeries
-        };
-        console.log(newFilterFields);
-        setFilterFields(newFilterFields)
+        })
     }, [filterSeries])
+
+    // сбрасываем фильтр по сериям и обновляем данные при изменении входного параметра серии
+    useEffect(() => {
+        if (seriesId === undefined || seriesId === null) {
+            setFilterSeries({});
+            fetchData();
+        }
+    }, [seriesId])
 
     const onAdd = (event) => {
         setFormValues(initFormValues);
@@ -166,28 +207,6 @@ function SetsPage() {
         }
     ]
 
-    const columns = [
-        {
-            title: 'Серия',
-            field: 'series.name',
-            sortable: false
-        },
-        {
-            title: 'Номер',
-            field: 'number',
-            sortable: true
-        },
-        {
-            title: 'Название',
-            field: 'name',
-            sortable: true
-        },
-        {
-            title: 'Год выпуска',
-            field: 'year',
-            sortable: true
-        }
-    ]
     return (
         <Box>
             <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"} mt={3}>
@@ -199,6 +218,7 @@ function SetsPage() {
                         <Typography color={"deepskyblue"} variant="h5">Фильтры</Typography>
                         <Stack direction="column" mt={2} spacing={3}>
                             <AutocompleteControl options={series} selectedValue={filterSeries}
+                                                 disabled={seriesId !== undefined}
                                                  label="Серия" setOption={setFilterSeries}/>
                             <TextField name="year" fullWidth type="number" label="Год выпуска" value={filterFields.year}
                                        onChange={onFilterInput}/>

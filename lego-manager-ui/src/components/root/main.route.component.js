@@ -10,6 +10,7 @@ function MainRoute() {
             <Switch>
                 <Route exact path="/series" component={SeriesPage}/>
                 <Route exact path="/sets" component={SetsPage}/>
+                <Route exact path="/sets/:seriesId" component={SetsPage}/>
                 <Route exact path="/" component={Home}/>
             </Switch>
         </Paper>

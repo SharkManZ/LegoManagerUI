@@ -3,6 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {makeStyles} from "@mui/styles";
 import {useState} from "react";
+import {useHistory} from "react-router-dom";
 const useStyles = makeStyles({
     root: {
         height: 150,
@@ -20,6 +21,7 @@ const useStyles = makeStyles({
 function SeriesCard({item, onEdit, onDelete}) {
     const classes = useStyles();
     const [cardZoom, setCardZoom] = useState(false);
+    const history = useHistory();
 
     const addDefaultImg = (event) => {
         event.target.src = "/series/empty.png";
@@ -37,10 +39,16 @@ function SeriesCard({item, onEdit, onDelete}) {
         onDelete(item.id);
     }
 
+    const onCardClick = () => {
+        history.push("/sets/" + item.id);
+    }
+
     return (
         <Grid container border={1} borderRadius={3} borderColor="#FFCF00" boxShadow={5}
               onMouseOver={()=>changeCardZoom(true)}
-              onMouseOut={()=>changeCardZoom(false)}>
+              onMouseOut={()=>changeCardZoom(false)}
+              onClick={onCardClick}
+        >
             <ImageListItem>
                 <Box style={{overflow: "hidden"}}>
                     <img src={`/series/${item.imgName}.jpg?w=248&fit=crop&auto=format`}

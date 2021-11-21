@@ -1,14 +1,17 @@
 import {Autocomplete, Box, TextField} from "@mui/material";
 
-function AutocompleteControl({options, selectedValue, label, setOption}) {
+function AutocompleteControl({options, selectedValue, label, setOption, disabled, ...otherProps}) {
+    const isDisabled = disabled ? true : false;
     return (
-        <Autocomplete options={options}
+        <Autocomplete options={options} disabled={isDisabled}
                       value={selectedValue}
                       onChange={(event, value) => setOption(value)}
                       getOptionLabel={(option) => option && option.name ? option.name : ''}
                       renderInput={(params) => (
                           <TextField
+                              disabled
                               {...params}
+                              {...otherProps}
                               label={label}
                               value=""
                               inputProps={{
