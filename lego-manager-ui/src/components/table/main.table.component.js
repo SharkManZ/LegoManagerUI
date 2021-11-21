@@ -35,11 +35,10 @@ import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import {fetchFromObject} from "../../utils/object.utils";
 
 function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, children}) {
-    const [searchValue, setSearchValue] = useState();
+    const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
     const loading = useSelector(state => state[branch].loading);
     const rows = useSelector(state => state[branch].rows);
-    const dispatch = useDispatch();
     const page = useSelector(state => state[branch].page);
     const rowsPerPage = useSelector(state => state[branch].rowsPerPage);
     const orderDirection = useSelector(state => state[branch].orderDirection);
@@ -48,6 +47,8 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
     const dialogTitle = useSelector(state => state[branch].formTitle);
     const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
     const currentRow = useSelector(state => state[branch].currentRow);
+    const search = useSelector(state => state[branch].search);
+    const [searchValue, setSearchValue] = useState();
 
     const onSearchChange = (event) => {
         setSearchValue(event.target.value);
@@ -87,7 +88,8 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
             <Paper sx={{width: '100%', mb: 2}}>
                 <Box m={2} paddingTop={2}>
                     <Stack direction="row" spacing={2}>
-                        <TextField label="Поиск" variant="standard" onChange={onSearchChange} onKeyPress={onSearch}
+                        <TextField label="Поиск" variant="standard" value={!searchValue ? search : searchValue}
+                                   onChange={onSearchChange} onKeyPress={onSearch}
                                    fullWidth/>
                         <Button variant="contained" onClick={onAdd}>Добавить</Button>
                     </Stack>

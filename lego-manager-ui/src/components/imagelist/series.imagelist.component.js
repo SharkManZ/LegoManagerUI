@@ -24,6 +24,7 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
     const dialogOpen = useSelector(state => state[branch].formOpen);
     const dialogTitle = useSelector(state => state[branch].formTitle);
     const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
+    const search = useSelector(state => state[branch].search);
     const [searchValue, setSearchValue] = useState();
     const [currentId, setCurrentId] = useState();
 
@@ -61,7 +62,7 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
                         </Grid>
                         <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
                             <Stack direction="row" style={{width: '100%'}} spacing={2}>
-                                <TextField label="Название" variant="standard" fullWidth
+                                <TextField label="Название" variant="standard" fullWidth value={!searchValue ? search : searchValue}
                                            onChange={onSearchChange} onKeyUp={onSearch}></TextField>
                                 <Button variant="outlined" onClick={onAdd}>Добавить</Button>
                             </Stack>
