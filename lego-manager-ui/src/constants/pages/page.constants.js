@@ -9,5 +9,11 @@ export const PAGE_CRUD_CONSTANTS = {
         editFormTitle: 'Редактирование набора',
         deleteFormTitle: 'Удалить набор',
         listError: 'Ошибка при получении списка наборов'
+    },
+    colors: {
+        addFormTitle: 'Добавление цвета',
+        editFormTitle: 'Редактирование цвета',
+        deleteFormTitle: 'Удалить цвет',
+        listError: 'Ошибка при получении списка цветов'
     }
 }

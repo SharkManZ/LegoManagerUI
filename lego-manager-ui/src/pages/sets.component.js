@@ -80,7 +80,6 @@ function SetsPage() {
 
     const fetchData = () => {
         const currentFilters = (seriesId !== undefined && seriesId !== null) ? {...filters, ...{series: {id: seriesId}}} : filters;
-        console.log(currentFilters);
         getSets({
             page: page,
             rowsPerPage: rowsPerPage,

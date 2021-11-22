@@ -83,6 +83,20 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
         dispatch(setCurrentRowAction(row, branch));
     }
 
+    const getColor = (row, column) => {
+        if (column.type === 'color') {
+            return '#' + row[column.field];
+        }
+        return 'white';
+    }
+
+    const getRowValue = (row, column) => {
+        if (column.type === 'color') {
+            return '';
+        }
+        return fetchFromObject(row, column.field);
+    }
+
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>
@@ -133,8 +147,8 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         {columns.map((column) => (
-                                            <TableCell key={column.field}>
-                                                {fetchFromObject(row, column.field)}
+                                            <TableCell key={column.field} style={{backgroundColor: getColor(row, column)}}>
+                                                {getRowValue(row, column)}
                                             </TableCell>
                                         ))}
                                         <TableCell align="right" width={100}>

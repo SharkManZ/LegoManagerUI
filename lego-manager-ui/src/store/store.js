@@ -18,7 +18,8 @@ function branchReducer(reducerFunction, name) {
 
 const rootReducer = combineReducers({
     series: branchReducer(imageListCrudReducer, 'series'),
-    sets: branchReducer(gridCrudReducer, 'sets')
+    sets: branchReducer(gridCrudReducer, 'sets'),
+    colors: branchReducer(gridCrudReducer, 'colors')
 })
 
 export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));

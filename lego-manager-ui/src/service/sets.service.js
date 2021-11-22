@@ -33,7 +33,6 @@ export async function getSets({...params}) {
             })
         }
     }
-    console.log(params);
 
     const result = await httpClient.post("/lego-manager/sets/list", requestParams)
         .then(res => res.data)
