@@ -11,14 +11,14 @@ import {
 import SeriesImageList from "../components/imagelist/series.imagelist.component";
 import {useSnackbar} from "notistack";
 import {Box, TextField} from "@mui/material";
-import {PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
+import {PAGE_CRUD_CONSTANTS, SERIES_BRANCH} from "../constants/pages/page.constants";
 
 const itemsPerPage = 16;
-const branch = "series";
 const initFormValues = {
     id: null,
     name: ''
 }
+const branch = SERIES_BRANCH;
 
 function SeriesPage() {
     const {enqueueSnackbar} = useSnackbar();

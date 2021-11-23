@@ -20,7 +20,7 @@ import {LinearProgress} from "@material-ui/core";
 import TableContainer from "@mui/material/TableContainer";
 import Actions from "../action/actions.component";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     setActionAnchorElAction, setCurrentRowAction, setDeleteConfirmOpenAction,
@@ -49,6 +49,10 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
     const currentRow = useSelector(state => state[branch].currentRow);
     const search = useSelector(state => state[branch].search);
     const [searchValue, setSearchValue] = useState();
+
+    useEffect(() => {
+        setSearchValue(search);
+    }, [])
 
     const onSearchChange = (event) => {
         setSearchValue(event.target.value);
@@ -102,7 +106,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
             <Paper sx={{width: '100%', mb: 2}}>
                 <Box m={2} paddingTop={2}>
                     <Stack direction="row" spacing={2}>
-                        <TextField label="Поиск" variant="standard" value={!searchValue ? search : searchValue}
+                        <TextField label="Поиск" variant="standard" value={searchValue}
                                    onChange={onSearchChange} onKeyPress={onSearch}
                                    fullWidth/>
                         <Button variant="contained" onClick={onAdd}>Добавить</Button>

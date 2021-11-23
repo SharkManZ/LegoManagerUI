@@ -10,7 +10,7 @@ import {
     setPageAction,
     setTotalCountAction
 } from "../store/crud.actions";
-import {PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
+import {PAGE_CRUD_CONSTANTS, SETS_BRANCH} from "../constants/pages/page.constants";
 import {useEffect, useState} from "react";
 import {deleteSet, getSets, saveSet} from "../service/sets.service";
 import {useSnackbar} from "notistack";
@@ -53,7 +53,7 @@ const columns = [
         sortable: true
     }
 ]
-const branch = 'sets';
+const branch = SETS_BRANCH;
 
 function SetsPage() {
     const {seriesId} = useParams();

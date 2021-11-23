@@ -9,33 +9,26 @@ import {
     setPageAction,
     setTotalCountAction
 } from "../store/crud.actions";
-import {COLORS_BRANCH, PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
+import {PAGE_CRUD_CONSTANTS, PART_CATEGORIES_BRANCH} from "../constants/pages/page.constants";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
-import {deleteColor, getColors, saveColor} from "../service/colors.service";
+import {deletePartCategory, getPartCategories, savePartCategory} from "../service/part.categories.service";
 
 const initFormValues = {
     id: null,
-    name: '',
-    hexColor: ''
+    name: ''
 }
 const columns = [
     {
         title: 'Название',
         field: 'name',
         sortable: true
-    },
-    {
-        title: 'Цвет',
-        field: 'hexColor',
-        type: 'color',
-        sortable: false
     }
 ]
-const branch = COLORS_BRANCH;
+const branch = PART_CATEGORIES_BRANCH;
 
-function ColorsPage() {
+function PartCategoriesPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     // grid
@@ -55,7 +48,7 @@ function ColorsPage() {
     }, [search, page, rowsPerPage, orderBy, orderDirection])
 
     const fetchData = () => {
-        getColors({
+        getPartCategories({
             page: page,
             rowsPerPage: rowsPerPage,
             search: search,
@@ -75,10 +68,9 @@ function ColorsPage() {
     }
 
     const onSave = () => {
-        saveColor({
+        savePartCategory({
             id: formValues.id,
-            name: formValues.name,
-            hexColor: formValues.hexColor
+            name: formValues.name
         }).then(res => {
             dispatch(setPageAction(0, branch));
             dispatch(setFormOpenAction(false, null, branch));
@@ -94,7 +86,7 @@ function ColorsPage() {
     }
 
     const onDelete = (id) => {
-        deleteColor({id}).then(res => {
+        deletePartCategory({id}).then(res => {
             fetchData();
             dispatch(setDeleteConfirmOpenAction(false, branch));
         }).catch(error => {
@@ -147,8 +139,6 @@ function ColorsPage() {
                     <Stack direction="column" spacing={2} mt={2}>
                         <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
                                    value={formValues.name}/>
-                        <TextField required name="hexColor" fullWidth label="Цвет" onChange={onFormInput}
-                                   value={formValues.hexColor}/>
                     </Stack>
                 </Box>
             </MainTable>
@@ -156,4 +146,4 @@ function ColorsPage() {
     )
 }
 
-export default ColorsPage;
+export default PartCategoriesPage;
