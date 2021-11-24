@@ -4,11 +4,12 @@ function AutocompleteControl({options, selectedValue, label, setOption, disabled
     const isDisabled = disabled ? true : false;
     return (
         <Autocomplete options={options} disabled={isDisabled}
-                      value={selectedValue}
+                      value={selectedValue} fullWidth
                       onChange={(event, value) => setOption(value)}
                       getOptionLabel={(option) => option && option.name ? option.name : ''}
                       renderInput={(params) => (
                           <TextField
+                              fullWidth
                               disabled
                               {...params}
                               {...otherProps}

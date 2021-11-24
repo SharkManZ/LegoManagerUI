@@ -1,4 +1,17 @@
-import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    Paper,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -10,20 +23,23 @@ import {
     setPageAction,
     setTotalCountAction
 } from "../store/crud.actions";
-import {PAGE_CRUD_CONSTANTS, PARTS_BRANCH, SETS_BRANCH} from "../constants/pages/page.constants";
-import {useEffect, useState} from "react";
-import {deleteSet, getSets, saveSet} from "../service/sets.service";
+import {PAGE_CRUD_CONSTANTS, PARTS_BRANCH} from "../constants/pages/page.constants";
+import React, {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
-import {getAllSeries} from "../service/series.service";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
 import {useParams} from "react-router-dom";
 import {deletePart, getParts, savePart} from "../service/parts.service";
-import {getAllCategories} from "../service/part.categories.service";
+import {getAllCategories, savePartCategory} from "../service/part.categories.service";
+import AddIcon from '@mui/icons-material/Add';
 
 const initFormValues = {
     id: null,
     name: '',
     number: ''
+}
+const initCategoryFormValues = {
+    id: null,
+    categoryName: ''
 }
 const initFilters = {
     category: {
@@ -63,10 +79,13 @@ function PartsPage() {
     const orderDirection = useSelector(state => state[branch].orderDirection);
 
     const [categories, setCategories] = useState([]);
+    const [categoryOpen, setCategoryOpen] = useState(false);
+    const [lastAddedCategory, setLastAddedCategory] = useState();
 
     // crud
     const [formValues, setFormValues] = useState(initFormValues);
     const [selectedCategory, setSelectedCategory] = useState();
+    const [categoryFormValues, setCategoryFormValues] = useState(initCategoryFormValues);
 
     // filters
     const [filters, setFilters] = useState();
@@ -100,18 +119,26 @@ function PartsPage() {
         fetchData();
     }, [search, page, rowsPerPage, orderBy, orderDirection, JSON.stringify(filters)])
 
-    // запрос всех серий - один раз
-    useEffect(() => {
+    const fetchAllCategories = () => {
         getAllCategories({enqueueSnackbar})
             .then(res => {
                 setCategories(res);
             })
+    }
+
+    // запрос всех серий - один раз
+    useEffect(() => {
+        fetchAllCategories();
     }, [])
 
     // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
     useEffect(() => {
         if (categoryId !== undefined && categoryId !== null) {
             setFilterCategories(categories.find(item => item.id == categoryId));
+        } else if (lastAddedCategory != undefined && lastAddedCategory !== null) {
+            // второй вариант обновления общего списка - добавление категории из формы добавления детали
+            setSelectedCategory(categories.find(item => item.id == lastAddedCategory.id));
+            setLastAddedCategory(null);
         }
     }, [categories])
 
@@ -181,6 +208,27 @@ function PartsPage() {
         })
     }
 
+    const onCategoryFormInput = (event) => {
+        const {name, value} = event.target;
+        setCategoryFormValues({
+            ...categoryFormValues,
+            [name]: value
+        })
+    }
+
+    const onCategorySave = () => {
+        savePartCategory({
+            id: categoryFormValues.id,
+            name: categoryFormValues.categoryName
+        }).then(res => {
+            fetchAllCategories();
+            setLastAddedCategory(res.body);
+            setCategoryOpen(false);
+        }).catch(error => {
+            enqueueSnackbar(error, {variant: 'error'});
+        });
+    }
+
     const onFilterInput = (event) => {
         const {name, value} = event.target;
         setFilterFields({
@@ -233,8 +281,16 @@ function PartsPage() {
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>
-                                <AutocompleteControl options={categories} selectedValue={selectedCategory}
-                                                     label="Категория" setOption={setSelectedCategory}/>
+                                <Stack direction="row" spacing={2}>
+                                    <AutocompleteControl options={categories} selectedValue={selectedCategory}
+                                                         label="Категория" setOption={setSelectedCategory}/>
+                                    <IconButton color="primary" aria-label="add to shopping cart" onClick={() => {
+                                        setCategoryFormValues(initCategoryFormValues);
+                                        setCategoryOpen(true);
+                                    }}>
+                                        <AddIcon/>
+                                    </IconButton>
+                                </Stack>
                                 <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
                                            value={formValues.number}/>
                                 <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
@@ -244,6 +300,17 @@ function PartsPage() {
                     </MainTable>
                 </Grid>
             </Grid>
+            <Dialog open={categoryOpen} fullWidth onClose={() => setCategoryOpen(false)}>
+                <DialogTitle>Добавление категории детали</DialogTitle>
+                <DialogContent>
+                    <TextField required name="categoryName" fullWidth label="Название" onChange={onCategoryFormInput}
+                               value={categoryFormValues.categoryName}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="contained" onClick={() => onCategorySave()}>Сохранить</Button>
+                    <Button variant="contained" onClick={() => setCategoryOpen(false)}>Отмена</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }
