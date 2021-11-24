@@ -62,6 +62,11 @@ const columns = [
         title: 'Название',
         field: 'name',
         sortable: true
+    },
+    {
+        title: 'Количество цветов',
+        field: 'colorsCount',
+        sortable: false
     }
 ]
 const branch = PARTS_BRANCH;
