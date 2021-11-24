@@ -126,7 +126,7 @@ function PartCategoriesPage() {
     return (
         <Box>
             <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"} mt={3}>
-                <Typography variant="h4">Цвета</Typography>
+                <Typography variant="h4">Категории деталей</Typography>
             </Grid>
             <MainTable rowActions={rowActions}
                        columns={columns}

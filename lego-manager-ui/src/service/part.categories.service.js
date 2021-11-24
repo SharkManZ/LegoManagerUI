@@ -30,6 +30,18 @@ export async function getPartCategories({...params}) {
     }
 }
 
+export async function getAllCategories({...params}) {
+    const result = await httpClient.post("/lego-manager/part/category/list/all")
+        .then(res => res.data.body)
+        .catch(error => {
+            params.enqueueSnackbar(error, {variant:'error'});
+            return {
+                body: []
+            }
+        });
+    return result;
+}
+
 export async function savePartCategory({...params}) {
     const result = await httpClient.post("/lego-manager/part/category/save", params);
     return result.data;
