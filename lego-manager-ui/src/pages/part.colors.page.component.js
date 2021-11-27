@@ -10,10 +10,20 @@ import {
 import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import React, {useEffect, useState} from "react";
-import {Box, IconButton, Stack, TextField} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Stack,
+    TextField
+} from "@mui/material";
 import {deletePartColor, getPartColors, savePartColor} from "../service/part.colors.service";
 import AddIcon from '@mui/icons-material/Add';
-import {getAllColors} from "../service/colors.service";
+import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
 
 const initFormValues = {
@@ -22,7 +32,7 @@ const initFormValues = {
 }
 const initColorFormValues = {
     id: null,
-    name: '',
+    colorName: '',
     hexColor: ''
 }
 const columns = [
@@ -49,6 +59,8 @@ function PartColor({partId, setIsColorsChanged}) {
     const [selectedColor, setSelectedColor] = useState();
 
     const [colors, setColors] = useState([]);
+    const [colorOpen, setColorOpen] = useState();
+    const [lastAddedColor, setLastAddedColor] = useState();
 
     // crud
     const [formValues, setFormValues] = useState(initFormValues);
@@ -85,10 +97,27 @@ function PartColor({partId, setIsColorsChanged}) {
         fetchAllColors();
     }, [])
 
+    // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
+    useEffect(() => {
+        if (lastAddedColor != undefined && lastAddedColor !== null) {
+            // второй вариант обновления общего списка - добавление категории из формы добавления детали
+            setSelectedColor(colors.find(item => item.id == lastAddedColor.id));
+            setLastAddedColor(null);
+        }
+    }, [colors])
+
     const onFormInput = (event) => {
         const {name, value} = event.target;
         setFormValues({
             ...formValues,
+            [name]: value
+        })
+    }
+
+    const onColorFormInput = (event) => {
+        const {name, value} = event.target;
+        setColorFormValues({
+            ...colorFormValues,
             [name]: value
         })
     }
@@ -134,6 +163,20 @@ function PartColor({partId, setIsColorsChanged}) {
         dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
+    const onColorSave = () => {
+        saveColor({
+            id: colorFormValues.id,
+            name: colorFormValues.colorName,
+            hexColor: colorFormValues.hexColor
+        }).then(res => {
+            fetchAllColors();
+            setLastAddedColor(res.body);
+            setColorOpen(false);
+        }).catch(error => {
+            enqueueSnackbar(error, {variant: 'error'});
+        });
+    }
+
     const rowActions = [
         {
             title: 'Редактировать',
@@ -160,7 +203,7 @@ function PartColor({partId, setIsColorsChanged}) {
                                                       label="Цвет" setOption={setSelectedColor}/>
                             <IconButton color="primary" onClick={() => {
                                 setColorFormValues(initColorFormValues);
-                                // setCategoryOpen(true);
+                                setColorOpen(true);
                             }}>
                                 <AddIcon/>
                             </IconButton>
@@ -169,6 +212,21 @@ function PartColor({partId, setIsColorsChanged}) {
                                    value={formValues.number}/>
                     </Stack>
                 </Box>
+                <Dialog open={colorOpen} fullWidth onClose={() => setColorOpen(false)}>
+                    <DialogTitle>Добавление цвета</DialogTitle>
+                    <DialogContent>
+                        <Stack direction="column" spacing={2}>
+                            <TextField required name="colorName" fullWidth label="Название" onChange={onColorFormInput}
+                                       value={colorFormValues.colorName}/>
+                            <TextField required name="hexColor" fullWidth label="Код цвета" onChange={onColorFormInput}
+                                       value={colorFormValues.hexColor}/>
+                        </Stack>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant="contained" onClick={onColorSave}>Сохранить</Button>
+                        <Button variant="contained" onClick={() => setColorOpen(false)}>Отмена</Button>
+                    </DialogActions>
+                </Dialog>
             </MainTable>
         </Box>
     )
