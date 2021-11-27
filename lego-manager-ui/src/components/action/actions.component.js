@@ -19,9 +19,9 @@ function Actions({branch, items}) {
                  }}>
             <Box m={2}>
                 <Stack direction="column" spacing={2}>
-                    {items.map((item) => (
+                    {items !== undefined ? items.map((item) => (
                         <Button key={item.title} variant="contained" onClick={item.onClick}>{item.title}</Button>
-                    ))}
+                    )) : {}}
                 </Stack>
             </Box>
         </Popover>

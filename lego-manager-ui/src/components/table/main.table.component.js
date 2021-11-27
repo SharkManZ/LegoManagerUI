@@ -23,7 +23,9 @@ import ConfirmDialog from "../dialog/confirm.dialog.component";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    setActionAnchorElAction, setCurrentRowAction, setDeleteConfirmOpenAction,
+    setActionAnchorElAction,
+    setCurrentRowAction,
+    setDeleteConfirmOpenAction,
     setFormOpenAction,
     setOrderByAction,
     setOrderDirectionAction,
@@ -34,7 +36,7 @@ import {
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import {fetchFromObject} from "../../utils/object.utils";
 
-function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, children}) {
+function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagination = false, children}) {
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
     const loading = useSelector(state => state[branch].loading);
@@ -89,7 +91,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
 
     const getColor = (row, column) => {
         if (column.type === 'color') {
-            return '#' + row[column.field];
+            return '#' + fetchFromObject(row, column.field);
         }
         return 'white';
     }
@@ -127,14 +129,14 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
                                                sortDirection={orderBy === column.field ? orderDirection : false}>
                                         {column.sortable ?
 
-                                                <TableSortLabel
-                                                    active={orderBy === column.field}
-                                                    direction={orderBy === column.field ? orderDirection : 'asc'}
-                                                    onClick={onSortChange(column.field)}
-                                                >
-                                                    {column.title}
-                                                </TableSortLabel>
-                                             :
+                                            <TableSortLabel
+                                                active={orderBy === column.field}
+                                                direction={orderBy === column.field ? orderDirection : 'asc'}
+                                                onClick={onSortChange(column.field)}
+                                            >
+                                                {column.title}
+                                            </TableSortLabel>
+                                            :
                                             <div>{column.title}</div>
                                         }
 
@@ -145,13 +147,14 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
                         </TableHead>
                         {!loading ? (
                             <TableBody>
-                                {rows.map((row) => (
+                                {rows !== undefined ? rows.map((row) => (
                                     <TableRow
                                         key={row.id}
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         {columns.map((column) => (
-                                            <TableCell key={column.field} style={{backgroundColor: getColor(row, column)}}>
+                                            <TableCell key={column.field}
+                                                       style={{backgroundColor: getColor(row, column)}}>
                                                 {getRowValue(row, column)}
                                             </TableCell>
                                         ))}
@@ -159,14 +162,16 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, childr
                                             <Button variant="outlined" onClick={onActionButtonClick(row)}>...</Button>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )) : []}
                             </TableBody>
                         ) : null
                         }
                     </Table>
-                    <TablePagination component="div" count={totalCount} page={page}
-                                     onPageChange={pageChange} onRowsPerPageChange={rowPerPageChange}
-                                     rowsPerPage={rowsPerPage}/>
+                    {!noPagination ? (
+                        <TablePagination component="div" count={totalCount} page={page}
+                                         onPageChange={pageChange} onRowsPerPageChange={rowPerPageChange}
+                                         rowsPerPage={rowsPerPage}/>
+                    ) : ""}
                 </TableContainer>
             </Paper>
             <Dialog open={dialogOpen} fullWidth onClose={onClose}>

@@ -31,6 +31,7 @@ import {useParams} from "react-router-dom";
 import {deletePart, getParts, savePart} from "../service/parts.service";
 import {getAllCategories, savePartCategory} from "../service/part.categories.service";
 import AddIcon from '@mui/icons-material/Add';
+import PartColor from "./part.colors.page.component";
 
 const initFormValues = {
     id: null,
@@ -86,6 +87,8 @@ function PartsPage() {
     const [categories, setCategories] = useState([]);
     const [categoryOpen, setCategoryOpen] = useState(false);
     const [lastAddedCategory, setLastAddedCategory] = useState();
+    const [colorsOpen, setColorsOpen] = useState(false);
+    const [isColorsChanged, setIsColorsChanged] = useState(false);
 
     // crud
     const [formValues, setFormValues] = useState(initFormValues);
@@ -205,6 +208,11 @@ function PartsPage() {
         dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
+    const onColorsAction = (event) => {
+        dispatch(setActionAnchorElAction(null, branch));
+        setColorsOpen(true);
+    }
+
     const onFormInput = (event) => {
         const {name, value} = event.target;
         setFormValues({
@@ -234,15 +242,19 @@ function PartsPage() {
         });
     }
 
-    const onFilterInput = (event) => {
-        const {name, value} = event.target;
-        setFilterFields({
-            ...filters,
-            [name]: value
-        })
+    const onColorsClose = () => {
+        setColorsOpen(false);
+        if (isColorsChanged) {
+            fetchData();
+            setIsColorsChanged(false);
+        }
     }
 
     const rowActions = [
+        {
+            title: 'Цвета',
+            onClick: onColorsAction
+        },
         {
             title: 'Редактировать',
             onClick: onEditAction
@@ -315,6 +327,12 @@ function PartsPage() {
                     <Button variant="contained" onClick={() => onCategorySave()}>Сохранить</Button>
                     <Button variant="contained" onClick={() => setCategoryOpen(false)}>Отмена</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog open={colorsOpen} onClose={onColorsClose} maxWidth="xl">
+                <DialogTitle>Цвета детали</DialogTitle>
+                <DialogContent>
+                    <PartColor partId={currentRow !== null ? currentRow.id : 0} setIsColorsChanged={setIsColorsChanged}/>
+                </DialogContent>
             </Dialog>
         </Box>
     )

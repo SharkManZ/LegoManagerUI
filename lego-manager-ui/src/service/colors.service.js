@@ -30,6 +30,19 @@ export async function getColors({...params}) {
     }
 }
 
+export async function getAllColors({...params}) {
+    const result = await httpClient.get("/lego-manager/colors/list/all")
+        .then(res => res.data.body)
+        .catch(error => {
+            params.enqueueSnackbar(error, {variant:'error'});
+            return {
+                body: []
+            }
+        });
+    return result;
+}
+
+
 export async function saveColor({...params}) {
     const result = await httpClient.post("/lego-manager/colors/save", params);
     return result.data;

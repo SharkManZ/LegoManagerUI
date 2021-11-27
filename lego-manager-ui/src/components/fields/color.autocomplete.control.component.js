@@ -1,7 +1,10 @@
-import {Autocomplete, Box, TextField} from "@mui/material";
+import {Autocomplete, Box, Stack, TextField} from "@mui/material";
 
-function AutocompleteControl({options, selectedValue, label, setOption, disabled, ...otherProps}) {
+function ColorAutocompleteControl({options, selectedValue, label, setOption, disabled, ...otherProps}) {
     const isDisabled = disabled ? true : false;
+    const getColor = (value) => {
+        return '#' + value;
+    }
     return (
         <Autocomplete options={options} disabled={isDisabled}
                       value={selectedValue} fullWidth
@@ -16,12 +19,15 @@ function AutocompleteControl({options, selectedValue, label, setOption, disabled
                               label={label}
                           />)}
                       renderOption={(props, option) => (
-                          <Box component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
-                              {option.name}
-                          </Box>
+                          <Stack direction="row" fullWidth>
+                              <Box width="100%" component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
+                                  {option.name}
+                              </Box>
+                              <Box width={100} style={{backgroundColor: getColor(option.hexColor)}}></Box>
+                          </Stack>
                       )}
         />
     )
 }
 
-export default AutocompleteControl;
+export default ColorAutocompleteControl;

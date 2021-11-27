@@ -8,7 +8,7 @@ import {
     PARTS_BRANCH,
     PART_CATEGORIES_BRANCH,
     SERIES_BRANCH,
-    SETS_BRANCH
+    SETS_BRANCH, PART_COLORS_BRANCH
 } from "../constants/pages/page.constants";
 
 function branchReducer(reducerFunction, name) {
@@ -28,7 +28,8 @@ const rootReducer = combineReducers({
     sets: branchReducer(gridCrudReducer, SETS_BRANCH),
     colors: branchReducer(gridCrudReducer, COLORS_BRANCH),
     partCategories: branchReducer(gridCrudReducer, PART_CATEGORIES_BRANCH),
-    parts: branchReducer(gridCrudReducer, PARTS_BRANCH)
+    parts: branchReducer(gridCrudReducer, PARTS_BRANCH),
+    partColors: branchReducer(gridCrudReducer, PART_COLORS_BRANCH)
 })
 
 export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
