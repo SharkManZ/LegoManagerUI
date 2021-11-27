@@ -37,6 +37,14 @@ const initColorFormValues = {
 }
 const columns = [
     {
+        title: '',
+        field: 'number',
+        imageSource: 'parts',
+        key: 'imgKey',
+        isImage: true,
+        sortable: false
+    },
+    {
         title: 'Номер',
         field: 'number',
         sortable: true
@@ -59,7 +67,7 @@ function PartColor({partId, setIsColorsChanged}) {
     const [selectedColor, setSelectedColor] = useState();
 
     const [colors, setColors] = useState([]);
-    const [colorOpen, setColorOpen] = useState();
+    const [colorOpen, setColorOpen] = useState(false);
     const [lastAddedColor, setLastAddedColor] = useState();
 
     // crud

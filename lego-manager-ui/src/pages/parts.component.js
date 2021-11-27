@@ -50,6 +50,14 @@ const initFilters = {
 }
 const columns = [
     {
+        title: '',
+        field:'minColorNumber',
+        imageSource: 'parts',
+        key: 'imgKey',
+        sortable: false,
+        isImage: true
+    },
+    {
         title: 'Категория',
         field: 'category.name',
         sortable: false

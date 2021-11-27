@@ -35,8 +35,19 @@ import {
 } from "../../store/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import {fetchFromObject} from "../../utils/object.utils";
+import {makeStyles} from "@mui/styles";
 
+const useStyles = makeStyles({
+    root: {
+        height: "auto",
+        width: "auto",
+        maxHeight: 50,
+        maxWidth: 60,
+        objectFit: 'cover'
+    }
+});
 function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagination = false, children}) {
+    const classes = useStyles();
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
     const loading = useSelector(state => state[branch].loading);
@@ -103,6 +114,51 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
         return fetchFromObject(row, column.field);
     }
 
+    const isImageColumn = (column) => {
+        return column.isImage !== undefined && column.isImage;
+    }
+
+    const addDefaultImg = (event) => {
+        event.target.src = "/series/empty.png";
+    }
+
+    const getRowColumnCell = (row, column) => {
+        if (isImageColumn(column)) {
+            return (
+                <Box key={column.key ? column.key : column.field} style={{overflow: "hidden", textAlign: "center"}} pt={1}>
+                    <img src={`/${column.imageSource}/${row[column.field]}.png`}
+
+                         loading="lazy"
+                         onError={addDefaultImg}
+                         className={classes.root}
+                    />
+                </Box>
+            )
+        } else if (column.type === 'color') {
+            return (
+                <TableCell key={column.key ? column.key : column.field} width="10%">
+                    <Box sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        '& > :not(style)': {
+                            width: 150,
+                            height: 40,
+                        }
+                    }}>
+                        <Paper style={{backgroundColor: getColor(row, column)}} elevation={10}/>
+                    </Box>
+
+                </TableCell>
+            )
+        } else {
+            return (
+                <TableCell key={column.key ? column.key : column.field}>
+                    {getRowValue(row, column)}
+                </TableCell>
+            )
+        }
+    }
+
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>
@@ -125,7 +181,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
-                                    <TableCell key={column.field}
+                                    <TableCell key={column.key ? column.key : column.field}
                                                sortDirection={orderBy === column.field ? orderDirection : false}>
                                         {column.sortable ?
 
@@ -153,10 +209,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         {columns.map((column) => (
-                                            <TableCell key={column.field}
-                                                       style={{backgroundColor: getColor(row, column)}}>
-                                                {getRowValue(row, column)}
-                                            </TableCell>
+                                            getRowColumnCell(row, column)
                                         ))}
                                         <TableCell align="right" width={100}>
                                             <Button variant="outlined" onClick={onActionButtonClick(row)}>...</Button>
