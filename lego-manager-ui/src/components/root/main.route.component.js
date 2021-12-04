@@ -6,6 +6,7 @@ import {Paper} from "@mui/material";
 import ColorsPage from "../../pages/colors.component";
 import PartCategoriesPage from "../../pages/part.categories.component";
 import PartsPage from "../../pages/parts.component";
+import SetPartsPage from "../../pages/set.parts.page.component";
 
 function MainRoute() {
     return (
@@ -17,6 +18,7 @@ function MainRoute() {
                 <Route exact path="/partCategories" component={PartCategoriesPage}/>
                 <Route exact path="/parts" component={PartsPage}/>
                 <Route exact path="/parts/:categoryId" component={PartsPage}/>
+                <Route exact path="/set/:setId/parts" component={SetPartsPage}/>
                 <Route exact path="/colors" component={ColorsPage}/>
                 <Route exact path="/" component={Home}/>
             </Switch>

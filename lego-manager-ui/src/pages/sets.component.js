@@ -16,7 +16,7 @@ import {deleteSet, getSets, saveSet} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 
 const initFormValues = {
     id: null,
@@ -51,6 +51,11 @@ const columns = [
         title: 'Год выпуска',
         field: 'year',
         sortable: true
+    },
+    {
+        title: 'Кол-во деталей',
+        field: 'partsCount',
+        sortable: false
     }
 ]
 const branch = SETS_BRANCH;
@@ -59,6 +64,8 @@ function SetsPage() {
     const {seriesId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const history = useHistory();
+
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
     const search = useSelector(state => state[branch].search);
@@ -179,6 +186,11 @@ function SetsPage() {
         dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
+    const onPartsAction = (event) => {
+        history.push(`/set/${currentRow.id}/parts`);
+        dispatch(setActionAnchorElAction(null, branch));
+    }
+
     const onFormInput = (event) => {
         const {name, value} = event.target;
         setFormValues({
@@ -196,6 +208,10 @@ function SetsPage() {
     }
 
     const rowActions = [
+        {
+            title: 'Детали',
+            onClick: onPartsAction
+        },
         {
             title: 'Редактировать',
             onClick: onEditAction

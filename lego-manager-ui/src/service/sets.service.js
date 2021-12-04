@@ -51,6 +51,17 @@ export async function getSets({...params}) {
     }
 }
 
+export async function getSetParts({...params}) {
+
+    const result = await httpClient.post(`/lego-manager/sets/${params.setId}/part/list`)
+        .then(res => res.data.body)
+        .catch(error => {
+            params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
+            return [];
+        });
+    return result;
+}
+
 export async function saveSet({...params}) {
     const result = await httpClient.post("/lego-manager/sets/save", params);
     return result.data;

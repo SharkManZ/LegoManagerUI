@@ -4,6 +4,7 @@ export const COLORS_BRANCH = "colors";
 export const PART_CATEGORIES_BRANCH = "partCategories";
 export const PARTS_BRANCH = "parts";
 export const PART_COLORS_BRANCH = "partColors";
+export const SET_PARTS_BRANCH = "setParts";
 
 export const PAGE_CRUD_CONSTANTS = {
     series: {
@@ -40,5 +41,11 @@ export const PAGE_CRUD_CONSTANTS = {
         editFormTitle: 'Редактирование  цвета детали',
         deleteFormTitle: 'Удалить цвет детали',
         listError: 'Ошибка при получении списка цветов деталей'
+    },
+    setParts: {
+        addFormTitle: 'Добавление детали набора',
+        editFormTitle: 'Редактирование детали набора',
+        deleteFormTitle: 'Удалить деталь набора',
+        listError: 'Ошибка при получении списка деталей набора'
     }
 }
