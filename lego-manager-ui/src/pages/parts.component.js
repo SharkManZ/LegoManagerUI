@@ -36,7 +36,8 @@ import PartColor from "./part.colors.page.component";
 const initFormValues = {
     id: null,
     name: '',
-    number: ''
+    number: '',
+    alternateNumber: ''
 }
 const initCategoryFormValues = {
     id: null,
@@ -65,6 +66,7 @@ const columns = [
     {
         title: 'Номер',
         field: 'number',
+        additionalField: 'alternateNumber',
         sortable: true
     },
     {
@@ -194,6 +196,7 @@ function PartsPage() {
             id: formValues.id,
             name: formValues.name,
             number: formValues.number,
+            alternateNumber: formValues.alternateNumber,
             category: selectedCategory
         }).then(res => {
             dispatch(setPageAction(0, branch));
@@ -318,6 +321,8 @@ function PartsPage() {
                                 </Stack>
                                 <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
                                            value={formValues.number}/>
+                                <TextField name="alternateNumber" fullWidth label="Альтернативный номер" onChange={onFormInput}
+                                           value={formValues.alternateNumber}/>
                                 <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
                                            value={formValues.name}/>
                             </Stack>

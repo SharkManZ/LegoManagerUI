@@ -111,7 +111,11 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
         if (column.type === 'color') {
             return '';
         }
-        return fetchFromObject(row, column.field);
+        let value = fetchFromObject(row, column.field);
+        if (column.additionalField !== undefined) {
+            value = value + ' (' + fetchFromObject(row, column.additionalField) + ')';
+        }
+        return value;
     }
 
     const isImageColumn = (column) => {
