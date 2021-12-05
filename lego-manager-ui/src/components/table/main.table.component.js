@@ -112,7 +112,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
             return '';
         }
         let value = fetchFromObject(row, column.field);
-        if (column.additionalField !== undefined) {
+        if (column.additionalField && fetchFromObject(row, column.additionalField)) {
             value = value + ' (' + fetchFromObject(row, column.additionalField) + ')';
         }
         return value;

@@ -5,11 +5,13 @@ function FindTextField({name, itemId, itemName, onSelectItem,
                            searchFunc, searchFuncParams, searchParam, evalName, ...otherProps}) {
     const [fieldValue, setFieldValue] = useState(itemName);
     const [localFound, setLocalFound] = useState(itemId !== undefined && itemId !== null);
+    const [searchComplete, setSearchComplete] = useState(false);
 
     const onChange = (event) => {
         setFieldValue(event.target.value);
         itemId = undefined;
         setLocalFound(false);
+        setSearchComplete(false);
     }
 
     const onKeyPress = (event) => {
@@ -21,12 +23,13 @@ function FindTextField({name, itemId, itemName, onSelectItem,
                     setFieldValue(evalName(res));
                     setLocalFound(true)
                 }
+                setSearchComplete(true);
             })
         }
     }
 
     const getTextColor = () => {
-        return localFound ? '#13B633' : 'black';
+        return localFound ? '#13B633' : (searchComplete ? 'red' : 'black');
     }
 
     return (
