@@ -47,7 +47,6 @@ function SeriesCard({item, onEdit, onDelete}) {
         <Grid container border={1} borderRadius={3} borderColor="#FFCF00" boxShadow={5}
               onMouseOver={()=>changeCardZoom(true)}
               onMouseOut={()=>changeCardZoom(false)}
-              onClick={onCardClick}
         >
             <ImageListItem>
                 <Box style={{overflow: "hidden"}}>
@@ -56,6 +55,7 @@ function SeriesCard({item, onEdit, onDelete}) {
                          loading="lazy"
                          onError={addDefaultImg}
                          className={cardZoom ? classes.cardHovered : classes.root}
+                         onClick={onCardClick}
                     />
                 </Box>
                 <ImageListItemBar title={item.name} position="top">test</ImageListItemBar>

@@ -32,13 +32,8 @@ import {deletePart, getParts, savePart} from "../service/parts.service";
 import {getAllCategories, savePartCategory} from "../service/part.categories.service";
 import AddIcon from '@mui/icons-material/Add';
 import PartColor from "./part.colors.page.component";
+import {useFormik} from "formik";
 
-const initFormValues = {
-    id: null,
-    name: '',
-    number: '',
-    alternateNumber: ''
-}
 const initCategoryFormValues = {
     id: null,
     categoryName: ''
@@ -52,7 +47,7 @@ const initFilters = {
 const columns = [
     {
         title: '',
-        field:'minColorNumber',
+        field: 'minColorNumber',
         imageSource: 'parts',
         key: 'imgKey',
         sortable: false,
@@ -86,6 +81,7 @@ function PartsPage() {
     const {categoryId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
     const search = useSelector(state => state[branch].search);
@@ -101,9 +97,31 @@ function PartsPage() {
     const [isColorsChanged, setIsColorsChanged] = useState(false);
 
     // crud
-    const [formValues, setFormValues] = useState(initFormValues);
     const [selectedCategory, setSelectedCategory] = useState();
     const [categoryFormValues, setCategoryFormValues] = useState(initCategoryFormValues);
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            name: '',
+            number: '',
+            alternateNumber: ''
+        },
+        onSubmit: values => {
+            savePart({
+                id: values.id,
+                name: values.name,
+                number: values.number,
+                alternateNumber: values.alternateNumber,
+                category: selectedCategory
+            }).then(res => {
+                dispatch(setPageAction(0, branch));
+                dispatch(setFormOpenAction(false, null, branch));
+                fetchData();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'});
+            });
+        }
+    });
 
     // filters
     const [filters, setFilters] = useState();
@@ -177,7 +195,7 @@ function PartsPage() {
     }, [categoryId])
 
     const onAdd = (event) => {
-        setFormValues(initFormValues);
+        formik.resetForm();
         setSelectedCategory(null);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
@@ -191,24 +209,8 @@ function PartsPage() {
         });
     }
 
-    const onSave = () => {
-        savePart({
-            id: formValues.id,
-            name: formValues.name,
-            number: formValues.number,
-            alternateNumber: formValues.alternateNumber,
-            category: selectedCategory
-        }).then(res => {
-            dispatch(setPageAction(0, branch));
-            dispatch(setFormOpenAction(false, null, branch));
-            fetchData();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
-
     const onEditAction = (event) => {
-        setFormValues(currentRow);
+        formik.setValues(currentRow);
         setSelectedCategory(categories.find(item => item.id === currentRow.category.id));
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
         dispatch(setActionAnchorElAction(null, branch));
@@ -222,14 +224,6 @@ function PartsPage() {
     const onColorsAction = (event) => {
         dispatch(setActionAnchorElAction(null, branch));
         setColorsOpen(true);
-    }
-
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
     }
 
     const onCategoryFormInput = (event) => {
@@ -305,7 +299,7 @@ function PartsPage() {
                                branch={branch}
                                onAdd={onAdd}
                                onDelete={onDelete}
-                               onSave={onSave}
+                               onSave={formik.submitForm}
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>
@@ -319,12 +313,14 @@ function PartsPage() {
                                         <AddIcon/>
                                     </IconButton>
                                 </Stack>
-                                <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
-                                           value={formValues.number}/>
-                                <TextField name="alternateNumber" fullWidth label="Альтернативный номер" onChange={onFormInput}
-                                           value={formValues.alternateNumber}/>
-                                <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
-                                           value={formValues.name}/>
+                                <TextField required name="number" fullWidth label="Номер" onChange={formik.handleChange}
+                                           value={formik.values.number}/>
+                                <TextField name="alternateNumber" fullWidth label="Альтернативный номер"
+                                           onChange={formik.handleChange}
+                                           value={formik.values.alternateNumber}/>
+                                <TextField required name="name" fullWidth label="Название"
+                                           onChange={formik.handleChange}
+                                           value={formik.values.name}/>
                             </Stack>
                         </Box>
                     </MainTable>
@@ -344,7 +340,8 @@ function PartsPage() {
             <Dialog open={colorsOpen} onClose={onColorsClose} maxWidth="xl">
                 <DialogTitle>Цвета детали</DialogTitle>
                 <DialogContent>
-                    <PartColor partId={currentRow !== null ? currentRow.id : 0} setIsColorsChanged={setIsColorsChanged}/>
+                    <PartColor partId={currentRow !== null ? currentRow.id : 0}
+                               setIsColorsChanged={setIsColorsChanged}/>
                 </DialogContent>
             </Dialog>
         </Box>

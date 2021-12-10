@@ -10,15 +10,12 @@ import {
     setTotalCountAction
 } from "../store/crud.actions";
 import {PAGE_CRUD_CONSTANTS, PART_CATEGORIES_BRANCH} from "../constants/pages/page.constants";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
 import {deletePartCategory, getPartCategories, savePartCategory} from "../service/part.categories.service";
+import {useFormik} from "formik";
 
-const initFormValues = {
-    id: null,
-    name: ''
-}
 const columns = [
     {
         title: 'Название',
@@ -40,7 +37,24 @@ function PartCategoriesPage() {
     const orderDirection = useSelector(state => state[branch].orderDirection);
 
     // crud
-    const [formValues, setFormValues] = useState(initFormValues);
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            name: ''
+        },
+        onSubmit: values => {
+            savePartCategory({
+                id: values.id,
+                name: values.name
+            }).then(res => {
+                dispatch(setPageAction(0, branch));
+                dispatch(setFormOpenAction(false, null, branch));
+                fetchData();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'});
+            });
+        }
+    })
 
     // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки
     useEffect(() => {
@@ -67,21 +81,8 @@ function PartCategoriesPage() {
             });
     }
 
-    const onSave = () => {
-        savePartCategory({
-            id: formValues.id,
-            name: formValues.name
-        }).then(res => {
-            dispatch(setPageAction(0, branch));
-            dispatch(setFormOpenAction(false, null, branch));
-            fetchData();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
-
     const onAdd = (event) => {
-        setFormValues(initFormValues);
+        formik.resetForm();
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
 
@@ -95,7 +96,7 @@ function PartCategoriesPage() {
     }
 
     const onEditAction = (event) => {
-        setFormValues(currentRow);
+        formik.setValues(currentRow);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
         dispatch(setActionAnchorElAction(null, branch));
     }
@@ -103,14 +104,6 @@ function PartCategoriesPage() {
     const onDeleteAction = (event) => {
         dispatch(setActionAnchorElAction(null, branch));
         dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
     }
 
     const rowActions = [
@@ -133,12 +126,12 @@ function PartCategoriesPage() {
                        branch={branch}
                        onAdd={onAdd}
                        onDelete={onDelete}
-                       onSave={onSave}
+                       onSave={formik.submitForm}
             >
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>
-                        <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
-                                   value={formValues.name}/>
+                        <TextField required name="name" fullWidth label="Название" onChange={formik.handleChange}
+                                   value={formik.values.name}/>
                     </Stack>
                 </Box>
             </MainTable>

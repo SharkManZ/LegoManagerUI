@@ -12,20 +12,35 @@ import SeriesImageList from "../components/imagelist/series.imagelist.component"
 import {useSnackbar} from "notistack";
 import {Box, TextField} from "@mui/material";
 import {PAGE_CRUD_CONSTANTS, SERIES_BRANCH} from "../constants/pages/page.constants";
+import {useFormik} from "formik";
 
 const itemsPerPage = 16;
-const initFormValues = {
-    id: null,
-    name: ''
-}
+
 const branch = SERIES_BRANCH;
 
 function SeriesPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+
+    // grid
     const page = useSelector(state => state[branch].page);
     const search = useSelector(state => state[branch].search);
-    const [formValues, setFormValues] = useState(initFormValues);
+
+    // crud
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            name: ''
+        },
+        onSubmit: (values => {
+            saveSeries({id: values.id, name: values.name}).then(res => {
+                dispatch(setFormOpenAction(false, null, branch));
+                fetchIfNeeded();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'})
+            })
+        })
+    });
 
     useEffect(() => {
         fetchData();
@@ -39,31 +54,14 @@ function SeriesPage() {
             })
     }
 
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
-    }
-
     const onAdd = () => {
-        setFormValues(initFormValues);
+        formik.resetForm();
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
 
     const onEditAction = (values) => {
-        setFormValues(values);
+        formik.setValues(values);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
-    }
-
-    const onSave = () => {
-        saveSeries({id: formValues.id, name: formValues.name}).then(res => {
-            dispatch(setFormOpenAction(false, null, branch));
-            fetchIfNeeded();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'})
-        })
     }
 
     const fetchIfNeeded = () => {
@@ -83,19 +81,18 @@ function SeriesPage() {
         })
     }
 
-
     return (
         <SeriesImageList
             branch={branch}
             itemsPerPage={itemsPerPage}
             onAdd={onAdd}
-            onSave={onSave}
+            onSave={formik.handleSubmit}
             onEdit={onEditAction}
             onDelete={onDelete}
         >
             <Box m={2}>
-                <TextField name="name" autoFocus fullWidth label="Название" onChange={onFormInput}
-                           value={formValues.name}/>
+                <TextField name="name" autoFocus fullWidth label="Название" onChange={formik.handleChange}
+                           value={formik.values.name}/>
             </Box>
         </SeriesImageList>
     )

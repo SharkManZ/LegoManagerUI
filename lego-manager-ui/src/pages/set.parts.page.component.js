@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import FindTextField from "../components/fields/find.text.field.component";
 import {searchPartColor} from "../service/part.colors.service";
 import {deleteSetPart, saveSetPart} from "../service/set.parts.service";
+import {useFormik} from "formik";
 
 const columns = [
     {
@@ -53,16 +54,6 @@ const columns = [
         sortable: false
     }
 ]
-const initFormValues = {
-    id: null,
-    partColor: {
-        id: null,
-        part: {
-            name: ""
-        }
-    },
-    count: 0
-}
 const branch = SET_PARTS_BRANCH;
 
 function SetPartsPage() {
@@ -74,7 +65,31 @@ function SetPartsPage() {
     const currentRow = useSelector(state => state[branch].currentRow);
 
     // crud
-    const [formValues, setFormValues] = useState(initFormValues);
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            partColor: {
+                id: null,
+                part: {
+                    name: ""
+                }
+            },
+            count: 0
+        },
+        onSubmit: values => {
+            saveSetPart({
+                id: values.id,
+                count: values.count,
+                set: {id: setId},
+                partColor: {id: values.partColor.id}
+            }).then(res => {
+                dispatch(setFormOpenAction(false, null, branch));
+                fetchData();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'});
+            });
+        }
+    })
 
     const fetchData = () => {
         getSetParts({
@@ -95,26 +110,18 @@ function SetPartsPage() {
         fetchData();
     }, [])
 
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
-    }
-
     const onSelectPartColor = (id) => {
-        setFormValues({
-            ...formValues,
+        formik.setValues({
+            ...formik.values,
             partColor: {
-                ...formValues.partColor,
+                ...formik.values.partColor,
                 id: id
             }
         })
     }
 
     const onEditAction = (event) => {
-        setFormValues({
+        formik.setValues({
             id: currentRow.id,
             count: currentRow.count,
             partColor: {
@@ -134,22 +141,8 @@ function SetPartsPage() {
     }
 
     const onAdd = (event) => {
-        setFormValues(initFormValues);
+        formik.resetForm();
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
-    }
-
-    const onSave = () => {
-        saveSetPart({
-            id: formValues.id,
-            count: formValues.count,
-            set: {id: setId},
-            partColor: {id: formValues.partColor.id}
-        }).then(res => {
-            dispatch(setFormOpenAction(false, null, branch));
-            fetchData();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
     }
 
     const onDelete = (id) => {
@@ -176,7 +169,7 @@ function SetPartsPage() {
         <Box>
             <MainTable columns={columns} branch={branch}
                        onAdd={onAdd}
-                       onSave={onSave}
+                       onSave={formik.submitForm}
                        onDelete={onDelete}
                        rowActions={rowActions}
                        noPagination={true}>
@@ -187,12 +180,12 @@ function SetPartsPage() {
                                        searchFuncParams={{enqueueSnackbar}}
                                        searchParam="searchValue"
                                        evalName={(res) => res.part.name + '(' + res.number + ')'}
-                                       itemId={formValues.partColor.id}
-                                       itemName={formValues.partColor.part.name}
+                                       itemId={formik.values.partColor.id}
+                                       itemName={formik.values.partColor.part.name}
                                        onSelectItem={onSelectPartColor}
                         />
-                        <TextField required name="count" fullWidth label="Количество" onChange={onFormInput}
-                                   value={formValues.count}/>
+                        <TextField required name="count" fullWidth label="Количество" onChange={formik.handleChange}
+                                   value={formik.values.count}/>
                     </Stack>
                 </Box>
             </MainTable>

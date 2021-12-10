@@ -25,11 +25,8 @@ import {deletePartColor, getPartColors, savePartColor} from "../service/part.col
 import AddIcon from '@mui/icons-material/Add';
 import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
+import {useFormik} from "formik";
 
-const initFormValues = {
-    id: null,
-    number: ''
-}
 const initColorFormValues = {
     id: null,
     colorName: '',
@@ -71,7 +68,26 @@ function PartColor({partId, setIsColorsChanged}) {
     const [lastAddedColor, setLastAddedColor] = useState();
 
     // crud
-    const [formValues, setFormValues] = useState(initFormValues);
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            number: ''
+        },
+        onSubmit: values => {
+            savePartColor({
+                id: values.id,
+                number: values.number,
+                part: {id: partId},
+                color: selectedColor
+            }).then(res => {
+                dispatch(setFormOpenAction(false, null, branch));
+                setIsColorsChanged(true);
+                fetchData();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'});
+            });
+        }
+    })
     const [colorFormValues, setColorFormValues] = useState(initColorFormValues);
 
     const fetchData = () => {
@@ -105,7 +121,6 @@ function PartColor({partId, setIsColorsChanged}) {
         fetchAllColors();
     }, [])
 
-    // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
     useEffect(() => {
         if (lastAddedColor != undefined && lastAddedColor !== null) {
             // второй вариант обновления общего списка - добавление категории из формы добавления детали
@@ -113,14 +128,6 @@ function PartColor({partId, setIsColorsChanged}) {
             setLastAddedColor(null);
         }
     }, [colors])
-
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
-    }
 
     const onColorFormInput = (event) => {
         const {name, value} = event.target;
@@ -131,7 +138,8 @@ function PartColor({partId, setIsColorsChanged}) {
     }
 
     const onAdd = (event) => {
-        setFormValues(initFormValues);
+        formik.resetForm();
+        setSelectedColor(0);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
 
@@ -145,23 +153,9 @@ function PartColor({partId, setIsColorsChanged}) {
         });
     }
 
-    const onSave = () => {
-        savePartColor({
-            id: formValues.id,
-            number: formValues.number,
-            part: {id: partId},
-            color: selectedColor
-        }).then(res => {
-            dispatch(setFormOpenAction(false, null, branch));
-            setIsColorsChanged(true);
-            fetchData();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
-
     const onEditAction = (event) => {
-        setFormValues(currentRow);
+        formik.setValues(currentRow);
+        setSelectedColor(colors.find(item => item.id == currentRow.color.id));
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
         dispatch(setActionAnchorElAction(null, branch));
     }
@@ -200,7 +194,7 @@ function PartColor({partId, setIsColorsChanged}) {
         <Box>
             <MainTable columns={columns} branch={branch}
                        onAdd={onAdd}
-                       onSave={onSave}
+                       onSave={formik.submitForm}
                        onDelete={onDelete}
                        rowActions={rowActions}
                        noPagination={true}>
@@ -216,8 +210,8 @@ function PartColor({partId, setIsColorsChanged}) {
                                 <AddIcon/>
                             </IconButton>
                         </Stack>
-                        <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
-                                   value={formValues.number}/>
+                        <TextField required name="number" fullWidth label="Номер" onChange={formik.handleChange}
+                                   value={formik.values.number}/>
                     </Stack>
                 </Box>
                 <Dialog open={colorOpen} fullWidth onClose={() => setColorOpen(false)}>

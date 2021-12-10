@@ -46,6 +46,7 @@ const useStyles = makeStyles({
         objectFit: 'cover'
     }
 });
+
 function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagination = false, children}) {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -129,14 +130,17 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
     const getRowColumnCell = (row, column) => {
         if (isImageColumn(column)) {
             return (
-                <Box key={column.key ? column.key : column.field} style={{overflow: "hidden", textAlign: "center"}} pt={1}>
-                    <img src={`/${column.imageSource}/${row[column.field]}.png`}
+                <TableCell key={column.key ? column.key : column.field}>
+                    <Box
+                        style={{overflow: "hidden", textAlign: "center"}}>
+                        <img src={`/${column.imageSource}/${row[column.field]}.png`}
 
-                         loading="lazy"
-                         onError={addDefaultImg}
-                         className={classes.root}
-                    />
-                </Box>
+                             loading="lazy"
+                             onError={addDefaultImg}
+                             className={classes.root}
+                        />
+                    </Box>
+                </TableCell>
             )
         } else if (column.type === 'color') {
             return (

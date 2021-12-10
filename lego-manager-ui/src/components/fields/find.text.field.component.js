@@ -39,7 +39,6 @@ function FindTextField({name, itemId, itemName, onSelectItem,
                        onChange={onChange}
                        onKeyPress={onKeyPress}
                        inputProps={{style: {color: getTextColor()}}}
-
                        fullWidth
                        {...otherProps}/>
         </Stack>

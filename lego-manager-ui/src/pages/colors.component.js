@@ -10,16 +10,12 @@ import {
     setTotalCountAction
 } from "../store/crud.actions";
 import {COLORS_BRANCH, PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
 import {deleteColor, getColors, saveColor} from "../service/colors.service";
+import {useFormik} from "formik";
 
-const initFormValues = {
-    id: null,
-    name: '',
-    hexColor: ''
-}
 const columns = [
     {
         title: 'Название',
@@ -36,6 +32,7 @@ const columns = [
 const branch = COLORS_BRANCH;
 
 function ColorsPage() {
+
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     // grid
@@ -47,7 +44,26 @@ function ColorsPage() {
     const orderDirection = useSelector(state => state[branch].orderDirection);
 
     // crud
-    const [formValues, setFormValues] = useState(initFormValues);
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            name: '',
+            hexColor: ''
+        },
+        onSubmit: values => {
+            saveColor({
+                id: values.id,
+                name: values.name,
+                hexColor: values.hexColor
+            }).then(res => {
+                dispatch(setPageAction(0, branch));
+                dispatch(setFormOpenAction(false, null, branch));
+                fetchData();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'});
+            });
+        }
+    })
 
     // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки
     useEffect(() => {
@@ -74,22 +90,8 @@ function ColorsPage() {
             });
     }
 
-    const onSave = () => {
-        saveColor({
-            id: formValues.id,
-            name: formValues.name,
-            hexColor: formValues.hexColor
-        }).then(res => {
-            dispatch(setPageAction(0, branch));
-            dispatch(setFormOpenAction(false, null, branch));
-            fetchData();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
-
     const onAdd = (event) => {
-        setFormValues(initFormValues);
+        formik.resetForm();
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
 
@@ -103,7 +105,7 @@ function ColorsPage() {
     }
 
     const onEditAction = (event) => {
-        setFormValues(currentRow);
+        formik.setValues(currentRow);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
         dispatch(setActionAnchorElAction(null, branch));
     }
@@ -111,14 +113,6 @@ function ColorsPage() {
     const onDeleteAction = (event) => {
         dispatch(setActionAnchorElAction(null, branch));
         dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
     }
 
     const rowActions = [
@@ -141,14 +135,14 @@ function ColorsPage() {
                        branch={branch}
                        onAdd={onAdd}
                        onDelete={onDelete}
-                       onSave={onSave}
+                       onSave={formik.submitForm}
             >
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>
-                        <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
-                                   value={formValues.name}/>
-                        <TextField required name="hexColor" fullWidth label="Цвет" onChange={onFormInput}
-                                   value={formValues.hexColor}/>
+                        <TextField required name="name" fullWidth label="Название" onChange={formik.handleChange}
+                                   value={formik.values.name}/>
+                        <TextField required name="hexColor" fullWidth label="Цвет" onChange={formik.handleChange}
+                                   value={formik.values.hexColor}/>
                     </Stack>
                 </Box>
             </MainTable>

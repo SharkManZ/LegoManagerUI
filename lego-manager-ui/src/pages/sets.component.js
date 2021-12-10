@@ -17,13 +17,8 @@ import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
 import {useHistory, useParams} from "react-router-dom";
+import {useFormik} from "formik";
 
-const initFormValues = {
-    id: null,
-    name: '',
-    number: '',
-    year: null
-}
 const initFilters = {
     year: "",
     series: {
@@ -77,8 +72,30 @@ function SetsPage() {
     const [series, setSeries] = useState([]);
 
     // crud
-    const [formValues, setFormValues] = useState(initFormValues);
     const [selectedSeries, setSelectedSeries] = useState();
+    const formik = useFormik({
+        initialValues: {
+            id: null,
+            name: '',
+            number: '',
+            year: null
+        },
+        onSubmit: values => {
+            saveSet({
+                id: values.id,
+                name: values.name,
+                number: values.number,
+                year: values.year,
+                series: selectedSeries
+            }).then(res => {
+                dispatch(setPageAction(0, branch));
+                dispatch(setFormOpenAction(false, null, branch));
+                fetchData();
+            }).catch(error => {
+                enqueueSnackbar(error, {variant: 'error'});
+            });
+        }
+    })
 
     // filters
     const [filters, setFilters] = useState();
@@ -144,7 +161,7 @@ function SetsPage() {
     }, [seriesId])
 
     const onAdd = (event) => {
-        setFormValues(initFormValues);
+        formik.resetForm();
         setSelectedSeries(null);
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
     }
@@ -158,24 +175,8 @@ function SetsPage() {
         });
     }
 
-    const onSave = () => {
-        saveSet({
-            id: formValues.id,
-            name: formValues.name,
-            number: formValues.number,
-            year: formValues.year,
-            series: selectedSeries
-        }).then(res => {
-            dispatch(setPageAction(0, branch));
-            dispatch(setFormOpenAction(false, null, branch));
-            fetchData();
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
-
     const onEditAction = (event) => {
-        setFormValues(currentRow);
+        formik.setValues(currentRow);
         setSelectedSeries(series.find(item => item.id === currentRow.series.id));
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
         dispatch(setActionAnchorElAction(null, branch));
@@ -189,14 +190,6 @@ function SetsPage() {
     const onPartsAction = (event) => {
         history.push(`/set/${currentRow.id}/parts`);
         dispatch(setActionAnchorElAction(null, branch));
-    }
-
-    const onFormInput = (event) => {
-        const {name, value} = event.target;
-        setFormValues({
-            ...formValues,
-            [name]: value
-        })
     }
 
     const onFilterInput = (event) => {
@@ -253,18 +246,20 @@ function SetsPage() {
                                branch={branch}
                                onAdd={onAdd}
                                onDelete={onDelete}
-                               onSave={onSave}
+                               onSave={formik.submitForm}
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>
                                 <AutocompleteControl options={series} selectedValue={selectedSeries}
                                                      label="Серия" setOption={setSelectedSeries}/>
-                                <TextField required name="number" fullWidth label="Номер" onChange={onFormInput}
-                                           value={formValues.number}/>
-                                <TextField required name="name" fullWidth label="Название" onChange={onFormInput}
-                                           value={formValues.name}/>
-                                <TextField required name="year" fullWidth label="Год выпуска" onChange={onFormInput}
-                                           type="number" value={formValues.year}/>
+                                <TextField required name="number" fullWidth label="Номер" onChange={formik.handleChange}
+                                           value={formik.values.number}/>
+                                <TextField required name="name" fullWidth label="Название"
+                                           onChange={formik.handleChange}
+                                           value={formik.values.name}/>
+                                <TextField required name="year" fullWidth label="Год выпуска"
+                                           onChange={formik.handleChange}
+                                           type="number" value={formik.values.year}/>
                             </Stack>
                         </Box>
                     </MainTable>
