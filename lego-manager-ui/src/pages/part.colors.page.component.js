@@ -44,6 +44,7 @@ const columns = [
     {
         title: 'Номер',
         field: 'number',
+        additionalField: 'alternateNumber',
         sortable: true
     },
     {
@@ -71,14 +72,16 @@ function PartColor({partId, setIsColorsChanged}) {
     const formik = useFormik({
         initialValues: {
             id: null,
-            number: ''
+            number: '',
+            alternateNumber: ''
         },
         onSubmit: values => {
             savePartColor({
                 id: values.id,
                 number: values.number,
                 part: {id: partId},
-                color: selectedColor
+                color: selectedColor,
+                alternateNumber: values.alternateNumber
             }).then(res => {
                 dispatch(setFormOpenAction(false, null, branch));
                 setIsColorsChanged(true);
@@ -212,6 +215,8 @@ function PartColor({partId, setIsColorsChanged}) {
                         </Stack>
                         <TextField required name="number" fullWidth label="Номер" onChange={formik.handleChange}
                                    value={formik.values.number}/>
+                        <TextField name="alternateNumber" fullWidth label="Альтернативный номер" onChange={formik.handleChange}
+                                   value={formik.values.alternateNumber}/>
                     </Stack>
                 </Box>
                 <Dialog open={colorOpen} fullWidth onClose={() => setColorOpen(false)}>

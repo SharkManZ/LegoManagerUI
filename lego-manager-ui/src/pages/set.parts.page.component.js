@@ -179,7 +179,11 @@ function SetPartsPage() {
                                        searchFunc={searchPartColor}
                                        searchFuncParams={{enqueueSnackbar}}
                                        searchParam="searchValue"
-                                       evalName={(res) => res.part.name + '(' + res.number + ')'}
+                                       evalName={(res) =>
+                                           res.part.name + ' (' + res.number +
+                                           (res.alternateNumber ? ", " + res.alternateNumber : "")
+                                           + ')'
+                                       }
                                        itemId={formik.values.partColor.id}
                                        itemName={formik.values.partColor.part.name}
                                        onSelectItem={onSelectPartColor}
