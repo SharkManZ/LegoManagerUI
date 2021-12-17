@@ -1,6 +1,7 @@
 export const SET_TOTAL_COUNT = "SET_TOTAL_COUNT";
 export const SET_LOADING = "SET_LOADING";
-export const FETCH_DATA = "FETCH_DATE";
+export const FETCH_DATA_REQUEST = "FETCH_DATA_REQUEST";
+export const FETCH_DATA = "FETCH_DATA";
 export const SET_SEARCH = "SET_SEARCH";
 export const SET_PAGE = "SET_PAGE";
 export const SET_ROWS_PER_PAGE = "SET_ROWS_PER_PAGE";

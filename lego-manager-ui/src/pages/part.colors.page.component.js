@@ -1,12 +1,11 @@
 import MainTable from "../components/table/main.table.component";
 import {PAGE_CRUD_CONSTANTS, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
-    setFormOpenAction,
-    setLoadingAction
-} from "../store/crud.actions";
+    setFormOpenAction
+} from "../store/reducer/crud.actions";
 import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import React, {useEffect, useState} from "react";
@@ -21,7 +20,7 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import {deletePartColor, getPartColors, savePartColor} from "../service/part.colors.service";
+import {deletePartColor, savePartColor} from "../service/part.colors.service";
 import AddIcon from '@mui/icons-material/Add';
 import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
@@ -94,18 +93,11 @@ function PartColor({partId, setIsColorsChanged}) {
     const [colorFormValues, setColorFormValues] = useState(initColorFormValues);
 
     const fetchData = () => {
-        getPartColors({
+        dispatch(fetchDataRequestAction({
             partId: partId,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
-        })
-            .then(res => {
-                dispatch(fetchDataAction(res, branch));
-                dispatch(setLoadingAction(false, branch));
-            })
-            .catch(error => {
-                dispatch(setLoadingAction(false, branch));
-            });
+        }, branch));
     }
     // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров
     useEffect(() => {
@@ -215,7 +207,8 @@ function PartColor({partId, setIsColorsChanged}) {
                         </Stack>
                         <TextField required name="number" fullWidth label="Номер" onChange={formik.handleChange}
                                    value={formik.values.number}/>
-                        <TextField name="alternateNumber" fullWidth label="Альтернативный номер" onChange={formik.handleChange}
+                        <TextField name="alternateNumber" fullWidth label="Альтернативный номер"
+                                   onChange={formik.handleChange}
                                    value={formik.values.alternateNumber}/>
                     </Stack>
                 </Box>

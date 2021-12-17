@@ -1,7 +1,7 @@
-import * as types from '../constants/crud.action.constants';
+import * as types from '../../constants/crud.action.constants';
 const defaultState = {
     rows: [],
-    loading: true,
+    loading: false,
     totalCount: 0,
     search: '',
     page: 0,
@@ -53,11 +53,27 @@ export default function gridCrudReducer(state = defaultState, action) {
                 ...state,
                 orderDirection: action.payload
             }
-        case `${branch}/${types.FETCH_DATA}`:
+        case `${branch}/${types.FETCH_DATA_REQUEST}`:{
             return {
                 ...state,
-                rows: action.payload
+                formOpen: false,
+                page: action.payload.page,
+                totalCount: 0,
+                loading: true,
+                deleteConfirmOpen: false,
+                actionAnchorEl: false,
+                currentRow: null,
+                rows: []
             }
+        }
+        case `${branch}/${types.FETCH_DATA}`: {
+            return {
+                ...state,
+                loading: false,
+                rows: Array.isArray(action.payload) ? action.payload : action.payload.data,
+                totalCount: Array.isArray(action.payload) ? 0 : action.payload.totalCount
+            }
+        }
         case `${branch}/${types.SET_FORM_OPEN}`:
             return {
                 ...state,

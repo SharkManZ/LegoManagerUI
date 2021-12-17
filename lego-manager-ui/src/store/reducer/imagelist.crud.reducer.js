@@ -1,4 +1,4 @@
-import * as types from '../constants/crud.action.constants';
+import * as types from '../../constants/crud.action.constants';
 const defaultState = {
     rows: [],
     totalCount: 0,
@@ -29,10 +29,22 @@ export default function imageListCrudReducer(state = defaultState, action) {
                 ...state,
                 page: action.payload
             }
+        case `${branch}/${types.FETCH_DATA_REQUEST}`:{
+            return {
+                ...state,
+                formOpen: false,
+                page: action.payload.page +1,
+                totalCount: 0,
+                deleteConfirmOpen: false,
+                actionAnchorEl: false,
+                rows: []
+            }
+        }
         case `${branch}/${types.FETCH_DATA}`:
             return {
                 ...state,
-                rows: action.payload
+                rows: action.payload.data,
+                totalCount: action.payload.totalCount
             }
         case `${branch}/${types.SET_FORM_OPEN}`:
             return {

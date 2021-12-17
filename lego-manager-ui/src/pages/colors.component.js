@@ -1,19 +1,17 @@
 import {Box, Grid, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction,
-    setLoadingAction,
-    setPageAction,
-    setTotalCountAction
-} from "../store/crud.actions";
+    setPageAction
+} from "../store/reducer/crud.actions";
 import {COLORS_BRANCH, PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
-import {deleteColor, getColors, saveColor} from "../service/colors.service";
+import {deleteColor, saveColor} from "../service/colors.service";
 import {useFormik} from "formik";
 
 const columns = [
@@ -71,7 +69,7 @@ function ColorsPage() {
     }, [search, page, rowsPerPage, orderBy, orderDirection])
 
     const fetchData = () => {
-        getColors({
+        dispatch(fetchDataRequestAction({
             page: page,
             rowsPerPage: rowsPerPage,
             search: search,
@@ -79,15 +77,7 @@ function ColorsPage() {
             orderDirection: orderDirection,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
-        })
-            .then(res => {
-                dispatch(fetchDataAction(res.data, branch));
-                dispatch(setTotalCountAction(res.totalCount, branch));
-                dispatch(setLoadingAction(false, branch));
-            })
-            .catch(error => {
-                dispatch(setLoadingAction(false, branch));
-            });
+        }, branch));
     }
 
     const onAdd = (event) => {

@@ -32,7 +32,7 @@ import {
     setPageAction,
     setRowsPerPageAction,
     setSearchAction
-} from "../../store/crud.actions";
+} from "../../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";

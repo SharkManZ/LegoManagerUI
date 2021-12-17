@@ -1,15 +1,18 @@
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import {composeWithDevTools} from "redux-devtools-extension";
-import thunk from "redux-thunk";
-import imageListCrudReducer from "./imagelist.crud.reducer";
-import gridCrudReducer from "./grid.crud.reducer";
+import createSagaMiddleware from 'redux-saga'
+import imageListCrudReducer from "./reducer/imagelist.crud.reducer";
+import gridCrudReducer from "./reducer/grid.crud.reducer";
 import {
     COLORS_BRANCH,
-    PARTS_BRANCH,
     PART_CATEGORIES_BRANCH,
+    PART_COLORS_BRANCH,
+    PARTS_BRANCH,
     SERIES_BRANCH,
-    SETS_BRANCH, PART_COLORS_BRANCH, SET_PARTS_BRANCH
+    SET_PARTS_BRANCH,
+    SETS_BRANCH
 } from "../constants/pages/page.constants";
+import {rootSaga} from "./saga/root.saga";
 
 function branchReducer(reducerFunction, name) {
     return (state, action) => {
@@ -23,6 +26,8 @@ function branchReducer(reducerFunction, name) {
     }
 }
 
+const sagaMiddleware = createSagaMiddleware();
+
 const rootReducer = combineReducers({
     series: branchReducer(imageListCrudReducer, SERIES_BRANCH),
     sets: branchReducer(gridCrudReducer, SETS_BRANCH),
@@ -33,4 +38,5 @@ const rootReducer = combineReducers({
     setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH)
 })
 
-export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));
+sagaMiddleware.run(rootSaga);

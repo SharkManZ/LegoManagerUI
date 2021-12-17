@@ -15,20 +15,18 @@ import {
 import MainTable from "../components/table/main.table.component";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction,
-    setLoadingAction,
-    setPageAction,
-    setTotalCountAction
-} from "../store/crud.actions";
+    setPageAction
+} from "../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS, PARTS_BRANCH} from "../constants/pages/page.constants";
 import React, {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
 import {useParams} from "react-router-dom";
-import {deletePart, getParts, savePart} from "../service/parts.service";
+import {deletePart, savePart} from "../service/parts.service";
 import {getAllCategories, savePartCategory} from "../service/part.categories.service";
 import AddIcon from '@mui/icons-material/Add';
 import PartColor from "./part.colors.page.component";
@@ -130,7 +128,7 @@ function PartsPage() {
 
     const fetchData = () => {
         const currentFilters = (categoryId !== undefined && categoryId !== null) ? {...filters, ...{category: {id: categoryId}}} : filters;
-        getParts({
+        dispatch(fetchDataRequestAction({
             page: page,
             rowsPerPage: rowsPerPage,
             search: search,
@@ -139,15 +137,7 @@ function PartsPage() {
             filters: currentFilters,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
-        })
-            .then(res => {
-                dispatch(fetchDataAction(res.data, branch));
-                dispatch(setTotalCountAction(res.totalCount, branch));
-                dispatch(setLoadingAction(false, branch));
-            })
-            .catch(error => {
-                dispatch(setLoadingAction(false, branch));
-            });
+        }, branch));
     }
 
     // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров

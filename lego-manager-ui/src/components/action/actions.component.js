@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import {Button, Popover, Stack} from "@mui/material";
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setActionAnchorElAction} from "../../store/crud.actions";
+import {setActionAnchorElAction} from "../../store/reducer/crud.actions";
 
 function Actions({branch, items}) {
     const anchorEl = useSelector(state => state[branch].actionAnchorEl);

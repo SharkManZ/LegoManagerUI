@@ -1,4 +1,5 @@
-import * as types from '../constants/crud.action.constants';
+import * as types from '../../constants/crud.action.constants';
+import {FETCH_DATA_REQUEST} from "../../constants/crud.action.constants";
 
 export const setTotalCountAction = (totalCount, branch) => ({
     branch,
@@ -40,6 +41,12 @@ export const setOrderDirectionAction = (orderDirection, branch) => ({
     branch,
     type: `${branch}/${types.SET_ORDER_DIRECTION}`,
     payload: orderDirection
+})
+
+export const fetchDataRequestAction = (request, branch) => ({
+    branch,
+    type: `${branch}/${types.FETCH_DATA_REQUEST}`,
+    payload: request
 })
 
 export const fetchDataAction = (rows, branch) => ({

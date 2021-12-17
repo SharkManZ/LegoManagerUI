@@ -9,7 +9,7 @@ import {
     setDeleteConfirmOpenAction,
     setFormOpenAction,
     setLoadingAction
-} from "../store/crud.actions";
+} from "../store/reducer/crud.actions";
 import {getSetParts} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";

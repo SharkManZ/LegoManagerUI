@@ -2,17 +2,15 @@ import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/mater
 import MainTable from "../components/table/main.table.component";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction,
-    setLoadingAction,
-    setPageAction,
-    setTotalCountAction
-} from "../store/crud.actions";
+    setPageAction
+} from "../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS, SETS_BRANCH} from "../constants/pages/page.constants";
 import {useEffect, useState} from "react";
-import {deleteSet, getSets, saveSet} from "../service/sets.service";
+import {deleteSet, saveSet} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
@@ -104,7 +102,7 @@ function SetsPage() {
 
     const fetchData = () => {
         const currentFilters = (seriesId !== undefined && seriesId !== null) ? {...filters, ...{series: {id: seriesId}}} : filters;
-        getSets({
+        dispatch(fetchDataRequestAction({
             page: page,
             rowsPerPage: rowsPerPage,
             search: search,
@@ -113,15 +111,7 @@ function SetsPage() {
             filters: currentFilters,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
-        })
-            .then(res => {
-                dispatch(fetchDataAction(res.data, branch));
-                dispatch(setTotalCountAction(res.totalCount, branch));
-                dispatch(setLoadingAction(false, branch));
-            })
-            .catch(error => {
-                dispatch(setLoadingAction(false, branch));
-            });
+        }, branch));
     }
 
     // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров

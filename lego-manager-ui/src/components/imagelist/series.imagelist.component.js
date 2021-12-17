@@ -12,7 +12,7 @@ import {
 import SeriesCard from "../cards/series.card.component";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction, setSearchAction} from "../../store/crud.actions";
+import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction, setSearchAction} from "../../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
 

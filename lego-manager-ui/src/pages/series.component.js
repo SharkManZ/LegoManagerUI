@@ -1,13 +1,12 @@
-import {useEffect, useState} from "react";
-import {deleteSeries, getSeries, saveSeries} from "../service/series.service";
+import {useEffect} from "react";
+import {deleteSeries, saveSeries} from "../service/series.service";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction,
-    setPageAction,
-    setTotalCountAction
-} from "../store/crud.actions";
+    setPageAction
+} from "../store/reducer/crud.actions";
 import SeriesImageList from "../components/imagelist/series.imagelist.component";
 import {useSnackbar} from "notistack";
 import {Box, TextField} from "@mui/material";
@@ -47,11 +46,12 @@ function SeriesPage() {
     }, [page, search]);
 
     const fetchData = () => {
-        getSeries({page: page - 1, rowsPerPage: itemsPerPage, search: search, enqueueSnackbar})
-            .then(res => {
-                dispatch(fetchDataAction(res.data, branch));
-                dispatch(setTotalCountAction(res.totalCount, branch));
-            })
+        dispatch(fetchDataRequestAction({
+            page: page - 1,
+            rowsPerPage: itemsPerPage,
+            search: search,
+            enqueueSnackbar
+        }, branch));
     }
 
     const onAdd = () => {

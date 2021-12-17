@@ -1,19 +1,17 @@
 import {Box, Grid, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction,
-    setLoadingAction,
-    setPageAction,
-    setTotalCountAction
-} from "../store/crud.actions";
+    setPageAction
+} from "../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS, PART_CATEGORIES_BRANCH} from "../constants/pages/page.constants";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
-import {deletePartCategory, getPartCategories, savePartCategory} from "../service/part.categories.service";
+import {deletePartCategory, savePartCategory} from "../service/part.categories.service";
 import {useFormik} from "formik";
 
 const columns = [
@@ -62,7 +60,7 @@ function PartCategoriesPage() {
     }, [search, page, rowsPerPage, orderBy, orderDirection])
 
     const fetchData = () => {
-        getPartCategories({
+        dispatch(fetchDataRequestAction({
             page: page,
             rowsPerPage: rowsPerPage,
             search: search,
@@ -70,15 +68,7 @@ function PartCategoriesPage() {
             orderDirection: orderDirection,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
-        })
-            .then(res => {
-                dispatch(fetchDataAction(res.data, branch));
-                dispatch(setTotalCountAction(res.totalCount, branch));
-                dispatch(setLoadingAction(false, branch));
-            })
-            .catch(error => {
-                dispatch(setLoadingAction(false, branch));
-            });
+        }, branch));
     }
 
     const onAdd = (event) => {
