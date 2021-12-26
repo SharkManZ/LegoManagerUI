@@ -1,7 +1,7 @@
 import {Box, Stack, TextField} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import React, {useEffect, useState} from "react";
-import {PAGE_CRUD_CONSTANTS, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
+import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
 import {
     fetchDataAction,
@@ -22,7 +22,7 @@ const columns = [
     {
         title: '',
         field: 'colorNumber',
-        imageSource: 'parts',
+        imageSource: `${LEGO_IMG_ROOT}/parts`,
         key: 'imgKey',
         isImage: true,
         sortable: false

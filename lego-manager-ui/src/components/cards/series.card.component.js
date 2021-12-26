@@ -4,6 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {makeStyles} from "@mui/styles";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
+import {LEGO_IMG_ROOT} from "../../constants/pages/page.constants";
 const useStyles = makeStyles({
     root: {
         height: 150,
@@ -24,7 +25,7 @@ function SeriesCard({item, onEdit, onDelete}) {
     const history = useHistory();
 
     const addDefaultImg = (event) => {
-        event.target.src = "/series/empty.png";
+        event.target.src = `/empty.png`;
     }
 
     const changeCardZoom = (value) => {
@@ -50,7 +51,7 @@ function SeriesCard({item, onEdit, onDelete}) {
         >
             <ImageListItem>
                 <Box style={{overflow: "hidden"}}>
-                    <img src={`/series/${item.imgName}.jpg?w=248&fit=crop&auto=format`}
+                    <img src={`/${LEGO_IMG_ROOT}/series/${item.imgName}.jpg?w=248&fit=crop&auto=format`}
                          alt={item.imgName}
                          loading="lazy"
                          onError={addDefaultImg}

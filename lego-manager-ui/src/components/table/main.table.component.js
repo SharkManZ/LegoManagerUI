@@ -124,7 +124,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
     }
 
     const addDefaultImg = (event) => {
-        event.target.src = "/series/empty.png";
+        event.target.src = "/empty.png";
     }
 
     const getRowColumnCell = (row, column) => {

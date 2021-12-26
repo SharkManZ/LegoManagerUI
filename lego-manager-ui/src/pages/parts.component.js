@@ -21,7 +21,7 @@ import {
     setFormOpenAction,
     setPageAction
 } from "../store/reducer/crud.actions";
-import {PAGE_CRUD_CONSTANTS, PARTS_BRANCH} from "../constants/pages/page.constants";
+import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, PARTS_BRANCH} from "../constants/pages/page.constants";
 import React, {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
@@ -46,7 +46,7 @@ const columns = [
     {
         title: '',
         field: 'minColorNumber',
-        imageSource: 'parts',
+        imageSource: `${LEGO_IMG_ROOT}/parts`,
         key: 'imgKey',
         sortable: false,
         isImage: true

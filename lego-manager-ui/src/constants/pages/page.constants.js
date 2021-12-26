@@ -6,6 +6,8 @@ export const PARTS_BRANCH = "parts";
 export const PART_COLORS_BRANCH = "partColors";
 export const SET_PARTS_BRANCH = "setParts";
 
+export const LEGO_IMG_ROOT = "lego-images";
+
 export const PAGE_CRUD_CONSTANTS = {
     series: {
         addFormTitle: 'Добавление серии',
