@@ -47,11 +47,4 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-/lego-manager-ui/public/parts/*.png
-/lego-manager-ui/public/parts/*.jpg
-/lego-manager-ui/public/series/*.png
-/lego-manager-ui/public/series/*.jpg
-/lego-manager-ui/public/sets/*.png
-/lego-manager-ui/public/sets/*.jpg
-
+**/lego-images/*
