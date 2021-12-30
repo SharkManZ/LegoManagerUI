@@ -1,5 +1,5 @@
 import MainTable from "../components/table/main.table.component";
-import {PAGE_CRUD_CONSTANTS, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
+import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
 import {
     fetchDataRequestAction,
     setActionAnchorElAction,
@@ -35,7 +35,7 @@ const columns = [
     {
         title: '',
         field: 'number',
-        imageSource: 'parts',
+        imageSource: `${LEGO_IMG_ROOT}/parts`,
         key: 'imgKey',
         isImage: true,
         sortable: false
