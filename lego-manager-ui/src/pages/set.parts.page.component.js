@@ -187,6 +187,7 @@ function SetPartsPage() {
                                        itemId={formik.values.partColor.id}
                                        itemName={formik.values.partColor.part.name}
                                        onSelectItem={onSelectPartColor}
+                                       autoFocus
                         />
                         <TextField required name="count" fullWidth label="Количество" onChange={formik.handleChange}
                                    value={formik.values.count}/>

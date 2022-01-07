@@ -167,6 +167,12 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
         }
     }
 
+    useEffect(() => {
+        if (search) {
+            setSearchValue(search);
+        }
+    }, [])
+
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>

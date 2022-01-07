@@ -130,7 +130,7 @@ function ColorsPage() {
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>
                         <TextField required name="name" fullWidth label="Название" onChange={formik.handleChange}
-                                   value={formik.values.name}/>
+                                   value={formik.values.name} autoFocus/>
                         <TextField required name="hexColor" fullWidth label="Цвет" onChange={formik.handleChange}
                                    value={formik.values.hexColor}/>
                     </Stack>

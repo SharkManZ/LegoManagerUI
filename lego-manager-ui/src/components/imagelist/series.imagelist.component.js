@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 import SeriesCard from "../cards/series.card.component";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction, setSearchAction} from "../../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
@@ -52,6 +52,12 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
         dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
+    useEffect(() => {
+        if (search) {
+            setSearchValue(search);
+        }
+    }, [])
+
     return (
         <div>
             <ImageList gap={30} cols={4} style={{overflow: "hidden", padding: 10}}>
@@ -62,7 +68,7 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
                         </Grid>
                         <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
                             <Stack direction="row" style={{width: '100%'}} spacing={2}>
-                                <TextField label="Название" variant="standard" fullWidth value={!searchValue ? search : searchValue}
+                                <TextField label="Название" variant="standard" fullWidth value={searchValue}
                                            onChange={onSearchChange} onKeyUp={onSearch}></TextField>
                                 <Button variant="outlined" onClick={onAdd}>Добавить</Button>
                             </Stack>
