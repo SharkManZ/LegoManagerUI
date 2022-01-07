@@ -43,11 +43,11 @@ function SeriesPage() {
 
     useEffect(() => {
         fetchData();
-    }, [page, search]);
+    }, [page]);
 
     const fetchData = () => {
         dispatch(fetchDataRequestAction({
-            page: page - 1,
+            page: page > 0 ? page - 1 : 0,
             rowsPerPage: itemsPerPage,
             search: search,
             enqueueSnackbar

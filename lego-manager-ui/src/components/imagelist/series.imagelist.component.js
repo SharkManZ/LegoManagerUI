@@ -1,20 +1,24 @@
 import {
-    Button, Dialog, DialogActions, DialogContent, DialogTitle,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Grid,
     ImageList,
     ImageListItem,
     ListSubheader,
     Pagination,
     Stack,
-    TextField,
     Typography
 } from "@mui/material";
 import SeriesCard from "../cards/series.card.component";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction, setSearchAction} from "../../store/reducer/crud.actions";
+import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction} from "../../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
+import SearchField from "../fields/search.field.component";
 
 function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete, children}) {
     const dispatch = useDispatch();
@@ -24,20 +28,8 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
     const dialogOpen = useSelector(state => state[branch].formOpen);
     const dialogTitle = useSelector(state => state[branch].formTitle);
     const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
-    const search = useSelector(state => state[branch].search);
-    const [searchValue, setSearchValue] = useState();
+
     const [currentId, setCurrentId] = useState();
-
-    const onSearchChange = (event) => {
-        setSearchValue(event.target.value);
-    }
-
-    const onSearch = (event) => {
-        if (event.key === 'Enter') {
-            dispatch(setPageAction(1, branch));
-            dispatch(setSearchAction(searchValue, branch));
-        }
-    }
 
     const onPageChange = (event, page) => {
         dispatch(setPageAction(page, branch));
@@ -52,12 +44,6 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
         dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
-    useEffect(() => {
-        if (search) {
-            setSearchValue(search);
-        }
-    }, [])
-
     return (
         <div>
             <ImageList gap={30} cols={4} style={{overflow: "hidden", padding: 10}}>
@@ -68,8 +54,7 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
                         </Grid>
                         <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
                             <Stack direction="row" style={{width: '100%'}} spacing={2}>
-                                <TextField label="Название" variant="standard" fullWidth value={searchValue}
-                                           onChange={onSearchChange} onKeyUp={onSearch}></TextField>
+                                <SearchField branch={branch}/>
                                 <Button variant="outlined" onClick={onAdd}>Добавить</Button>
                             </Stack>
                         </Grid>

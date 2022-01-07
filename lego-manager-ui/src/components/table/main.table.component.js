@@ -13,14 +13,13 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TableSortLabel,
-    TextField
+    TableSortLabel
 } from "@mui/material";
 import {LinearProgress} from "@material-ui/core";
 import TableContainer from "@mui/material/TableContainer";
 import Actions from "../action/actions.component";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     setActionAnchorElAction,
@@ -30,12 +29,12 @@ import {
     setOrderByAction,
     setOrderDirectionAction,
     setPageAction,
-    setRowsPerPageAction,
-    setSearchAction
+    setRowsPerPageAction
 } from "../../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";
+import SearchField from "../fields/search.field.component";
 
 const useStyles = makeStyles({
     root: {
@@ -61,26 +60,10 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
     const dialogTitle = useSelector(state => state[branch].formTitle);
     const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
     const currentRow = useSelector(state => state[branch].currentRow);
-    const search = useSelector(state => state[branch].search);
-    const [searchValue, setSearchValue] = useState();
 
-    useEffect(() => {
-        setSearchValue(search);
-    }, [])
-
-    const onSearchChange = (event) => {
-        setSearchValue(event.target.value);
-    }
     const onSortChange = (property) => (event) => {
         dispatch(setOrderByAction(property, branch));
         dispatch(setOrderDirectionAction(orderDirection === 'asc' ? 'desc' : 'asc', branch));
-    }
-
-    const onSearch = (event) => {
-        if (event.key === 'Enter') {
-            dispatch(setPageAction(0, branch));
-            dispatch(setSearchAction(searchValue, branch));
-        }
     }
 
     const pageChange = (event, newPage) => {
@@ -167,20 +150,12 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
         }
     }
 
-    useEffect(() => {
-        if (search) {
-            setSearchValue(search);
-        }
-    }, [])
-
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>
                 <Box m={2} paddingTop={2}>
                     <Stack direction="row" spacing={2}>
-                        <TextField label="Поиск" variant="standard" value={searchValue}
-                                   onChange={onSearchChange} onKeyPress={onSearch}
-                                   fullWidth/>
+                        <SearchField branch={branch}/>
                         <Button variant="contained" onClick={onAdd}>Добавить</Button>
                     </Stack>
                 </Box>
