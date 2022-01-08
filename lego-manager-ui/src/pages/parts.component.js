@@ -315,7 +315,8 @@ function PartsPage() {
                                            value={formik.values.alternateNumber}/>
                                 <TextField required name="name" fullWidth label="Название"
                                            onChange={formik.handleChange}
-                                           value={formik.values.name}/>
+                                           value={formik.values.name}
+                                           multiline/>
                             </Stack>
                         </Box>
                     </MainTable>

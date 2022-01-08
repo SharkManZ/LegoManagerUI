@@ -40,6 +40,7 @@ function FindTextField({name, itemId, itemName, onSelectItem,
                        onKeyPress={onKeyPress}
                        inputProps={{style: {color: getTextColor()}}}
                        fullWidth
+                       multiline
                        {...otherProps}/>
         </Stack>
     )
