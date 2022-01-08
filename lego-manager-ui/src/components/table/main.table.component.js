@@ -13,7 +13,7 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TableSortLabel
+    TableSortLabel, Tooltip
 } from "@mui/material";
 import {LinearProgress} from "@material-ui/core";
 import TableContainer from "@mui/material/TableContainer";
@@ -136,7 +136,9 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
                             height: 40,
                         }
                     }}>
-                        <Paper style={{backgroundColor: getColor(row, column)}} elevation={10}/>
+                        <Tooltip title={column.additionalField ? fetchFromObject(row, column.additionalField) : ""}>
+                            <Paper style={{backgroundColor: getColor(row, column)}} elevation={10}/>
+                        </Tooltip>
                     </Box>
 
                 </TableCell>

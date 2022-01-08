@@ -49,6 +49,7 @@ const columns = [
     {
         title: 'Цвет',
         field: 'color.hexColor',
+        additionalField: 'color.name',
         type: 'color',
         sortable: false
     }
