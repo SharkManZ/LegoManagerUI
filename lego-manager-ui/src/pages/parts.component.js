@@ -245,6 +245,11 @@ function PartsPage() {
         }
     }
 
+    const onFilterApply = () => {
+        dispatch(setPageAction(0, branch));
+        setFilters(filterFields);
+    }
+
     const rowActions = [
         {
             title: 'Цвета',
@@ -275,7 +280,7 @@ function PartsPage() {
                                                  label="Серия" setOption={setFilterCategories}/>
                         </Stack>
                         <Stack direction="row" mt={2} spacing={2} justifyContent="center">
-                            <Button variant="contained" onClick={() => setFilters(filterFields)}>Применить</Button>
+                            <Button variant="contained" onClick={onFilterApply}>Применить</Button>
                             <Button variant="contained" onClick={() => {
                                 setFilters({});
                                 setFilterFields(initFilters)

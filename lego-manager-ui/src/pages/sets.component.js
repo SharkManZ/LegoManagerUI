@@ -190,6 +190,11 @@ function SetsPage() {
         })
     }
 
+    const onFilterApply = () => {
+        dispatch(setPageAction(0, branch));
+        setFilters(filterFields);
+    }
+
     const rowActions = [
         {
             title: 'Детали',
@@ -222,7 +227,7 @@ function SetsPage() {
                                        onChange={onFilterInput}/>
                         </Stack>
                         <Stack direction="row" mt={2} spacing={2} justifyContent="center">
-                            <Button variant="contained" onClick={() => setFilters(filterFields)}>Применить</Button>
+                            <Button variant="contained" onClick={onFilterApply}>Применить</Button>
                             <Button variant="contained" onClick={() => {
                                 setFilters({});
                                 setFilterFields(initFilters)
