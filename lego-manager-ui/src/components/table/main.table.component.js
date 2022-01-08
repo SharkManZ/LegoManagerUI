@@ -35,6 +35,7 @@ import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles({
     root: {
@@ -240,6 +241,17 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
             />
         </Box>
     )
+}
+
+MainTable.propTypes = {
+    rowActions: PropTypes.array.isRequired,
+    columns: PropTypes.array.isRequired,
+    branch: PropTypes.string.isRequired,
+    onAdd: PropTypes.func,
+    onSave: PropTypes.func,
+    onDelete: PropTypes.func,
+    noPagination: PropTypes.bool,
+    children: PropTypes.array
 }
 
 export default MainTable;

@@ -3,6 +3,7 @@ import TextSnippet from "@mui/icons-material/TextSnippet";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setPageAction, setSearchAction} from "../../store/reducer/crud.actions";
+import PropTypes from "prop-types";
 
 function SearchField({branch}) {
     const dispatch = useDispatch();
@@ -40,6 +41,10 @@ function SearchField({branch}) {
             />
         </Stack>
     )
+}
+
+SearchField.propTypes = {
+    branch: PropTypes.string.isRequired
 }
 
 export default SearchField;

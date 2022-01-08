@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import {Box, Grid, Paper} from "@mui/material";
+import PropTypes from "prop-types";
 
 const Item = styled(Box)(({ theme }) => ({
     ...theme.typography.body2,
@@ -11,7 +12,7 @@ const Item = styled(Box)(({ theme }) => ({
 
 function CenterGridItem({xs, children}) {
     return (
-        <Grid item xs={xs}     item
+        <Grid item xs={xs}
               container
               direction="column"
               display="flex"
@@ -19,6 +20,11 @@ function CenterGridItem({xs, children}) {
             <Item>{children}</Item>
         </Grid>
     )
+}
+
+CenterGridItem.propTypes = {
+    xs: PropTypes.number.isRequired,
+    children: PropTypes.array.isRequired
 }
 
 export default CenterGridItem;

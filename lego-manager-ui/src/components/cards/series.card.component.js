@@ -5,6 +5,7 @@ import {makeStyles} from "@mui/styles";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 import {LEGO_IMG_ROOT} from "../../constants/pages/page.constants";
+import PropTypes from "prop-types";
 const useStyles = makeStyles({
     root: {
         height: 150,
@@ -80,6 +81,12 @@ function SeriesCard({item, onEdit, onDelete}) {
             </ImageListItem>
         </Grid>
     )
+}
+
+SeriesCard.propTypes = {
+    item: PropTypes.object.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
 }
 
 export default SeriesCard;

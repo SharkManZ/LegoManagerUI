@@ -19,6 +19,7 @@ import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction} from "../.
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
 import SearchField from "../fields/search.field.component";
+import PropTypes from "prop-types";
 
 function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete, children}) {
     const dispatch = useDispatch();
@@ -88,6 +89,16 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
             />
         </div>
     )
+}
+
+SeriesImageList.propTypes = {
+    branch: PropTypes.string.isRequired,
+    itemsPerPage: PropTypes.number.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    children: PropTypes.array
 }
 
 export default SeriesImageList;

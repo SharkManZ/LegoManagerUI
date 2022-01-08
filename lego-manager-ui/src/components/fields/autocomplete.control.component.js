@@ -1,6 +1,7 @@
 import {Autocomplete, Box, TextField} from "@mui/material";
+import PropTypes from "prop-types";
 
-function AutocompleteControl({options, selectedValue, label, setOption, disabled, ...otherProps}) {
+function AutocompleteControl({options, selectedValue, setOption, disabled, ...otherProps}) {
     const isDisabled = disabled ? true : false;
     return (
         <Autocomplete options={options} disabled={isDisabled}
@@ -13,7 +14,6 @@ function AutocompleteControl({options, selectedValue, label, setOption, disabled
                               disabled
                               {...params}
                               {...otherProps}
-                              label={label}
                           />)}
                       renderOption={(props, option) => (
                           <Box component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
@@ -22,6 +22,13 @@ function AutocompleteControl({options, selectedValue, label, setOption, disabled
                       )}
         />
     )
+}
+
+AutocompleteControl.propTypes = {
+    options: PropTypes.array,
+    selectedValue: PropTypes.object,
+    setOption: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
 }
 
 export default AutocompleteControl;

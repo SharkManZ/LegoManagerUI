@@ -1,5 +1,4 @@
 import * as types from '../../constants/crud.action.constants';
-import {FETCH_DATA_REQUEST} from "../../constants/crud.action.constants";
 
 export const setTotalCountAction = (totalCount, branch) => ({
     branch,

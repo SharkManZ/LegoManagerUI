@@ -1,5 +1,6 @@
 import {Box, Grid, Paper, Typography} from "@mui/material";
 import CenterGridItem from "./grid.item.component";
+import PropTypes from "prop-types";
 
 function TotalCard({img, caption, totalCount, inStock, onClick}) {
     const onCardClick = () => {
@@ -43,6 +44,14 @@ function TotalCard({img, caption, totalCount, inStock, onClick}) {
             </Grid>
         </Grid>
     )
+}
+
+TotalCard.propTypes = {
+    img: PropTypes.string.isRequired,
+    caption: PropTypes.string.isRequired,
+    totalCount: PropTypes.number.isRequired,
+    inStock: PropTypes.number.isRequired,
+    onClick: PropTypes.func
 }
 
 export default TotalCard;

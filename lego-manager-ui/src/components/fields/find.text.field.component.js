@@ -1,5 +1,6 @@
 import {Stack, TextField} from "@mui/material";
 import {useState} from "react";
+import PropTypes from "prop-types";
 
 function FindTextField({name, itemId, itemName, onSelectItem,
                            searchFunc, searchFuncParams, searchParam, evalName, ...otherProps}) {
@@ -44,6 +45,17 @@ function FindTextField({name, itemId, itemName, onSelectItem,
                        {...otherProps}/>
         </Stack>
     )
+}
+
+FindTextField.propTypes = {
+    name: PropTypes.string.isRequired,
+    itemId: PropTypes.number,
+    itemName: PropTypes.string,
+    onSelectItem: PropTypes.func.isRequired,
+    searchFunc: PropTypes.func.isRequired,
+    searchFuncParams: PropTypes.object.isRequired,
+    searchParam: PropTypes.string.isRequired,
+    evalName: PropTypes.func.isRequired
 }
 
 export default FindTextField;

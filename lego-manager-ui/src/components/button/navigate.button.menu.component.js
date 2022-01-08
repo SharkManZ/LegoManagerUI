@@ -3,6 +3,7 @@ import {useHistory} from "react-router-dom";
 import {bindHover, bindMenu} from "material-ui-popup-state";
 import {Button, Link, MenuItem} from "@mui/material";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
+import PropTypes from 'prop-types';
 
 function NavigateButtonMenu({text, items, ...otherProps}) {
     const popupState = usePopupState({variant: 'popover', popupId: 'demoMenu'})
@@ -24,6 +25,10 @@ function NavigateButtonMenu({text, items, ...otherProps}) {
             </HoverMenu>
         </Button>
     )
+}
+
+NavigateButtonMenu.propTypes = {
+    text: PropTypes.string.isRequired
 }
 
 export default NavigateButtonMenu;

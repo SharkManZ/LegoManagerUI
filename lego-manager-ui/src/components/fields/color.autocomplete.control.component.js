@@ -1,6 +1,7 @@
 import {Autocomplete, Box, Stack, TextField} from "@mui/material";
+import PropTypes from "prop-types";
 
-function ColorAutocompleteControl({options, selectedValue, label, setOption, disabled, ...otherProps}) {
+function ColorAutocompleteControl({options, selectedValue, setOption, disabled, ...otherProps}) {
     const isDisabled = disabled ? true : false;
     const getColor = (value) => {
         return '#' + value;
@@ -16,7 +17,6 @@ function ColorAutocompleteControl({options, selectedValue, label, setOption, dis
                               disabled
                               {...params}
                               {...otherProps}
-                              label={label}
                           />)}
                       renderOption={(props, option) => (
                           <Stack direction="row" fullWidth>
@@ -30,4 +30,10 @@ function ColorAutocompleteControl({options, selectedValue, label, setOption, dis
     )
 }
 
+ColorAutocompleteControl.propTypes = {
+    options: PropTypes.array.isRequired,
+    selectedValue: PropTypes.object,
+    setOption: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
+}
 export default ColorAutocompleteControl;

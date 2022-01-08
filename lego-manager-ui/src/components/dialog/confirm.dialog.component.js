@@ -1,5 +1,6 @@
 import {Button, Dialog, DialogActions, DialogContent, Typography} from "@mui/material";
 import React from "react";
+import PropTypes from "prop-types";
 
 function ConfirmDialog({message, open, closeDialog, onConfirm}) {
 
@@ -14,6 +15,13 @@ function ConfirmDialog({message, open, closeDialog, onConfirm}) {
             </DialogActions>
         </Dialog>
     )
+}
+
+ConfirmDialog.propTypes = {
+    message: PropTypes.string.isRequired,
+    open: PropTypes.bool.isRequired,
+    closeDialog: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired
 }
 
 export default ConfirmDialog;
