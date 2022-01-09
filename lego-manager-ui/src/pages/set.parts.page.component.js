@@ -60,6 +60,7 @@ function SetPartsPage() {
     const {setId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const search = useSelector(state => state[branch].search);
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -94,6 +95,7 @@ function SetPartsPage() {
     const fetchData = () => {
         getSetParts({
             setId: setId,
+            search: search,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
         })
@@ -108,7 +110,7 @@ function SetPartsPage() {
 
     useEffect(() => {
         fetchData();
-    }, [])
+    }, [search])
 
     const onSelectPartColor = (id) => {
         formik.setValues({

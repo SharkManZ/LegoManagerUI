@@ -52,8 +52,11 @@ export async function getSets({...params}) {
 }
 
 export async function getSetParts({...params}) {
+    let requestParams = {
+        search: params.search
+    }
 
-    const result = await httpClient.post(`/lego-manager/sets/${params.setId}/part/list`)
+    const result = await httpClient.post(`/lego-manager/sets/${params.setId}/part/list`, requestParams)
         .then(res => res.data.body)
         .catch(error => {
             params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
