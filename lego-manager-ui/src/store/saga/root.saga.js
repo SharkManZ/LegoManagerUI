@@ -4,7 +4,7 @@ import {
     PART_CATEGORIES_BRANCH,
     PART_COLORS_BRANCH,
     PARTS_BRANCH,
-    SERIES_BRANCH,
+    SERIES_BRANCH, SET_PARTS_BRANCH,
     SETS_BRANCH
 } from "../../constants/pages/page.constants";
 import {FETCH_DATA_REQUEST} from "../../constants/crud.action.constants";
@@ -14,6 +14,7 @@ import {fetchColorList} from "./colors.saga";
 import {fetchPartCategoriesList} from "./part.categories.saga";
 import {fetchPartsList} from "./parts.saga";
 import {fetchPartColorList} from "./part.colors.saga";
+import {fetchSetPartsList} from "./set.parts.saga";
 
 export function* watchColorsList() {
     yield takeLatest(`${COLORS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchColorList)
@@ -39,6 +40,10 @@ export function* watchPartColorsList() {
     yield takeLatest(`${PART_COLORS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchPartColorList)
 }
 
+export function* watchSetPartsList() {
+    yield takeLatest(`${SET_PARTS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchSetPartsList)
+}
+
 export function* rootSaga() {
     yield all([
         watchSetsList(),
@@ -46,6 +51,7 @@ export function* rootSaga() {
         watchColorsList(),
         watchPartCategoriesList(),
         watchPartsList(),
-        watchPartColorsList()
+        watchPartColorsList(),
+        watchSetPartsList()
     ])
 }

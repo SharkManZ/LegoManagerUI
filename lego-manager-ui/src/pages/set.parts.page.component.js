@@ -4,13 +4,11 @@ import React, {useEffect} from "react";
 import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
 import {
-    fetchDataAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
-    setFormOpenAction,
-    setLoadingAction
+    setFormOpenAction
 } from "../store/reducer/crud.actions";
-import {getSetParts} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import FindTextField from "../components/fields/find.text.field.component";
@@ -93,19 +91,12 @@ function SetPartsPage() {
     })
 
     const fetchData = () => {
-        getSetParts({
+        dispatch(fetchDataRequestAction({
             setId: setId,
             search: search,
             enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError
-        })
-            .then(res => {
-                dispatch(fetchDataAction(res, branch));
-                dispatch(setLoadingAction(false, branch));
-            })
-            .catch(error => {
-                dispatch(setLoadingAction(false, branch));
-            });
+        }, branch));
     }
 
     useEffect(() => {
