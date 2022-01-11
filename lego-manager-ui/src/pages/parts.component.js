@@ -160,10 +160,10 @@ function PartsPage() {
     // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
     useEffect(() => {
         if (categoryId !== undefined && categoryId !== null) {
-            setFilterCategories(categories.find(item => item.id == categoryId));
-        } else if (lastAddedCategory != undefined && lastAddedCategory !== null) {
+            setFilterCategories(categories.find(item => item.id === categoryId));
+        } else if (lastAddedCategory !== undefined && lastAddedCategory !== null) {
             // второй вариант обновления общего списка - добавление категории из формы добавления детали
-            setSelectedCategory(categories.find(item => item.id == lastAddedCategory.id));
+            setSelectedCategory(categories.find(item => item.id === lastAddedCategory.id));
             setLastAddedCategory(null);
         }
     }, [categories])

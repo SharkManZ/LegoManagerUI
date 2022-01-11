@@ -13,7 +13,8 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TableSortLabel, Tooltip
+    TableSortLabel,
+    Tooltip
 } from "@mui/material";
 import {LinearProgress} from "@material-ui/core";
 import TableContainer from "@mui/material/TableContainer";
@@ -118,7 +119,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
                     <Box
                         style={{overflow: "hidden", textAlign: "center"}}>
                         <img src={`/${column.imageSource}/${row[column.field]}.png`}
-
+                             alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
                              loading="lazy"
                              onError={addDefaultImg}
                              className={classes.root}

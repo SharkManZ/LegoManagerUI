@@ -130,7 +130,7 @@ function SetsPage() {
     // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
     useEffect(() => {
         if (seriesId !== undefined && seriesId !== null) {
-            setFilterSeries(series.find(item => item.id == seriesId));
+            setFilterSeries(series.find(item => item.id === seriesId));
         }
     }, [series])
 

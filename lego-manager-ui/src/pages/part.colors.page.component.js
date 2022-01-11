@@ -118,9 +118,9 @@ function PartColor({partId, setIsColorsChanged}) {
     }, [])
 
     useEffect(() => {
-        if (lastAddedColor != undefined && lastAddedColor !== null) {
+        if (lastAddedColor !== undefined && lastAddedColor !== null) {
             // второй вариант обновления общего списка - добавление категории из формы добавления детали
-            setSelectedColor(colors.find(item => item.id == lastAddedColor.id));
+            setSelectedColor(colors.find(item => item.id === lastAddedColor.id));
             setLastAddedColor(null);
         }
     }, [colors])
@@ -151,7 +151,7 @@ function PartColor({partId, setIsColorsChanged}) {
 
     const onEditAction = (event) => {
         formik.setValues(currentRow);
-        setSelectedColor(colors.find(item => item.id == currentRow.color.id));
+        setSelectedColor(colors.find(item => item.id === currentRow.color.id));
         dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
         dispatch(setActionAnchorElAction(null, branch));
     }

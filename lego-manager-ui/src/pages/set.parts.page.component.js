@@ -1,6 +1,6 @@
 import {Box, Stack, TextField} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
 import {

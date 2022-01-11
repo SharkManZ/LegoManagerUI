@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import {Box, Grid, Paper} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 import PropTypes from "prop-types";
 
-const Item = styled(Box)(({ theme }) => ({
+const Item = styled(Box)(({theme}) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
