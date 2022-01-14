@@ -2,26 +2,30 @@ import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/mater
 import MainTable from "../components/table/main.table.component";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    fetchDataRequestAction,
+    saveRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
-    setFormOpenAction,
-    setPageAction
+    setFiltersAction,
+    setFormOpenAction
 } from "../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS, SETS_BRANCH} from "../constants/pages/page.constants";
 import {useEffect, useState} from "react";
-import {deleteSet, saveSet} from "../service/sets.service";
 import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
 import {useHistory, useParams} from "react-router-dom";
 import {useFormik} from "formik";
+import {transformFilters} from "../utils/object.utils";
 
 const initFilters = {
-    year: "",
+    year: {
+        operator: '=',
+        value: ''
+    },
     series: {
-        id: null,
-        name: ""
+        field: 'series.id',
+        operator: '=',
+        value: null
     }
 }
 const columns = [
@@ -61,16 +65,16 @@ function SetsPage() {
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
-    const search = useSelector(state => state[branch].search);
-    const page = useSelector(state => state[branch].page);
-    const rowsPerPage = useSelector(state => state[branch].rowsPerPage);
-    const orderBy = useSelector(state => state[branch].orderBy);
-    const orderDirection = useSelector(state => state[branch].orderDirection);
 
     const [series, setSeries] = useState([]);
 
+    // filters
+    const [filterFields, setFilterFields] = useState(initFilters);
+    const [filterSeries, setFilterSeries] = useState({});
+
     // crud
     const [selectedSeries, setSelectedSeries] = useState();
+
     const formik = useFormik({
         initialValues: {
             id: null,
@@ -79,45 +83,15 @@ function SetsPage() {
             year: null
         },
         onSubmit: values => {
-            saveSet({
+            dispatch(saveRequestAction({
                 id: values.id,
                 name: values.name,
                 number: values.number,
                 year: values.year,
                 series: selectedSeries
-            }).then(res => {
-                dispatch(setPageAction(0, branch));
-                dispatch(setFormOpenAction(false, null, branch));
-                fetchData();
-            }).catch(error => {
-                enqueueSnackbar(error, {variant: 'error'});
-            });
+            }, branch));
         }
     })
-
-    // filters
-    const [filters, setFilters] = useState();
-    const [filterFields, setFilterFields] = useState(initFilters);
-    const [filterSeries, setFilterSeries] = useState({});
-
-    const fetchData = () => {
-        const currentFilters = (seriesId !== undefined && seriesId !== null) ? {...filters, ...{series: {id: seriesId}}} : filters;
-        dispatch(fetchDataRequestAction({
-            page: page,
-            rowsPerPage: rowsPerPage,
-            search: search,
-            orderBy: orderBy,
-            orderDirection: orderDirection,
-            filters: currentFilters,
-            enqueueSnackbar,
-            listError: PAGE_CRUD_CONSTANTS[branch].listError
-        }, branch));
-    }
-
-    // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров
-    useEffect(() => {
-        fetchData();
-    }, [search, page, rowsPerPage, orderBy, orderDirection, JSON.stringify(filters)])
 
     // запрос всех серий - один раз
     useEffect(() => {
@@ -130,15 +104,17 @@ function SetsPage() {
     // когда загрузили все серии, выставляем фильтр, если пришли со страницы серий
     useEffect(() => {
         if (seriesId !== undefined && seriesId !== null) {
-            setFilterSeries(series.find(item => item.id === seriesId));
+            setFilterSeries(series.find(item => item.id == seriesId));
         }
     }, [series])
 
     // добавляем к фильтрам серию, при выборе из списка
     useEffect(() => {
+        const value = filterSeries ? filterSeries.id : null;
+        const newValue = Object.assign({}, filterFields.series, {value: value});
         setFilterFields({
             ...filterFields,
-            series: filterSeries
+            series: newValue
         })
     }, [filterSeries])
 
@@ -146,24 +122,8 @@ function SetsPage() {
     useEffect(() => {
         if (seriesId === undefined || seriesId === null) {
             setFilterSeries({});
-            fetchData();
         }
     }, [seriesId])
-
-    const onAdd = (event) => {
-        formik.resetForm();
-        setSelectedSeries(null);
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
-    }
-
-    const onDelete = (id) => {
-        deleteSet({id}).then(res => {
-            fetchData();
-            dispatch(setDeleteConfirmOpenAction(false, branch));
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
 
     const onEditAction = (event) => {
         formik.setValues(currentRow);
@@ -184,15 +144,27 @@ function SetsPage() {
 
     const onFilterInput = (event) => {
         const {name, value} = event.target;
+        const newValue = Object.assign({}, filterFields[name], {value: value});
         setFilterFields({
-            ...filters,
-            [name]: value
+            ...filterFields,
+            [name]: newValue
         })
     }
 
     const onFilterApply = () => {
-        dispatch(setPageAction(0, branch));
-        setFilters(filterFields);
+        dispatch(setFiltersAction(transformFilters(filterFields), branch));
+    }
+
+    const clearFilters = () => {
+        if (seriesId === undefined || seriesId === null) {
+            setFilterFields(initFilters);
+            setFilterSeries(null);
+            dispatch(setFiltersAction([], branch));
+        } else {
+            const clearedFilters = Object.assign({}, filterFields, {year: initFilters.year});
+            setFilterFields(clearedFilters);
+            dispatch(setFiltersAction(transformFilters(clearedFilters), branch));
+        }
     }
 
     const rowActions = [
@@ -223,15 +195,13 @@ function SetsPage() {
                             <AutocompleteControl options={series} selectedValue={filterSeries}
                                                  disabled={seriesId !== undefined}
                                                  label="Серия" setOption={setFilterSeries}/>
-                            <TextField name="year" fullWidth type="number" label="Год выпуска" value={filterFields.year}
+                            <TextField name="year" fullWidth type="number" label="Год выпуска"
+                                       value={filterFields.year.value}
                                        onChange={onFilterInput}/>
                         </Stack>
                         <Stack direction="row" mt={2} spacing={2} justifyContent="center">
                             <Button variant="contained" onClick={onFilterApply}>Применить</Button>
-                            <Button variant="contained" onClick={() => {
-                                setFilters({});
-                                setFilterFields(initFilters)
-                            }}>Очистить</Button>
+                            <Button variant="contained" onClick={clearFilters}>Очистить</Button>
                         </Stack>
                     </Paper>
                 </Grid>
@@ -239,9 +209,8 @@ function SetsPage() {
                     <MainTable rowActions={rowActions}
                                columns={columns}
                                branch={branch}
-                               onAdd={onAdd}
-                               onDelete={onDelete}
-                               onSave={formik.submitForm}
+                               fetchRequest={{seriesId: seriesId}}
+                               formik={formik}
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>

@@ -1,7 +1,7 @@
 import MainTable from "../components/table/main.table.component";
 import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
 import {
-    fetchDataRequestAction,
+    saveRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction
@@ -20,7 +20,6 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import {deletePartColor, savePartColor} from "../service/part.colors.service";
 import AddIcon from '@mui/icons-material/Add';
 import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
@@ -76,34 +75,16 @@ function PartColor({partId, setIsColorsChanged}) {
             alternateNumber: ''
         },
         onSubmit: values => {
-            savePartColor({
+            dispatch(saveRequestAction({
                 id: values.id,
                 number: values.number,
                 part: {id: partId},
                 color: selectedColor,
                 alternateNumber: values.alternateNumber
-            }).then(res => {
-                dispatch(setFormOpenAction(false, null, branch));
-                setIsColorsChanged(true);
-                fetchData();
-            }).catch(error => {
-                enqueueSnackbar(error, {variant: 'error'});
-            });
+            }, branch));
         }
     })
     const [colorFormValues, setColorFormValues] = useState(initColorFormValues);
-
-    const fetchData = () => {
-        dispatch(fetchDataRequestAction({
-            partId: partId,
-            enqueueSnackbar,
-            listError: PAGE_CRUD_CONSTANTS[branch].listError
-        }, branch));
-    }
-    // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     const fetchAllColors = () => {
         getAllColors({enqueueSnackbar})
@@ -131,22 +112,6 @@ function PartColor({partId, setIsColorsChanged}) {
             ...colorFormValues,
             [name]: value
         })
-    }
-
-    const onAdd = (event) => {
-        formik.resetForm();
-        setSelectedColor(0);
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
-    }
-
-    const onDelete = (id) => {
-        deletePartColor({id}).then(res => {
-            fetchData();
-            setIsColorsChanged(true);
-            dispatch(setDeleteConfirmOpenAction(false, branch));
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
     }
 
     const onEditAction = (event) => {
@@ -189,10 +154,9 @@ function PartColor({partId, setIsColorsChanged}) {
     return (
         <Box>
             <MainTable columns={columns} branch={branch}
-                       onAdd={onAdd}
-                       onSave={formik.submitForm}
-                       onDelete={onDelete}
+                       formik={formik}
                        rowActions={rowActions}
+                       fetchRequest={{partId: partId}}
                        noPagination={true}>
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>

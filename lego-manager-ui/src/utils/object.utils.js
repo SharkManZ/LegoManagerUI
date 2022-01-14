@@ -10,3 +10,18 @@ export function fetchFromObject(obj, prop) {
 
     return obj[prop];
 }
+
+export function transformFilters(filterObject) {
+    let values = [];
+    for (const [key, value] of Object.entries(filterObject)) {
+        if (value.value !== null && value.value !== undefined && value.value !== '') {
+            values.push({
+                field: value.field ? value.field : key,
+                operator: value.operator,
+                value: value.value
+            })
+        }
+    }
+
+    return values;
+}

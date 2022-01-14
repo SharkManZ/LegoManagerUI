@@ -1,10 +1,10 @@
 import {Box, Stack, TextField} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
-import React, {useEffect} from "react";
+import React from "react";
 import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
 import {
-    fetchDataRequestAction,
+    saveRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
     setFormOpenAction
@@ -13,7 +13,6 @@ import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import FindTextField from "../components/fields/find.text.field.component";
 import {searchPartColor} from "../service/part.colors.service";
-import {deleteSetPart, saveSetPart} from "../service/set.parts.service";
 import {useFormik} from "formik";
 
 const columns = [
@@ -58,7 +57,6 @@ function SetPartsPage() {
     const {setId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const search = useSelector(state => state[branch].search);
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -76,32 +74,14 @@ function SetPartsPage() {
             count: 0
         },
         onSubmit: values => {
-            saveSetPart({
+            dispatch(saveRequestAction({
                 id: values.id,
                 count: values.count,
                 set: {id: setId},
                 partColor: {id: values.partColor.id}
-            }).then(res => {
-                dispatch(setFormOpenAction(false, null, branch));
-                fetchData();
-            }).catch(error => {
-                enqueueSnackbar(error, {variant: 'error'});
-            });
+            }, branch));
         }
     })
-
-    const fetchData = () => {
-        dispatch(fetchDataRequestAction({
-            setId: setId,
-            search: search,
-            enqueueSnackbar,
-            listError: PAGE_CRUD_CONSTANTS[branch].listError
-        }, branch));
-    }
-
-    useEffect(() => {
-        fetchData();
-    }, [search])
 
     const onSelectPartColor = (id) => {
         formik.setValues({
@@ -133,20 +113,6 @@ function SetPartsPage() {
         dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
-    const onAdd = (event) => {
-        formik.resetForm();
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
-    }
-
-    const onDelete = (id) => {
-        deleteSetPart({id}).then(res => {
-            fetchData();
-            dispatch(setDeleteConfirmOpenAction(false, branch));
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
-
     const rowActions = [
         {
             title: 'Редактировать',
@@ -161,9 +127,8 @@ function SetPartsPage() {
     return (
         <Box>
             <MainTable columns={columns} branch={branch}
-                       onAdd={onAdd}
-                       onSave={formik.submitForm}
-                       onDelete={onDelete}
+                       formik={formik}
+                       fetchRequest={{setId: setId}}
                        rowActions={rowActions}
                        noPagination={true}>
                 <Box>

@@ -1,4 +1,6 @@
 import * as types from '../../constants/crud.action.constants';
+import {DELETE_REQUEST, DELETE_RESPONSE, SAVE_REQUEST, SAVE_RESPONSE} from '../../constants/crud.action.constants';
+
 const defaultState = {
     rows: [],
     loading: false,
@@ -12,7 +14,9 @@ const defaultState = {
     formTitle: null,
     deleteConfirmOpen: false,
     actionAnchorEl: null,
-    currentRow: null
+    currentRow: null,
+    needRefresh: false,
+    filters: null
 }
 export default function gridCrudReducer(state = defaultState, action) {
     const {branch, type} = action;
@@ -53,7 +57,18 @@ export default function gridCrudReducer(state = defaultState, action) {
                 ...state,
                 orderDirection: action.payload
             }
-        case `${branch}/${types.FETCH_DATA_REQUEST}`:{
+        case `${branch}/${types.SET_FILTERS}`:
+            return {
+                ...state,
+                page: 0,
+                filters: action.payload
+            }
+        case `${branch}/${types.SET_NEED_REFRESH}`:
+            return {
+                ...state,
+                needRefresh: true
+            }
+        case `${branch}/${types.FETCH_DATA_REQUEST}`: {
             return {
                 ...state,
                 formOpen: false,
@@ -61,9 +76,10 @@ export default function gridCrudReducer(state = defaultState, action) {
                 totalCount: 0,
                 loading: true,
                 deleteConfirmOpen: false,
-                actionAnchorEl: false,
+                actionAnchorEl: null,
                 currentRow: null,
-                rows: []
+                rows: [],
+                needRefresh: false
             }
         }
         case `${branch}/${types.FETCH_DATA}`: {
@@ -94,6 +110,30 @@ export default function gridCrudReducer(state = defaultState, action) {
             return {
                 ...state,
                 currentRow: action.payload
+            }
+        case `${branch}/${DELETE_REQUEST}`:
+            return state;
+        case `${branch}/${DELETE_RESPONSE}`:
+            return {
+                ...state,
+                formOpen: false,
+                deleteConfirmOpen: false,
+                actionAnchorEl: null,
+                currentRow: null,
+                page: 0,
+                needRefresh: true
+            }
+        case `${branch}/${SAVE_REQUEST}`:
+            return state;
+        case `${branch}/${SAVE_RESPONSE}`:
+            return {
+                ...state,
+                formOpen: false,
+                deleteConfirmOpen: false,
+                actionAnchorEl: null,
+                currentRow: null,
+                page: 0,
+                needRefresh: true
             }
         default:
             return state;

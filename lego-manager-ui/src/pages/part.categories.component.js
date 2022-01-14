@@ -1,17 +1,13 @@
 import {Box, Grid, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import {
-    fetchDataRequestAction,
+    saveRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
-    setFormOpenAction,
-    setPageAction
+    setFormOpenAction
 } from "../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS, PART_CATEGORIES_BRANCH} from "../constants/pages/page.constants";
-import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useSnackbar} from "notistack";
-import {deletePartCategory, savePartCategory} from "../service/part.categories.service";
 import {useFormik} from "formik";
 
 const columns = [
@@ -24,15 +20,9 @@ const columns = [
 const branch = PART_CATEGORIES_BRANCH;
 
 function PartCategoriesPage() {
-    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
-    const search = useSelector(state => state[branch].search);
-    const page = useSelector(state => state[branch].page);
-    const rowsPerPage = useSelector(state => state[branch].rowsPerPage);
-    const orderBy = useSelector(state => state[branch].orderBy);
-    const orderDirection = useSelector(state => state[branch].orderDirection);
 
     // crud
     const formik = useFormik({
@@ -41,49 +31,12 @@ function PartCategoriesPage() {
             name: ''
         },
         onSubmit: values => {
-            savePartCategory({
+            dispatch(saveRequestAction({
                 id: values.id,
                 name: values.name
-            }).then(res => {
-                dispatch(setPageAction(0, branch));
-                dispatch(setFormOpenAction(false, null, branch));
-                fetchData();
-            }).catch(error => {
-                enqueueSnackbar(error, {variant: 'error'});
-            });
+            }, branch));
         }
     })
-
-    // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки
-    useEffect(() => {
-        fetchData();
-    }, [search, page, rowsPerPage, orderBy, orderDirection])
-
-    const fetchData = () => {
-        dispatch(fetchDataRequestAction({
-            page: page,
-            rowsPerPage: rowsPerPage,
-            search: search,
-            orderBy: orderBy,
-            orderDirection: orderDirection,
-            enqueueSnackbar,
-            listError: PAGE_CRUD_CONSTANTS[branch].listError
-        }, branch));
-    }
-
-    const onAdd = (event) => {
-        formik.resetForm();
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
-    }
-
-    const onDelete = (id) => {
-        deletePartCategory({id}).then(res => {
-            fetchData();
-            dispatch(setDeleteConfirmOpenAction(false, branch));
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
 
     const onEditAction = (event) => {
         formik.setValues(currentRow);
@@ -114,9 +67,7 @@ function PartCategoriesPage() {
             <MainTable rowActions={rowActions}
                        columns={columns}
                        branch={branch}
-                       onAdd={onAdd}
-                       onDelete={onDelete}
-                       onSave={formik.submitForm}
+                       formik={formik}
             >
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>

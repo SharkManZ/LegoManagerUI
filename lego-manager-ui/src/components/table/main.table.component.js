@@ -20,9 +20,10 @@ import {LinearProgress} from "@material-ui/core";
 import TableContainer from "@mui/material/TableContainer";
 import Actions from "../action/actions.component";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    deleteRequestAction, fetchDataRequestAction,
     setActionAnchorElAction,
     setCurrentRowAction,
     setDeleteConfirmOpenAction,
@@ -37,6 +38,7 @@ import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
 import PropTypes from "prop-types";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles({
     root: {
@@ -48,7 +50,8 @@ const useStyles = makeStyles({
     }
 });
 
-function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagination = false, children}) {
+function MainTable({rowActions, columns, branch, formik, noPagination = false, fetchRequest, children}) {
+    const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles();
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
@@ -62,6 +65,10 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
     const dialogTitle = useSelector(state => state[branch].formTitle);
     const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
     const currentRow = useSelector(state => state[branch].currentRow);
+    const needRefresh = useSelector(state => state[branch].needRefresh);
+    const prevNeedRefresh = useRef(null);
+    const search = useSelector(state => state[branch].search);
+    const filters = useSelector(state => state[branch].filters);
 
     const onSortChange = (property) => (event) => {
         dispatch(setOrderByAction(property, branch));
@@ -154,6 +161,43 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
         }
     }
 
+    const onAdd = (event) => {
+        formik.resetForm();
+        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
+    }
+
+    const onDelete = () => {
+        dispatch(deleteRequestAction({id: currentRow.id}, branch));
+    }
+
+    // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки
+    useEffect(() => {
+
+        // обновление данных из-за изменения признака необходимости обновить
+        if (needRefresh !== prevNeedRefresh.current) {
+            if (prevNeedRefresh.current && needRefresh === false) {
+                prevNeedRefresh.current = needRefresh;
+                return;
+            }
+            prevNeedRefresh.current = needRefresh;
+        }
+        fetchData();
+    }, [search, page, rowsPerPage, orderBy, orderDirection, needRefresh, JSON.stringify(filters)])
+
+    const fetchData = () => {
+        dispatch(fetchDataRequestAction({
+            page: page,
+            rowsPerPage: rowsPerPage,
+            search: search,
+            orderBy: orderBy,
+            orderDirection: orderDirection,
+            enqueueSnackbar,
+            listError: PAGE_CRUD_CONSTANTS[branch].listError,
+            fetchRequest: fetchRequest,
+            filters: filters
+        }, branch));
+    }
+
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>
@@ -226,7 +270,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
                     {children}
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" onClick={() => onSave()}>Сохранить</Button>
+                    <Button variant="contained" onClick={formik.submitForm}>Сохранить</Button>
                     <Button variant="contained" onClick={onClose}>Отмена</Button>
                 </DialogActions>
             </Dialog>
@@ -234,10 +278,7 @@ function MainTable({rowActions, columns, branch, onAdd, onSave, onDelete, noPagi
             <ConfirmDialog
                 open={deleteConfirmOpen}
                 closeDialog={() => dispatch(setDeleteConfirmOpenAction(false, branch))}
-                onConfirm={() => {
-                    dispatch(setActionAnchorElAction(null, branch));
-                    onDelete(currentRow.id);
-                }}
+                onConfirm={onDelete}
                 message={PAGE_CRUD_CONSTANTS[branch].deleteFormTitle}
             />
         </Box>
@@ -248,11 +289,9 @@ MainTable.propTypes = {
     rowActions: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
     branch: PropTypes.string.isRequired,
-    onAdd: PropTypes.func,
-    onSave: PropTypes.func,
-    onDelete: PropTypes.func,
+    formik: PropTypes.object,
     noPagination: PropTypes.bool,
-    children: PropTypes.array
+    fetchRequest: PropTypes.object
 }
 
 export default MainTable;

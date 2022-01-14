@@ -10,7 +10,7 @@ function ConfirmDialog({message, open, closeDialog, onConfirm}) {
                 <Typography>{message}?</Typography>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={() => onConfirm()}>Ok</Button>
+                <Button variant="contained" onClick={onConfirm}>Ok</Button>
                 <Button variant="contained" onClick={closeDialog}>Отмена</Button>
             </DialogActions>
         </Dialog>

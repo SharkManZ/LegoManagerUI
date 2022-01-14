@@ -4,7 +4,8 @@ export async function getParts({...params}) {
     let requestParams = {
         page: params.page,
         size: params.rowsPerPage,
-        search: params.search
+        search: params.search,
+        filters: params.filters
     }
 
     if (params.orderBy !== undefined && params.orderBy !== null) {
@@ -12,17 +13,6 @@ export async function getParts({...params}) {
             field: params.orderBy,
             direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'
         }];
-    }
-    if (params.filters !== undefined) {
-        if (!!params.filters.category && !!params.filters.category.id) {
-            requestParams.filters = [
-                {
-                    field: 'category.id',
-                    operator: '=',
-                    value: params.filters.category.id
-                }
-                ]
-        }
     }
 
     const result = await httpClient.post("/lego-manager/parts/list", requestParams)

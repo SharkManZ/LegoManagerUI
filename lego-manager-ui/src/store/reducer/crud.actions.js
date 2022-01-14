@@ -1,17 +1,5 @@
 import * as types from '../../constants/crud.action.constants';
 
-export const setTotalCountAction = (totalCount, branch) => ({
-    branch,
-    type: `${branch}/${types.SET_TOTAL_COUNT}`,
-    payload: totalCount
-});
-
-export const setLoadingAction = (loading, branch) => ({
-    branch,
-    type: `${branch}/${types.SET_LOADING}`,
-    payload: loading
-})
-
 export const setSearchAction = (search, branch) => ({
     branch,
     type: `${branch}/${types.SET_SEARCH}`,
@@ -42,16 +30,16 @@ export const setOrderDirectionAction = (orderDirection, branch) => ({
     payload: orderDirection
 })
 
+export const setFiltersAction = (filters, branch) => ({
+    branch,
+    type: `${branch}/${types.SET_FILTERS}`,
+    payload: filters
+})
+
 export const fetchDataRequestAction = (request, branch) => ({
     branch,
     type: `${branch}/${types.FETCH_DATA_REQUEST}`,
     payload: request
-})
-
-export const fetchDataAction = (rows, branch) => ({
-    branch,
-    type: `${branch}/${types.FETCH_DATA}`,
-    payload: rows
 })
 
 export const setFormOpenAction = (formOpen, title, branch) => ({
@@ -79,4 +67,22 @@ export const setCurrentRowAction = (currentRow, branch) => ({
     branch,
     type: `${branch}/${types.SET_CURRENT_ROW}`,
     payload: currentRow
+})
+
+export const setNeedRefreshAction = (branch) => ({
+    branch,
+    type: `${branch}/${types.SET_NEED_REFRESH}`,
+    payload: null
+})
+
+export const deleteRequestAction = (id, branch) => ({
+    branch,
+    type: `${branch}/${types.DELETE_REQUEST}`,
+    payload: id
+})
+
+export const saveRequestAction = (request, branch) => ({
+    branch,
+    type: `${branch}/${types.SAVE_REQUEST}`,
+    payload: request
 })

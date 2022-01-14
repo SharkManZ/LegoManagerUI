@@ -4,37 +4,18 @@ export async function getSets({...params}) {
     let requestParams = {
         page: params.page,
         size: params.rowsPerPage,
-        search: params.search
+        search: params.search,
+        filters: params.filters
     }
-
     if (params.orderBy !== undefined && params.orderBy !== null) {
         requestParams.sorts = [{
             field: params.orderBy,
             direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'}];
     }
-    if (params.filters !== undefined) {
-        if (!!params.filters.year) {
-            requestParams.filters = [
-                {
-                    field: 'year',
-                    operator: '=',
-                    value: params.filters.year
-                }
-            ]
-        }
-        if (!!params.filters.series && !!params.filters.series.id) {
-            if (requestParams.filters === undefined) {
-                requestParams.filters = []
-            }
-            requestParams.filters.push({
-                field: 'series.id',
-                operator: '=',
-                value: params.filters.series.id
-            })
-        }
-    }
-
-    const result = await httpClient.post("/lego-manager/sets/list", requestParams)
+    const url = params.fetchRequest && params.fetchRequest.seriesId ?
+        `/lego-manager/series/${params.fetchRequest.seriesId}/sets/list` :
+        "/lego-manager/sets/list";
+    const result = await httpClient.post(url, requestParams)
         .then(res => res.data)
         .catch(error => {
             params.enqueueSnackbar(params.listError + ':' + error, {variant:'error'});
@@ -56,7 +37,7 @@ export async function getSetParts({...params}) {
         search: params.search
     }
 
-    const result = await httpClient.post(`/lego-manager/sets/${params.setId}/part/list`, requestParams)
+    const result = await httpClient.post(`/lego-manager/sets/${params.fetchRequest.setId}/part/list`, requestParams)
         .then(res => res.data.body)
         .catch(error => {
             params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});

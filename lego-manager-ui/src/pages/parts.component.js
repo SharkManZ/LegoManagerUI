@@ -15,22 +15,23 @@ import {
 import MainTable from "../components/table/main.table.component";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    fetchDataRequestAction,
+    saveRequestAction,
     setActionAnchorElAction,
     setDeleteConfirmOpenAction,
+    setFiltersAction,
     setFormOpenAction,
-    setPageAction
+    setNeedRefreshAction
 } from "../store/reducer/crud.actions";
 import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, PARTS_BRANCH} from "../constants/pages/page.constants";
 import React, {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
 import {useParams} from "react-router-dom";
-import {deletePart, savePart} from "../service/parts.service";
 import {getAllCategories, savePartCategory} from "../service/part.categories.service";
 import AddIcon from '@mui/icons-material/Add';
 import PartColor from "./part.colors.page.component";
 import {useFormik} from "formik";
+import {transformFilters} from "../utils/object.utils";
 
 const initCategoryFormValues = {
     id: null,
@@ -38,8 +39,9 @@ const initCategoryFormValues = {
 }
 const initFilters = {
     category: {
-        id: null,
-        name: ""
+        field: 'category.id',
+        operator: '=',
+        value: null
     }
 }
 const columns = [
@@ -82,11 +84,6 @@ function PartsPage() {
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
-    const search = useSelector(state => state[branch].search);
-    const page = useSelector(state => state[branch].page);
-    const rowsPerPage = useSelector(state => state[branch].rowsPerPage);
-    const orderBy = useSelector(state => state[branch].orderBy);
-    const orderDirection = useSelector(state => state[branch].orderDirection);
 
     const [categories, setCategories] = useState([]);
     const [categoryOpen, setCategoryOpen] = useState(false);
@@ -105,45 +102,19 @@ function PartsPage() {
             alternateNumber: ''
         },
         onSubmit: values => {
-            savePart({
+            dispatch(saveRequestAction({
                 id: values.id,
                 name: values.name,
                 number: values.number,
                 alternateNumber: values.alternateNumber,
                 category: selectedCategory
-            }).then(res => {
-                dispatch(setPageAction(0, branch));
-                dispatch(setFormOpenAction(false, null, branch));
-                fetchData();
-            }).catch(error => {
-                enqueueSnackbar(error, {variant: 'error'});
-            });
+            }, branch));
         }
     });
 
     // filters
-    const [filters, setFilters] = useState();
     const [filterFields, setFilterFields] = useState(initFilters);
     const [filterCategories, setFilterCategories] = useState({});
-
-    const fetchData = () => {
-        const currentFilters = (categoryId !== undefined && categoryId !== null) ? {...filters, ...{category: {id: categoryId}}} : filters;
-        dispatch(fetchDataRequestAction({
-            page: page,
-            rowsPerPage: rowsPerPage,
-            search: search,
-            orderBy: orderBy,
-            orderDirection: orderDirection,
-            filters: currentFilters,
-            enqueueSnackbar,
-            listError: PAGE_CRUD_CONSTANTS[branch].listError
-        }, branch));
-    }
-
-    // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки, фильтров
-    useEffect(() => {
-        fetchData();
-    }, [search, page, rowsPerPage, orderBy, orderDirection, JSON.stringify(filters)])
 
     const fetchAllCategories = () => {
         getAllCategories({enqueueSnackbar})
@@ -170,9 +141,11 @@ function PartsPage() {
 
     // добавляем к фильтрам серию, при выборе из списка
     useEffect(() => {
+        const value = filterCategories ? filterCategories.id : null;
+        const newValue = Object.assign({}, filterFields.category, {value: value});
         setFilterFields({
             ...filterFields,
-            category: filterCategories
+            category: newValue
         })
     }, [filterCategories])
 
@@ -180,24 +153,8 @@ function PartsPage() {
     useEffect(() => {
         if (categoryId === undefined || categoryId === null) {
             setFilterCategories({});
-            fetchData();
         }
     }, [categoryId])
-
-    const onAdd = (event) => {
-        formik.resetForm();
-        setSelectedCategory(null);
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
-    }
-
-    const onDelete = (id) => {
-        deletePart({id}).then(res => {
-            fetchData();
-            dispatch(setDeleteConfirmOpenAction(false, branch));
-        }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
-        });
-    }
 
     const onEditAction = (event) => {
         formik.setValues(currentRow);
@@ -240,14 +197,19 @@ function PartsPage() {
     const onColorsClose = () => {
         setColorsOpen(false);
         if (isColorsChanged) {
-            fetchData();
+            dispatch(setNeedRefreshAction(branch));
             setIsColorsChanged(false);
         }
     }
 
     const onFilterApply = () => {
-        dispatch(setPageAction(0, branch));
-        setFilters(filterFields);
+        dispatch(setFiltersAction(transformFilters(filterFields), branch));
+    }
+
+    const clearFilters = () => {
+        setFilterFields(initFilters);
+        setFilterCategories(null);
+        dispatch(setFiltersAction([], branch));
     }
 
     const rowActions = [
@@ -281,10 +243,7 @@ function PartsPage() {
                         </Stack>
                         <Stack direction="row" mt={2} spacing={2} justifyContent="center">
                             <Button variant="contained" onClick={onFilterApply}>Применить</Button>
-                            <Button variant="contained" onClick={() => {
-                                setFilters({});
-                                setFilterFields(initFilters)
-                            }}>Очистить</Button>
+                            <Button variant="contained" onClick={clearFilters}>Очистить</Button>
                         </Stack>
                     </Paper>
                 </Grid>
@@ -292,9 +251,8 @@ function PartsPage() {
                     <MainTable rowActions={rowActions}
                                columns={columns}
                                branch={branch}
-                               onAdd={onAdd}
-                               onDelete={onDelete}
-                               onSave={formik.submitForm}
+                               formik={formik}
+                               fetchRequest={{categoryId: categoryId}}
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>

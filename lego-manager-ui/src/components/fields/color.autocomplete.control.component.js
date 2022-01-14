@@ -8,18 +8,17 @@ function ColorAutocompleteControl({options, selectedValue, setOption, disabled, 
     }
     return (
         <Autocomplete options={options} disabled={isDisabled}
-                      value={selectedValue} fullWidth
+                      value={selectedValue ? selectedValue : null} fullWidth
                       onChange={(event, value) => setOption(value)}
-                      getOptionLabel={(option) => option && option.name ? option.name : ''}
+                      getOptionLabel={(option) => option && option.name ? option.name : '-'}
                       renderInput={(params) => (
                           <TextField
-                              fullWidth
                               disabled
                               {...params}
                               {...otherProps}
                           />)}
                       renderOption={(props, option) => (
-                          <Stack direction="row" fullWidth>
+                          <Stack direction="row" key={option.id}>
                               <Box width="100%" component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
                                   {option.name}
                               </Box>
