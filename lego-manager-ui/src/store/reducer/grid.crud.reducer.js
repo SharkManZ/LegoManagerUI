@@ -16,6 +16,7 @@ const defaultState = {
     actionAnchorEl: null,
     currentRow: null,
     needRefresh: false,
+    needManualRefresh: false,
     filters: null
 }
 export default function gridCrudReducer(state = defaultState, action) {
@@ -68,6 +69,11 @@ export default function gridCrudReducer(state = defaultState, action) {
                 ...state,
                 needRefresh: true
             }
+        case `${branch}/${types.SET_NEED_MANUAL_REFRESH}`:
+            return {
+                ...state,
+                needManualRefresh: action.payload
+            }
         case `${branch}/${types.FETCH_DATA_REQUEST}`: {
             return {
                 ...state,
@@ -79,7 +85,8 @@ export default function gridCrudReducer(state = defaultState, action) {
                 actionAnchorEl: null,
                 currentRow: null,
                 rows: [],
-                needRefresh: false
+                needRefresh: false,
+                needManualRefresh: false
             }
         }
         case `${branch}/${types.FETCH_DATA}`: {

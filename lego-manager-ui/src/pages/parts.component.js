@@ -89,7 +89,7 @@ function PartsPage() {
     const [categoryOpen, setCategoryOpen] = useState(false);
     const [lastAddedCategory, setLastAddedCategory] = useState();
     const [colorsOpen, setColorsOpen] = useState(false);
-    const [isColorsChanged, setIsColorsChanged] = useState(false);
+    const needManualRefresh = useSelector(state => state[branch].needManualRefresh);
 
     // crud
     const [selectedCategory, setSelectedCategory] = useState();
@@ -196,9 +196,8 @@ function PartsPage() {
 
     const onColorsClose = () => {
         setColorsOpen(false);
-        if (isColorsChanged) {
+        if (needManualRefresh) {
             dispatch(setNeedRefreshAction(branch));
-            setIsColorsChanged(false);
         }
     }
 
@@ -294,8 +293,7 @@ function PartsPage() {
             <Dialog open={colorsOpen} onClose={onColorsClose} maxWidth="xl">
                 <DialogTitle>Цвета детали</DialogTitle>
                 <DialogContent>
-                    <PartColor partId={currentRow !== null ? currentRow.id : 0}
-                               setIsColorsChanged={setIsColorsChanged}/>
+                    <PartColor partId={currentRow !== null ? currentRow.id : 0}/>
                 </DialogContent>
             </Dialog>
         </Box>

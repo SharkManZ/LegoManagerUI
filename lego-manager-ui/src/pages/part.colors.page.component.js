@@ -55,7 +55,7 @@ const columns = [
 ]
 const branch = PART_COLORS_BRANCH;
 
-function PartColor({partId, setIsColorsChanged}) {
+function PartColor({partId}) {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
 

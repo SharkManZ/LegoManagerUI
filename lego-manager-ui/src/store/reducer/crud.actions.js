@@ -75,6 +75,13 @@ export const setNeedRefreshAction = (branch) => ({
     payload: null
 })
 
+export const setNeedManualRefreshAction = (value, branch) => ({
+    branch,
+    type: `${branch}/${types.SET_NEED_MANUAL_REFRESH}`,
+    payload: value
+})
+
+
 export const deleteRequestAction = (id, branch) => ({
     branch,
     type: `${branch}/${types.DELETE_REQUEST}`,
