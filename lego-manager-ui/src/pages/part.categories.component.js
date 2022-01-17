@@ -1,14 +1,10 @@
 import {Box, Grid, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
-import {
-    saveRequestAction,
-    setActionAnchorElAction,
-    setDeleteConfirmOpenAction,
-    setFormOpenAction
-} from "../store/reducer/crud.actions";
+import {saveRequestAction, setActionAnchorElAction, setFormOpenAction} from "../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS, PART_CATEGORIES_BRANCH} from "../constants/pages/page.constants";
 import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
+import useActions from "../components/action/CrudActions";
 
 const columns = [
     {
@@ -21,6 +17,7 @@ const branch = PART_CATEGORIES_BRANCH;
 
 function PartCategoriesPage() {
     const dispatch = useDispatch();
+    const {deleteAction} = useActions(branch);
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
 
@@ -44,11 +41,6 @@ function PartCategoriesPage() {
         dispatch(setActionAnchorElAction(null, branch));
     }
 
-    const onDeleteAction = (event) => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
     const rowActions = [
         {
             title: 'Редактировать',
@@ -56,7 +48,7 @@ function PartCategoriesPage() {
         },
         {
             title: 'Удалить',
-            onClick: onDeleteAction
+            onClick: deleteAction
         }
     ]
     return (

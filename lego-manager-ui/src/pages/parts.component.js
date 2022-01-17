@@ -32,6 +32,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PartColor from "./part.colors.page.component";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
+import useActions from "../components/action/CrudActions";
 
 const initCategoryFormValues = {
     id: null,
@@ -81,6 +82,7 @@ function PartsPage() {
     const {categoryId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const {deleteAction} = useActions(branch);
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -163,11 +165,6 @@ function PartsPage() {
         dispatch(setActionAnchorElAction(null, branch));
     }
 
-    const onDeleteAction = (event) => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
     const onColorsAction = (event) => {
         dispatch(setActionAnchorElAction(null, branch));
         setColorsOpen(true);
@@ -222,7 +219,7 @@ function PartsPage() {
         },
         {
             title: 'Удалить',
-            onClick: onDeleteAction
+            onClick: deleteAction
         }
     ]
 

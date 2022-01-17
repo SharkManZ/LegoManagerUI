@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from "react-redux";
 import FindTextField from "../components/fields/find.text.field.component";
 import {searchPartColor} from "../service/part.colors.service";
 import {useFormik} from "formik";
+import useActions from "../components/action/CrudActions";
 
 const columns = [
     {
@@ -57,6 +58,7 @@ function SetPartsPage() {
     const {setId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const {deleteAction} = useActions(branch);
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -108,11 +110,6 @@ function SetPartsPage() {
         dispatch(setActionAnchorElAction(null, branch));
     }
 
-    const onDeleteAction = (event) => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
     const rowActions = [
         {
             title: 'Редактировать',
@@ -120,7 +117,7 @@ function SetPartsPage() {
         },
         {
             title: 'Удалить',
-            onClick: onDeleteAction
+            onClick: deleteAction
         }
     ]
 

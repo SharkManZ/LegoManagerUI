@@ -16,6 +16,7 @@ import AutocompleteControl from "../components/fields/autocomplete.control.compo
 import {useHistory, useParams} from "react-router-dom";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
+import useActions from "../components/action/CrudActions";
 
 const initFilters = {
     year: {
@@ -62,6 +63,7 @@ function SetsPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const history = useHistory();
+    const {deleteAction} = useActions(branch);
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -132,11 +134,6 @@ function SetsPage() {
         dispatch(setActionAnchorElAction(null, branch));
     }
 
-    const onDeleteAction = (event) => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
     const onPartsAction = (event) => {
         history.push(`/set/${currentRow.id}/parts`);
         dispatch(setActionAnchorElAction(null, branch));
@@ -178,7 +175,7 @@ function SetsPage() {
         },
         {
             title: 'Удалить',
-            onClick: onDeleteAction
+            onClick: deleteAction
         }
     ]
 

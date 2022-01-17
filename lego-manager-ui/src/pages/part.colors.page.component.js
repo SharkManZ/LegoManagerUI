@@ -24,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
 import {useFormik} from "formik";
+import useActions from "../components/action/CrudActions";
 
 const initColorFormValues = {
     id: null,
@@ -58,6 +59,7 @@ const branch = PART_COLORS_BRANCH;
 function PartColor({partId}) {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const {deleteAction} = useActions(branch);
 
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -121,11 +123,6 @@ function PartColor({partId}) {
         dispatch(setActionAnchorElAction(null, branch));
     }
 
-    const onDeleteAction = (event) => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
     const onColorSave = () => {
         saveColor({
             id: colorFormValues.id,
@@ -147,7 +144,7 @@ function PartColor({partId}) {
         },
         {
             title: 'Удалить',
-            onClick: onDeleteAction
+            onClick: deleteAction
         }
     ]
 

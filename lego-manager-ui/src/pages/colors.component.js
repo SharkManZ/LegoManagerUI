@@ -9,6 +9,7 @@ import {
 import {COLORS_BRANCH, PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
 import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
+import useActions from "../components/action/CrudActions";
 
 const columns = [
     {
@@ -28,6 +29,8 @@ const branch = COLORS_BRANCH;
 function ColorsPage() {
 
     const dispatch = useDispatch();
+    const {deleteAction} = useActions(branch);
+
     // grid
     const currentRow = useSelector(state => state[branch].currentRow);
 
@@ -53,11 +56,6 @@ function ColorsPage() {
         dispatch(setActionAnchorElAction(null, branch));
     }
 
-    const onDeleteAction = (event) => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
-    }
-
     const rowActions = [
         {
             title: 'Редактировать',
@@ -65,7 +63,7 @@ function ColorsPage() {
         },
         {
             title: 'Удалить',
-            onClick: onDeleteAction
+            onClick: deleteAction
         }
     ]
     return (
