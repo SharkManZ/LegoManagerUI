@@ -1,15 +1,10 @@
 import {Box, Grid, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
-import {
-    saveRequestAction,
-    setActionAnchorElAction,
-    setDeleteConfirmOpenAction,
-    setFormOpenAction
-} from "../store/reducer/crud.actions";
-import {COLORS_BRANCH, PAGE_CRUD_CONSTANTS} from "../constants/pages/page.constants";
-import {useDispatch, useSelector} from "react-redux";
+import {saveRequestAction} from "../store/reducer/crud.actions";
+import {COLORS_BRANCH} from "../constants/pages/page.constants";
+import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
-import useActions from "../components/action/CrudActions";
+import useCrudActions from "../components/action/crud.actions";
 
 const columns = [
     {
@@ -27,12 +22,7 @@ const columns = [
 const branch = COLORS_BRANCH;
 
 function ColorsPage() {
-
     const dispatch = useDispatch();
-    const {deleteAction} = useActions(branch);
-
-    // grid
-    const currentRow = useSelector(state => state[branch].currentRow);
 
     // crud
     const formik = useFormik({
@@ -49,17 +39,12 @@ function ColorsPage() {
             }, branch));
         }
     })
-
-    const onEditAction = (event) => {
-        formik.setValues(currentRow);
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
-        dispatch(setActionAnchorElAction(null, branch));
-    }
+    const {editAction, deleteAction} = useCrudActions({branch: branch, formik: formik});
 
     const rowActions = [
         {
             title: 'Редактировать',
-            onClick: onEditAction
+            onClick: editAction
         },
         {
             title: 'Удалить',

@@ -1,20 +1,15 @@
 import {Box, Stack, TextField} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import React from "react";
-import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
+import {LEGO_IMG_ROOT, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
-import {
-    saveRequestAction,
-    setActionAnchorElAction,
-    setDeleteConfirmOpenAction,
-    setFormOpenAction
-} from "../store/reducer/crud.actions";
+import {saveRequestAction} from "../store/reducer/crud.actions";
 import {useSnackbar} from "notistack";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import FindTextField from "../components/fields/find.text.field.component";
 import {searchPartColor} from "../service/part.colors.service";
 import {useFormik} from "formik";
-import useActions from "../components/action/CrudActions";
+import useCrudActions from "../components/action/crud.actions";
 
 const columns = [
     {
@@ -58,10 +53,6 @@ function SetPartsPage() {
     const {setId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const {deleteAction} = useActions(branch);
-
-    // grid
-    const currentRow = useSelector(state => state[branch].currentRow);
 
     // crud
     const formik = useFormik({
@@ -95,8 +86,8 @@ function SetPartsPage() {
         })
     }
 
-    const onEditAction = (event) => {
-        formik.setValues({
+    const getValues = (currentRow) => {
+        return {
             id: currentRow.id,
             count: currentRow.count,
             partColor: {
@@ -105,15 +96,14 @@ function SetPartsPage() {
                     name: currentRow.partName + '(' + currentRow.colorNumber + ')'
                 }
             }
-        });
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
-        dispatch(setActionAnchorElAction(null, branch));
+        };
     }
+    const {editAction, deleteAction} = useCrudActions({branch: branch, formik: formik, getValues: getValues});
 
     const rowActions = [
         {
             title: 'Редактировать',
-            onClick: onEditAction
+            onClick: editAction
         },
         {
             title: 'Удалить',

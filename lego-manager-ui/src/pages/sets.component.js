@@ -1,14 +1,8 @@
 import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
-import {useDispatch, useSelector} from "react-redux";
-import {
-    saveRequestAction,
-    setActionAnchorElAction,
-    setDeleteConfirmOpenAction,
-    setFiltersAction,
-    setFormOpenAction
-} from "../store/reducer/crud.actions";
-import {PAGE_CRUD_CONSTANTS, SETS_BRANCH} from "../constants/pages/page.constants";
+import {useDispatch} from "react-redux";
+import {saveRequestAction, setActionAnchorElAction, setFiltersAction} from "../store/reducer/crud.actions";
+import {SETS_BRANCH} from "../constants/pages/page.constants";
 import {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import {getAllSeries} from "../service/series.service";
@@ -16,7 +10,7 @@ import AutocompleteControl from "../components/fields/autocomplete.control.compo
 import {useHistory, useParams} from "react-router-dom";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
-import useActions from "../components/action/CrudActions";
+import useCrudActions from "../components/action/crud.actions";
 
 const initFilters = {
     year: {
@@ -63,10 +57,6 @@ function SetsPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const history = useHistory();
-    const {deleteAction} = useActions(branch);
-
-    // grid
-    const currentRow = useSelector(state => state[branch].currentRow);
 
     const [series, setSeries] = useState([]);
 
@@ -127,18 +117,6 @@ function SetsPage() {
         }
     }, [seriesId])
 
-    const onEditAction = (event) => {
-        formik.setValues(currentRow);
-        setSelectedSeries(series.find(item => item.id === currentRow.series.id));
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
-        dispatch(setActionAnchorElAction(null, branch));
-    }
-
-    const onPartsAction = (event) => {
-        history.push(`/set/${currentRow.id}/parts`);
-        dispatch(setActionAnchorElAction(null, branch));
-    }
-
     const onFilterInput = (event) => {
         const {name, value} = event.target;
         const newValue = Object.assign({}, filterFields[name], {value: value});
@@ -164,6 +142,19 @@ function SetsPage() {
         }
     }
 
+    const additionalEditAction = (currentRow) => {
+        setSelectedSeries(series.find(item => item.id === currentRow.series.id));
+    }
+    const {currentRow, editAction, deleteAction} = useCrudActions({
+        branch: branch,
+        formik: formik,
+        additionalEditAction: additionalEditAction
+    });
+    const onPartsAction = (event) => {
+        history.push(`/set/${currentRow.id}/parts`);
+        dispatch(setActionAnchorElAction(null, branch));
+    }
+
     const rowActions = [
         {
             title: 'Детали',
@@ -171,7 +162,7 @@ function SetsPage() {
         },
         {
             title: 'Редактировать',
-            onClick: onEditAction
+            onClick: editAction
         },
         {
             title: 'Удалить',

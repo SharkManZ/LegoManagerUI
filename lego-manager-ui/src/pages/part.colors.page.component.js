@@ -1,13 +1,8 @@
 import MainTable from "../components/table/main.table.component";
-import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
-import {
-    saveRequestAction,
-    setActionAnchorElAction,
-    setDeleteConfirmOpenAction,
-    setFormOpenAction
-} from "../store/reducer/crud.actions";
+import {LEGO_IMG_ROOT, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
+import {saveRequestAction} from "../store/reducer/crud.actions";
 import {useSnackbar} from "notistack";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import React, {useEffect, useState} from "react";
 import {
     Box,
@@ -24,7 +19,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
 import {useFormik} from "formik";
-import useActions from "../components/action/CrudActions";
+import useCrudActions from "../components/action/crud.actions";
 
 const initColorFormValues = {
     id: null,
@@ -59,10 +54,8 @@ const branch = PART_COLORS_BRANCH;
 function PartColor({partId}) {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const {deleteAction} = useActions(branch);
 
     // grid
-    const currentRow = useSelector(state => state[branch].currentRow);
     const [selectedColor, setSelectedColor] = useState();
 
     const [colors, setColors] = useState([]);
@@ -116,13 +109,6 @@ function PartColor({partId}) {
         })
     }
 
-    const onEditAction = (event) => {
-        formik.setValues(currentRow);
-        setSelectedColor(colors.find(item => item.id === currentRow.color.id));
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
-        dispatch(setActionAnchorElAction(null, branch));
-    }
-
     const onColorSave = () => {
         saveColor({
             id: colorFormValues.id,
@@ -137,10 +123,19 @@ function PartColor({partId}) {
         });
     }
 
+    const additionalEditAction = (currentRow) => {
+        setSelectedColor(colors.find(item => item.id === currentRow.color.id));
+    }
+    const {editAction, deleteAction} = useCrudActions({
+        branch: branch,
+        formik: formik,
+        additionalEditAction: additionalEditAction
+    });
+
     const rowActions = [
         {
             title: 'Редактировать',
-            onClick: onEditAction
+            onClick: editAction
         },
         {
             title: 'Удалить',

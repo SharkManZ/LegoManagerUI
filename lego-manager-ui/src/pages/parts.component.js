@@ -17,12 +17,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     saveRequestAction,
     setActionAnchorElAction,
-    setDeleteConfirmOpenAction,
     setFiltersAction,
-    setFormOpenAction,
     setNeedRefreshAction
 } from "../store/reducer/crud.actions";
-import {LEGO_IMG_ROOT, PAGE_CRUD_CONSTANTS, PARTS_BRANCH} from "../constants/pages/page.constants";
+import {LEGO_IMG_ROOT, PARTS_BRANCH} from "../constants/pages/page.constants";
 import React, {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
@@ -32,7 +30,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PartColor from "./part.colors.page.component";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
-import useActions from "../components/action/CrudActions";
+import useCrudActions from "../components/action/crud.actions";
 
 const initCategoryFormValues = {
     id: null,
@@ -82,10 +80,8 @@ function PartsPage() {
     const {categoryId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const {deleteAction} = useActions(branch);
 
     // grid
-    const currentRow = useSelector(state => state[branch].currentRow);
 
     const [categories, setCategories] = useState([]);
     const [categoryOpen, setCategoryOpen] = useState(false);
@@ -158,13 +154,6 @@ function PartsPage() {
         }
     }, [categoryId])
 
-    const onEditAction = (event) => {
-        formik.setValues(currentRow);
-        setSelectedCategory(categories.find(item => item.id === currentRow.category.id));
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].editFormTitle, branch));
-        dispatch(setActionAnchorElAction(null, branch));
-    }
-
     const onColorsAction = (event) => {
         dispatch(setActionAnchorElAction(null, branch));
         setColorsOpen(true);
@@ -208,6 +197,15 @@ function PartsPage() {
         dispatch(setFiltersAction([], branch));
     }
 
+    const additionalEditAction = (currentRow) => {
+        setSelectedCategory(categories.find(item => item.id === currentRow.category.id));
+    }
+    const {currentRow, editAction, deleteAction} = useCrudActions({
+        branch: branch,
+        formik: formik,
+        additionalEditAction: additionalEditAction
+    });
+
     const rowActions = [
         {
             title: 'Цвета',
@@ -215,7 +213,7 @@ function PartsPage() {
         },
         {
             title: 'Редактировать',
-            onClick: onEditAction
+            onClick: editAction
         },
         {
             title: 'Удалить',
