@@ -26,29 +26,7 @@ const initColorFormValues = {
     colorName: '',
     hexColor: ''
 }
-const columns = [
-    {
-        title: '',
-        field: 'number',
-        imageSource: `${LEGO_IMG_ROOT}/parts`,
-        key: 'imgKey',
-        isImage: true,
-        sortable: false
-    },
-    {
-        title: 'Номер',
-        field: 'number',
-        additionalField: 'alternateNumber',
-        sortable: true
-    },
-    {
-        title: 'Цвет',
-        field: 'color.hexColor',
-        additionalField: 'color.name',
-        type: 'color',
-        sortable: false
-    }
-]
+
 const branch = PART_COLORS_BRANCH;
 
 function PartColor({partId}) {
@@ -145,7 +123,7 @@ function PartColor({partId}) {
 
     return (
         <Box>
-            <MainTable columns={columns} branch={branch}
+            <MainTable branch={branch}
                        formik={formik}
                        rowActions={rowActions}
                        fetchRequest={{partId: partId}}

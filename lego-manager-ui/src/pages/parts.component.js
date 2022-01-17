@@ -43,37 +43,7 @@ const initFilters = {
         value: null
     }
 }
-const columns = [
-    {
-        title: '',
-        field: 'minColorNumber',
-        imageSource: `${LEGO_IMG_ROOT}/parts`,
-        key: 'imgKey',
-        sortable: false,
-        isImage: true
-    },
-    {
-        title: 'Категория',
-        field: 'category.name',
-        sortable: false
-    },
-    {
-        title: 'Номер',
-        field: 'number',
-        additionalField: 'alternateNumber',
-        sortable: true
-    },
-    {
-        title: 'Название',
-        field: 'name',
-        sortable: true
-    },
-    {
-        title: 'Количество цветов',
-        field: 'colorsCount',
-        sortable: false
-    }
-]
+
 const branch = PARTS_BRANCH;
 
 function PartsPage() {
@@ -243,7 +213,6 @@ function PartsPage() {
                 </Grid>
                 <Grid container item xs={9}>
                     <MainTable rowActions={rowActions}
-                               columns={columns}
                                branch={branch}
                                formik={formik}
                                fetchRequest={{categoryId: categoryId}}

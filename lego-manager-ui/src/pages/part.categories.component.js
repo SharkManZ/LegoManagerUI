@@ -6,13 +6,6 @@ import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
 
-const columns = [
-    {
-        title: 'Название',
-        field: 'name',
-        sortable: true
-    }
-]
 const branch = PART_CATEGORIES_BRANCH;
 
 function PartCategoriesPage() {
@@ -49,7 +42,6 @@ function PartCategoriesPage() {
                 <Typography variant="h4">Категории деталей</Typography>
             </Grid>
             <MainTable rowActions={rowActions}
-                       columns={columns}
                        branch={branch}
                        formik={formik}
             >

@@ -6,19 +6,6 @@ import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
 
-const columns = [
-    {
-        title: 'Название',
-        field: 'name',
-        sortable: true
-    },
-    {
-        title: 'Цвет',
-        field: 'hexColor',
-        type: 'color',
-        sortable: false
-    }
-]
 const branch = COLORS_BRANCH;
 
 function ColorsPage() {
@@ -57,7 +44,6 @@ function ColorsPage() {
                 <Typography variant="h4">Цвета</Typography>
             </Grid>
             <MainTable rowActions={rowActions}
-                       columns={columns}
                        branch={branch}
                        formik={formik}
             >

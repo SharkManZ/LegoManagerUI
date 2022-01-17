@@ -23,33 +23,7 @@ const initFilters = {
         value: null
     }
 }
-const columns = [
-    {
-        title: 'Серия',
-        field: 'series.name',
-        sortable: false
-    },
-    {
-        title: 'Номер',
-        field: 'number',
-        sortable: true
-    },
-    {
-        title: 'Название',
-        field: 'name',
-        sortable: true
-    },
-    {
-        title: 'Год выпуска',
-        field: 'year',
-        sortable: true
-    },
-    {
-        title: 'Кол-во деталей',
-        field: 'partsCount',
-        sortable: false
-    }
-]
+
 const branch = SETS_BRANCH;
 
 function SetsPage() {
@@ -195,7 +169,6 @@ function SetsPage() {
                 </Grid>
                 <Grid container item xs={9}>
                     <MainTable rowActions={rowActions}
-                               columns={columns}
                                branch={branch}
                                fetchRequest={{seriesId: seriesId}}
                                formik={formik}

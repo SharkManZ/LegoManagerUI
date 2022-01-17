@@ -11,42 +11,6 @@ import {searchPartColor} from "../service/part.colors.service";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
 
-const columns = [
-    {
-        title: '',
-        field: 'colorNumber',
-        imageSource: `${LEGO_IMG_ROOT}/parts`,
-        key: 'imgKey',
-        isImage: true,
-        sortable: false
-    },
-    {
-        title: 'Номер цвета детали',
-        field: 'colorNumber',
-        sortable: false
-    },
-    {
-        title: 'Номер детали',
-        field: 'number',
-        sortable: false
-    },
-    {
-        title: 'Название',
-        field: 'partName',
-        sortable: false
-    },
-    {
-        title: 'Количество',
-        field: 'count',
-        sortable: false
-    },
-    {
-        title: 'Цвет',
-        field: 'hexColor',
-        type: 'color',
-        sortable: false
-    }
-]
 const branch = SET_PARTS_BRANCH;
 
 function SetPartsPage() {
@@ -113,7 +77,7 @@ function SetPartsPage() {
 
     return (
         <Box>
-            <MainTable columns={columns} branch={branch}
+            <MainTable branch={branch}
                        formik={formik}
                        fetchRequest={{setId: setId}}
                        rowActions={rowActions}

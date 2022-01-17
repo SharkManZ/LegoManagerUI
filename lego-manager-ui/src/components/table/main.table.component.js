@@ -23,7 +23,8 @@ import ConfirmDialog from "../dialog/confirm.dialog.component";
 import React, {useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    deleteRequestAction, fetchDataRequestAction,
+    deleteRequestAction,
+    fetchDataRequestAction,
     setActionAnchorElAction,
     setCurrentRowAction,
     setDeleteConfirmOpenAction,
@@ -50,7 +51,7 @@ const useStyles = makeStyles({
     }
 });
 
-function MainTable({rowActions, columns, branch, formik, noPagination = false, fetchRequest, children}) {
+function MainTable({rowActions, branch, formik, noPagination = false, fetchRequest, children}) {
     const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -69,6 +70,7 @@ function MainTable({rowActions, columns, branch, formik, noPagination = false, f
     const prevNeedRefresh = useRef(null);
     const search = useSelector(state => state[branch].search);
     const filters = useSelector(state => state[branch].filters);
+    const columns = PAGE_CRUD_CONSTANTS[branch].columns;
 
     const onSortChange = (property) => (event) => {
         dispatch(setOrderByAction(property, branch));
@@ -287,7 +289,6 @@ function MainTable({rowActions, columns, branch, formik, noPagination = false, f
 
 MainTable.propTypes = {
     rowActions: PropTypes.array.isRequired,
-    columns: PropTypes.array.isRequired,
     branch: PropTypes.string.isRequired,
     formik: PropTypes.object,
     noPagination: PropTypes.bool,
