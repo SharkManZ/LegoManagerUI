@@ -1,4 +1,4 @@
-import {Stack, TextField} from "@mui/material";
+import {Stack, TextField, Typography} from "@mui/material";
 import {useState} from "react";
 import PropTypes from "prop-types";
 
@@ -7,11 +7,13 @@ function FindTextField({name, itemId, itemName, onSelectItem,
     const [fieldValue, setFieldValue] = useState(itemName);
     const [localFound, setLocalFound] = useState(itemId !== undefined && itemId !== null);
     const [searchComplete, setSearchComplete] = useState(false);
+    const [foundValue, setFoundValue] = useState();
 
     const onChange = (event) => {
         setFieldValue(event.target.value);
         itemId = undefined;
         setLocalFound(false);
+        setFoundValue(null);
         setSearchComplete(false);
     }
 
@@ -21,7 +23,7 @@ function FindTextField({name, itemId, itemName, onSelectItem,
             searchFunc(searchFuncParams).then(res => {
                 if (res !== undefined) {
                     onSelectItem(res.id);
-                    setFieldValue(evalName(res));
+                    setFoundValue(evalName(res));
                     setLocalFound(true)
                 }
                 setSearchComplete(true);
@@ -34,15 +36,15 @@ function FindTextField({name, itemId, itemName, onSelectItem,
     }
 
     return (
-        <Stack direction="row">
+        <Stack direction="column">
             <TextField name={name}
                        value={fieldValue}
                        onChange={onChange}
                        onKeyPress={onKeyPress}
                        inputProps={{style: {color: getTextColor()}}}
                        fullWidth
-                       multiline
                        {...otherProps}/>
+            <Typography>{foundValue}</Typography>
         </Stack>
     )
 }
