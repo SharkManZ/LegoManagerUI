@@ -19,4 +19,6 @@ export const DELETE_RESPONSE = "DELETE_RESPONSE";
 export const SAVE_REQUEST = "SAVE_REQUEST";
 export const SAVE_RESPONSE = "SAVE_RESPONSE";
 export const ADD_FORM_OPEN = "ADD_FORM_OPEN";
+export const EDIT_FORM_OPEN = "EDIT_FORM_OPEN";
+export const CLOSE_FORM = "CLOSE_FORM";
 export const SET_FORM_ACTION = "SET_FORM_ACTION";

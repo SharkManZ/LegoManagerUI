@@ -6,13 +6,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
 import {useEffect} from "react";
-import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const branch = COLORS_BRANCH;
 
 function ColorsPage() {
     const dispatch = useDispatch();
+    const {editAction, deleteAction} = useCrudActions(branch);
     const formAction = useSelector(state => state[branch].formAction);
+    const currentRow = useSelector(state => state[branch].currentRow);
 
     // crud
     const formik = useFormik({
@@ -33,31 +35,19 @@ function ColorsPage() {
     useEffect(() => {
         if (formAction === ADD_FORM_ACTION) {
             formik.resetForm();
+        } else if (formAction === EDIT_FORM_ACTION) {
+            formik.setValues(currentRow);
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();
         }
     }, [formAction])
 
-    const {editAction, deleteAction} = useCrudActions({branch: branch, formik: formik});
-
-    const rowActions = [
-        {
-            title: 'Редактировать',
-            onClick: editAction
-        },
-        {
-            title: 'Удалить',
-            onClick: deleteAction
-        }
-    ]
     return (
         <Box>
             <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"} mt={3}>
                 <Typography variant="h4">Цвета</Typography>
             </Grid>
-            <MainTable rowActions={rowActions}
-                       branch={branch}
-            >
+            <MainTable rowActions={[editAction, deleteAction]} branch={branch}>
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>
                         <TextField required name="name" fullWidth label="Название" onChange={formik.handleChange}

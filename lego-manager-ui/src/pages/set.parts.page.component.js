@@ -1,7 +1,7 @@
 import {Box, Stack, TextField} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
 import React, {useEffect} from "react";
-import {LEGO_IMG_ROOT, SET_PARTS_BRANCH} from "../constants/pages/page.constants";
+import {SET_PARTS_BRANCH} from "../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
 import {saveRequestAction} from "../store/reducer/crud.actions";
 import {useSnackbar} from "notistack";
@@ -10,7 +10,7 @@ import FindTextField from "../components/fields/find.text.field.component";
 import {searchPartColor} from "../service/part.colors.service";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
-import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const branch = SET_PARTS_BRANCH;
 
@@ -19,6 +19,8 @@ function SetPartsPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const formAction = useSelector(state => state[branch].formAction);
+    const {editAction, deleteAction} = useCrudActions(branch);
+    const currentRow = useSelector(state => state[branch].currentRow);
 
     // crud
     const formik = useFormik({
@@ -52,44 +54,30 @@ function SetPartsPage() {
         })
     }
 
-    const getValues = (currentRow) => {
-        return {
-            id: currentRow.id,
-            count: currentRow.count,
-            partColor: {
-                id: currentRow.partColorId,
-                part: {
-                    name: currentRow.partName + '(' + currentRow.colorNumber + ')'
-                }
-            }
-        };
-    }
-    const {editAction, deleteAction} = useCrudActions({branch: branch, formik: formik, getValues: getValues});
-
     useEffect(() => {
         if (formAction === ADD_FORM_ACTION) {
             formik.resetForm();
+        } else if (formAction === EDIT_FORM_ACTION) {
+            formik.setValues({
+                id: currentRow.id,
+                count: currentRow.count,
+                partColor: {
+                    id: currentRow.partColorId,
+                    part: {
+                        name: currentRow.partName + '(' + currentRow.colorNumber + ')'
+                    }
+                }
+            })
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();
         }
     }, [formAction])
 
-    const rowActions = [
-        {
-            title: 'Редактировать',
-            onClick: editAction
-        },
-        {
-            title: 'Удалить',
-            onClick: deleteAction
-        }
-    ]
-
     return (
         <Box>
             <MainTable branch={branch}
                        fetchRequest={{setId: setId}}
-                       rowActions={rowActions}
+                       rowActions={[editAction, deleteAction]}
                        noPagination={true}>
                 <Box>
                     <Stack direction="column" spacing={2} mt={2}>

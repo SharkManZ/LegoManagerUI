@@ -51,6 +51,12 @@ export const setFormOpenAction = (formOpen, title, branch) => ({
     }
 })
 
+export const closeFormAction = (branch) => ({
+    branch,
+    type: `${branch}/${types.CLOSE_FORM}`,
+    payload: null
+})
+
 export const setFormActionAction = (action, branch) => ({
     branch,
     type: `${branch}/${types.SET_FORM_ACTION}`,
@@ -60,6 +66,12 @@ export const setFormActionAction = (action, branch) => ({
 export const addFormOpenAction = (branch) => ({
     branch,
     type: `${branch}/${types.ADD_FORM_OPEN}`,
+    payload: null
+})
+
+export const editFormOpenAction = (branch) => ({
+    branch,
+    type: `${branch}/${types.EDIT_FORM_OPEN}`,
     payload: null
 })
 

@@ -20,7 +20,7 @@ import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
-import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const initColorFormValues = {
     id: null,
@@ -33,11 +33,12 @@ const branch = PART_COLORS_BRANCH;
 function PartColor({partId}) {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const {editAction, deleteAction} = useCrudActions(branch);
 
     // grid
     const [selectedColor, setSelectedColor] = useState();
     const formAction = useSelector(state => state[branch].formAction);
-
+    const currentRow = useSelector(state => state[branch].currentRow);
     const [colors, setColors] = useState([]);
     const [colorOpen, setColorOpen] = useState(false);
     const [lastAddedColor, setLastAddedColor] = useState();
@@ -107,35 +108,18 @@ function PartColor({partId}) {
         if (formAction === ADD_FORM_ACTION) {
             setSelectedColor(null);
             formik.resetForm();
+        } else if (formAction === EDIT_FORM_ACTION) {
+            formik.setValues(currentRow);
+            setSelectedColor(colors.find(item => item.id === currentRow.color.id));
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();
         }
     }, [formAction])
 
-    const additionalEditAction = (currentRow) => {
-        setSelectedColor(colors.find(item => item.id === currentRow.color.id));
-    }
-    const {editAction, deleteAction} = useCrudActions({
-        branch: branch,
-        formik: formik,
-        additionalEditAction: additionalEditAction
-    });
-
-    const rowActions = [
-        {
-            title: 'Редактировать',
-            onClick: editAction
-        },
-        {
-            title: 'Удалить',
-            onClick: deleteAction
-        }
-    ]
-
     return (
         <Box>
             <MainTable branch={branch}
-                       rowActions={rowActions}
+                       rowActions={[editAction, deleteAction]}
                        fetchRequest={{partId: partId}}
                        noPagination={true}>
                 <Box>

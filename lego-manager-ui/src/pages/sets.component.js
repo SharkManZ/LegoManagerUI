@@ -11,7 +11,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
 import useCrudActions from "../components/action/crud.actions";
-import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const initFilters = {
     year: {
@@ -32,7 +32,7 @@ function SetsPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const history = useHistory();
-
+    const currentRow = useSelector(state => state[branch].currentRow);
     const [series, setSeries] = useState([]);
 
     // filters
@@ -42,6 +42,7 @@ function SetsPage() {
     // crud
     const [selectedSeries, setSelectedSeries] = useState();
     const formAction = useSelector(state => state[branch].formAction);
+    const {editAction, deleteAction} = useCrudActions(branch);
 
     const formik = useFormik({
         initialValues: {
@@ -60,6 +61,22 @@ function SetsPage() {
             }, branch));
         }
     })
+    useEffect(() => {
+        if (formAction === ADD_FORM_ACTION) {
+            if (seriesId !== undefined && seriesId !== null) {
+                setSelectedSeries(series.find(item => item.id == seriesId));
+            } else {
+                setSelectedSeries(null);
+            }
+            formik.resetForm();
+        } else if (formAction === EDIT_FORM_ACTION) {
+            formik.setValues(currentRow);
+            setSelectedSeries(series.find(item => item.id == currentRow.series.id));
+        } else if (formAction === SUBMIT_FORM_ACTION) {
+            formik.submitForm();
+        }
+    }, [formAction])
+
 
     // запрос всех серий - один раз
     useEffect(() => {
@@ -118,42 +135,12 @@ function SetsPage() {
         }
     }
 
-    useEffect(() => {
-        if (formAction === ADD_FORM_ACTION) {
-            setSelectedSeries(null);
-            formik.resetForm();
-        } else if (formAction === SUBMIT_FORM_ACTION) {
-            formik.submitForm();
-        }
-    }, [formAction])
-
-    const additionalEditAction = (currentRow) => {
-        setSelectedSeries(series.find(item => item.id === currentRow.series.id));
-    }
-    const {currentRow, editAction, deleteAction} = useCrudActions({
-        branch: branch,
-        formik: formik,
-        additionalEditAction: additionalEditAction
-    });
+    // Действия
     const onPartsAction = (event) => {
         history.push(`/set/${currentRow.id}/parts`);
         dispatch(setActionAnchorElAction(null, branch));
     }
-
-    const rowActions = [
-        {
-            title: 'Детали',
-            onClick: onPartsAction
-        },
-        {
-            title: 'Редактировать',
-            onClick: editAction
-        },
-        {
-            title: 'Удалить',
-            onClick: deleteAction
-        }
-    ]
+    console.log(seriesId !== undefined && seriesId !== null);
 
     return (
         <Box>
@@ -179,13 +166,14 @@ function SetsPage() {
                     </Paper>
                 </Grid>
                 <Grid container item xs={9}>
-                    <MainTable rowActions={rowActions}
+                    <MainTable rowActions={[{title: 'Детали', onClick: onPartsAction}, editAction, deleteAction]}
                                branch={branch}
                                fetchRequest={{seriesId: seriesId}}
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>
                                 <AutocompleteControl options={series} selectedValue={selectedSeries}
+                                                     disabled={seriesId !== undefined}
                                                      label="Серия" setOption={setSelectedSeries}/>
                                 <TextField required name="number" fullWidth label="Номер" onChange={formik.handleChange}
                                            value={formik.values.number}/>

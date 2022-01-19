@@ -31,7 +31,7 @@ import PartColor from "./part.colors.page.component";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
 import useCrudActions from "../components/action/crud.actions";
-import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const initCategoryFormValues = {
     id: null,
@@ -52,9 +52,10 @@ function PartsPage() {
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const formAction = useSelector(state => state[branch].formAction);
+    const currentRow = useSelector(state => state[branch].currentRow);
+    const {editAction, deleteAction} = useCrudActions(branch);
 
     // grid
-
     const [categories, setCategories] = useState([]);
     const [categoryOpen, setCategoryOpen] = useState(false);
     const [lastAddedCategory, setLastAddedCategory] = useState();
@@ -173,34 +174,13 @@ function PartsPage() {
         if (formAction === ADD_FORM_ACTION) {
             formik.resetForm();
             setSelectedCategory(null);
+        } else if (formAction === EDIT_FORM_ACTION) {
+            formik.setValues(currentRow);
+            setSelectedCategory(categories.find(item => item.id === currentRow.category.id));
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();
         }
     }, [formAction])
-
-    const additionalEditAction = (currentRow) => {
-        setSelectedCategory(categories.find(item => item.id === currentRow.category.id));
-    }
-    const {currentRow, editAction, deleteAction} = useCrudActions({
-        branch: branch,
-        formik: formik,
-        additionalEditAction: additionalEditAction
-    });
-
-    const rowActions = [
-        {
-            title: 'Цвета',
-            onClick: onColorsAction
-        },
-        {
-            title: 'Редактировать',
-            onClick: editAction
-        },
-        {
-            title: 'Удалить',
-            onClick: deleteAction
-        }
-    ]
 
     return (
         <Box>
@@ -223,7 +203,7 @@ function PartsPage() {
                     </Paper>
                 </Grid>
                 <Grid container item xs={9}>
-                    <MainTable rowActions={rowActions}
+                    <MainTable rowActions={[{title: 'Цвета', onClick: onColorsAction}, editAction, deleteAction]}
                                branch={branch}
                                fetchRequest={{categoryId: categoryId}}
                     >

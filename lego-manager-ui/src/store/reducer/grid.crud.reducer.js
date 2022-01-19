@@ -1,7 +1,7 @@
 import * as types from '../../constants/crud.action.constants';
 import {DELETE_REQUEST, DELETE_RESPONSE, SAVE_REQUEST, SAVE_RESPONSE} from '../../constants/crud.action.constants';
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
-import {ADD_FORM_ACTION} from "../../constants/crud.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION} from "../../constants/crud.constants";
 
 const defaultState = {
     rows: [],
@@ -106,6 +106,13 @@ export default function gridCrudReducer(state = defaultState, action) {
                 formOpen: action.payload.open,
                 formTitle: action.payload.title
             }
+        case `${branch}/${types.CLOSE_FORM}`:
+            return {
+                ...state,
+                formOpen: false,
+                formAction: null,
+                formTitle: null
+            }
         case `${branch}/${types.SET_FORM_ACTION}`:
             return {
                 ...state,
@@ -117,6 +124,14 @@ export default function gridCrudReducer(state = defaultState, action) {
                 formOpen: true,
                 formTitle: PAGE_CRUD_CONSTANTS[branch].addFormTitle,
                 formAction: ADD_FORM_ACTION
+            }
+        case `${branch}/${types.EDIT_FORM_OPEN}`:
+            return {
+                ...state,
+                formOpen: true,
+                formTitle: PAGE_CRUD_CONSTANTS[branch].editFormTitle,
+                formAction: EDIT_FORM_ACTION,
+                actionAnchorEl: null
             }
         case `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`:
             return {

@@ -24,12 +24,13 @@ import React, {useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addFormOpenAction,
+    closeFormAction,
     deleteRequestAction,
     fetchDataRequestAction,
     setActionAnchorElAction,
     setCurrentRowAction,
-    setDeleteConfirmOpenAction, setFormActionAction,
-    setFormOpenAction,
+    setDeleteConfirmOpenAction,
+    setFormActionAction,
     setOrderByAction,
     setOrderDirectionAction,
     setPageAction,
@@ -89,7 +90,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
     }
 
     const onClose = (event) => {
-        dispatch(setFormOpenAction(false, null, branch));
+        dispatch(closeFormAction(branch));
     }
 
     const onActionButtonClick = row => (event) => {
