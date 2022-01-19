@@ -1,5 +1,7 @@
 import * as types from '../../constants/crud.action.constants';
 import {DELETE_REQUEST, DELETE_RESPONSE, SAVE_REQUEST, SAVE_RESPONSE} from '../../constants/crud.action.constants';
+import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
+import {ADD_FORM_ACTION} from "../../constants/crud.constants";
 
 const defaultState = {
     rows: [],
@@ -11,6 +13,7 @@ const defaultState = {
     orderBy: null,
     orderDirection: 'asc',
     formOpen: false,
+    formAction: null,
     formTitle: null,
     deleteConfirmOpen: false,
     actionAnchorEl: null,
@@ -103,6 +106,18 @@ export default function gridCrudReducer(state = defaultState, action) {
                 formOpen: action.payload.open,
                 formTitle: action.payload.title
             }
+        case `${branch}/${types.SET_FORM_ACTION}`:
+            return {
+                ...state,
+                formAction: action.payload
+            }
+        case `${branch}/${types.ADD_FORM_OPEN}`:
+            return {
+                ...state,
+                formOpen: true,
+                formTitle: PAGE_CRUD_CONSTANTS[branch].addFormTitle,
+                formAction: ADD_FORM_ACTION
+            }
         case `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`:
             return {
                 ...state,
@@ -128,7 +143,8 @@ export default function gridCrudReducer(state = defaultState, action) {
                 actionAnchorEl: null,
                 currentRow: null,
                 page: 0,
-                needRefresh: true
+                needRefresh: true,
+                formAction: null
             }
         case `${branch}/${SAVE_REQUEST}`:
             return state;
@@ -140,7 +156,8 @@ export default function gridCrudReducer(state = defaultState, action) {
                 actionAnchorEl: null,
                 currentRow: null,
                 page: 0,
-                needRefresh: true
+                needRefresh: true,
+                formAction: null
             }
         default:
             return state;

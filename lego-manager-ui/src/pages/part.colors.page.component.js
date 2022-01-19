@@ -1,8 +1,8 @@
 import MainTable from "../components/table/main.table.component";
-import {LEGO_IMG_ROOT, PART_COLORS_BRANCH} from "../constants/pages/page.constants";
+import {PART_COLORS_BRANCH} from "../constants/pages/page.constants";
 import {saveRequestAction} from "../store/reducer/crud.actions";
 import {useSnackbar} from "notistack";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import React, {useEffect, useState} from "react";
 import {
     Box,
@@ -20,6 +20,7 @@ import {getAllColors, saveColor} from "../service/colors.service";
 import ColorAutocompleteControl from "../components/fields/color.autocomplete.control.component";
 import {useFormik} from "formik";
 import useCrudActions from "../components/action/crud.actions";
+import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const initColorFormValues = {
     id: null,
@@ -35,6 +36,7 @@ function PartColor({partId}) {
 
     // grid
     const [selectedColor, setSelectedColor] = useState();
+    const formAction = useSelector(state => state[branch].formAction);
 
     const [colors, setColors] = useState([]);
     const [colorOpen, setColorOpen] = useState(false);
@@ -101,6 +103,15 @@ function PartColor({partId}) {
         });
     }
 
+    useEffect(() => {
+        if (formAction === ADD_FORM_ACTION) {
+            setSelectedColor(null);
+            formik.resetForm();
+        } else if (formAction === SUBMIT_FORM_ACTION) {
+            formik.submitForm();
+        }
+    }, [formAction])
+
     const additionalEditAction = (currentRow) => {
         setSelectedColor(colors.find(item => item.id === currentRow.color.id));
     }
@@ -124,7 +135,6 @@ function PartColor({partId}) {
     return (
         <Box>
             <MainTable branch={branch}
-                       formik={formik}
                        rowActions={rowActions}
                        fetchRequest={{partId: partId}}
                        noPagination={true}>

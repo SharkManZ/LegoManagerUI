@@ -51,6 +51,18 @@ export const setFormOpenAction = (formOpen, title, branch) => ({
     }
 })
 
+export const setFormActionAction = (action, branch) => ({
+    branch,
+    type: `${branch}/${types.SET_FORM_ACTION}`,
+    payload: action
+})
+
+export const addFormOpenAction = (branch) => ({
+    branch,
+    type: `${branch}/${types.ADD_FORM_OPEN}`,
+    payload: null
+})
+
 export const setDeleteConfirmOpenAction = (deleteConfirmOpen, branch) => ({
     branch,
     type: `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`,
@@ -74,13 +86,6 @@ export const setNeedRefreshAction = (branch) => ({
     type: `${branch}/${types.SET_NEED_REFRESH}`,
     payload: null
 })
-
-export const setNeedManualRefreshAction = (value, branch) => ({
-    branch,
-    type: `${branch}/${types.SET_NEED_MANUAL_REFRESH}`,
-    payload: value
-})
-
 
 export const deleteRequestAction = (id, branch) => ({
     branch,

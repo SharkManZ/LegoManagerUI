@@ -20,7 +20,7 @@ import {
     setFiltersAction,
     setNeedRefreshAction
 } from "../store/reducer/crud.actions";
-import {LEGO_IMG_ROOT, PARTS_BRANCH} from "../constants/pages/page.constants";
+import {PARTS_BRANCH} from "../constants/pages/page.constants";
 import React, {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import AutocompleteControl from "../components/fields/autocomplete.control.component";
@@ -31,6 +31,7 @@ import PartColor from "./part.colors.page.component";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
 import useCrudActions from "../components/action/crud.actions";
+import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const initCategoryFormValues = {
     id: null,
@@ -50,6 +51,7 @@ function PartsPage() {
     const {categoryId} = useParams();
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
+    const formAction = useSelector(state => state[branch].formAction);
 
     // grid
 
@@ -167,6 +169,15 @@ function PartsPage() {
         dispatch(setFiltersAction([], branch));
     }
 
+    useEffect(() => {
+        if (formAction === ADD_FORM_ACTION) {
+            formik.resetForm();
+            setSelectedCategory(null);
+        } else if (formAction === SUBMIT_FORM_ACTION) {
+            formik.submitForm();
+        }
+    }, [formAction])
+
     const additionalEditAction = (currentRow) => {
         setSelectedCategory(categories.find(item => item.id === currentRow.category.id));
     }
@@ -214,7 +225,6 @@ function PartsPage() {
                 <Grid container item xs={9}>
                     <MainTable rowActions={rowActions}
                                branch={branch}
-                               formik={formik}
                                fetchRequest={{categoryId: categoryId}}
                     >
                         <Box>

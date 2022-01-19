@@ -23,11 +23,12 @@ import ConfirmDialog from "../dialog/confirm.dialog.component";
 import React, {useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    addFormOpenAction,
     deleteRequestAction,
     fetchDataRequestAction,
     setActionAnchorElAction,
     setCurrentRowAction,
-    setDeleteConfirmOpenAction,
+    setDeleteConfirmOpenAction, setFormActionAction,
     setFormOpenAction,
     setOrderByAction,
     setOrderDirectionAction,
@@ -40,6 +41,7 @@ import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
 import PropTypes from "prop-types";
 import {useSnackbar} from "notistack";
+import {SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
 
 const useStyles = makeStyles({
     root: {
@@ -51,7 +53,7 @@ const useStyles = makeStyles({
     }
 });
 
-function MainTable({rowActions, branch, formik, noPagination = false, fetchRequest, children}) {
+function MainTable({rowActions, branch, noPagination = false, fetchRequest, children}) {
     const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -164,8 +166,11 @@ function MainTable({rowActions, branch, formik, noPagination = false, fetchReque
     }
 
     const onAdd = (event) => {
-        formik.resetForm();
-        dispatch(setFormOpenAction(true, PAGE_CRUD_CONSTANTS[branch].addFormTitle, branch));
+        dispatch(addFormOpenAction(branch));
+    }
+
+    const onSubmit = () => {
+        dispatch(setFormActionAction(SUBMIT_FORM_ACTION, branch));
     }
 
     const onDelete = () => {
@@ -272,7 +277,7 @@ function MainTable({rowActions, branch, formik, noPagination = false, fetchReque
                     {children}
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" onClick={formik.submitForm}>Сохранить</Button>
+                    <Button variant="contained" onClick={onSubmit}>Сохранить</Button>
                     <Button variant="contained" onClick={onClose}>Отмена</Button>
                 </DialogActions>
             </Dialog>
@@ -290,7 +295,6 @@ function MainTable({rowActions, branch, formik, noPagination = false, fetchReque
 MainTable.propTypes = {
     rowActions: PropTypes.array.isRequired,
     branch: PropTypes.string.isRequired,
-    formik: PropTypes.object,
     noPagination: PropTypes.bool,
     fetchRequest: PropTypes.object
 }

@@ -1,6 +1,6 @@
 import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/material";
 import MainTable from "../components/table/main.table.component";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {saveRequestAction, setActionAnchorElAction, setFiltersAction} from "../store/reducer/crud.actions";
 import {SETS_BRANCH} from "../constants/pages/page.constants";
 import {useEffect, useState} from "react";
@@ -11,6 +11,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {useFormik} from "formik";
 import {transformFilters} from "../utils/object.utils";
 import useCrudActions from "../components/action/crud.actions";
+import {ADD_FORM_ACTION, SUBMIT_FORM_ACTION} from "../constants/crud.constants";
 
 const initFilters = {
     year: {
@@ -40,6 +41,7 @@ function SetsPage() {
 
     // crud
     const [selectedSeries, setSelectedSeries] = useState();
+    const formAction = useSelector(state => state[branch].formAction);
 
     const formik = useFormik({
         initialValues: {
@@ -116,6 +118,15 @@ function SetsPage() {
         }
     }
 
+    useEffect(() => {
+        if (formAction === ADD_FORM_ACTION) {
+            setSelectedSeries(null);
+            formik.resetForm();
+        } else if (formAction === SUBMIT_FORM_ACTION) {
+            formik.submitForm();
+        }
+    }, [formAction])
+
     const additionalEditAction = (currentRow) => {
         setSelectedSeries(series.find(item => item.id === currentRow.series.id));
     }
@@ -171,7 +182,6 @@ function SetsPage() {
                     <MainTable rowActions={rowActions}
                                branch={branch}
                                fetchRequest={{seriesId: seriesId}}
-                               formik={formik}
                     >
                         <Box>
                             <Stack direction="column" spacing={2} mt={2}>
