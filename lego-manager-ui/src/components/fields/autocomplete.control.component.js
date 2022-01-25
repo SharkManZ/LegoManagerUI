@@ -8,6 +8,7 @@ function AutocompleteControl({options, selectedValue, setOption, disabled, ...ot
                       value={selectedValue} fullWidth
                       onChange={(event, value) => setOption(value)}
                       getOptionLabel={(option) => option && option.name ? option.name : ''}
+                      isOptionEqualToValue={(option, value) => value && option.id === value.id}
                       renderInput={(params) => (
                           <TextField
                               fullWidth
