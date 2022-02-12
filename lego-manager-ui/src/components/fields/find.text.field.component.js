@@ -1,9 +1,9 @@
 import {Stack, TextField, Typography} from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 
 function FindTextField({name, itemId, itemName, onSelectItem,
-                           searchFunc, searchFuncParams, searchParam, evalName, ...otherProps}) {
+                           searchFunc, searchFuncParams, searchParam, evalName, textValue, ...otherProps}) {
     const [fieldValue, setFieldValue] = useState(itemName);
     const [localFound, setLocalFound] = useState(itemId !== undefined && itemId !== null);
     const [searchComplete, setSearchComplete] = useState(false);
@@ -17,18 +17,28 @@ function FindTextField({name, itemId, itemName, onSelectItem,
         setSearchComplete(false);
     }
 
+    useEffect(() => {
+        if (textValue) {
+            runSearch(textValue);
+        }
+    }, [textValue]);
+
     const onKeyPress = (event) => {
         if (event.key === 'Enter') {
-            searchFuncParams[searchParam] = fieldValue;
-            searchFunc(searchFuncParams).then(res => {
-                if (res !== undefined) {
-                    onSelectItem(res.id);
-                    setFoundValue(evalName(res));
-                    setLocalFound(true)
-                }
-                setSearchComplete(true);
-            })
+            runSearch(fieldValue);
         }
+    }
+
+    const runSearch = (value) => {
+        searchFuncParams[searchParam] = value;
+        searchFunc(searchFuncParams).then(res => {
+            if (res !== undefined) {
+                onSelectItem(res.id);
+                setFoundValue(evalName(res));
+                setLocalFound(true)
+            }
+            setSearchComplete(true);
+        })
     }
 
     const getTextColor = () => {
@@ -38,7 +48,7 @@ function FindTextField({name, itemId, itemName, onSelectItem,
     return (
         <Stack direction="column">
             <TextField name={name}
-                       value={fieldValue}
+                       value={fieldValue ? fieldValue : textValue}
                        onChange={onChange}
                        onKeyPress={onKeyPress}
                        inputProps={{style: {color: getTextColor()}}}

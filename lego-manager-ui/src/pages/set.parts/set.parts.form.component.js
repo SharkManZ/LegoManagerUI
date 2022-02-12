@@ -1,6 +1,6 @@
 import {useFormik} from "formik";
 import {saveRequestAction} from "../../store/reducer/crud.actions";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
 import {Box, Stack, TextField} from "@mui/material";
 import FindTextField from "../../components/fields/find.text.field.component";
@@ -15,6 +15,7 @@ function SetPartsForm({setId}) {
     const dispatch = useDispatch();
     const formAction = useSelector(state => state[branch].formAction);
     const currentRow = useSelector(state => state[branch].currentRow);
+    const [currentPartColorNumber, setCurrentPartColorNumber] = useState();
 
     // crud
     const formik = useFormik({
@@ -62,6 +63,7 @@ function SetPartsForm({setId}) {
                     }
                 }
             })
+            setCurrentPartColorNumber(currentRow.colorNumber);
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();
         }
@@ -82,6 +84,7 @@ function SetPartsForm({setId}) {
                                itemId={formik.values.partColor.id}
                                itemName={formik.values.partColor.part.name}
                                onSelectItem={onSelectPartColor}
+                               textValue={currentPartColorNumber}
                                autoFocus
                 />
                 <TextField required name="count" fullWidth label="Количество" onChange={formik.handleChange}
