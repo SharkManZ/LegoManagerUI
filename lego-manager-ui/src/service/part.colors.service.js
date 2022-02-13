@@ -1,8 +1,11 @@
 import httpClient from "./http.client";
 
 export async function getPartColors({...params}) {
-
-    const result = await httpClient.post(`/lego-manager/parts/${params.fetchRequest.partId}/color/list`)
+    let requestParams = {
+        value: params.search ? params.search.value : "",
+        equals: params.search ? params.search.equals : false
+    }
+    const result = await httpClient.post(`/lego-manager/parts/${params.fetchRequest.partId}/color/list`, requestParams)
         .then(res => res.data.body)
         .catch(error => {
             params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
