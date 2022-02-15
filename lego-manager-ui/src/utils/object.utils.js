@@ -1,10 +1,10 @@
 export function fetchFromObject(obj, prop) {
-    if(typeof obj === 'undefined') {
+    if (typeof obj === 'undefined') {
         return false;
     }
 
     var _index = prop.indexOf('.')
-    if(_index > -1) {
+    if (_index > -1) {
         return fetchFromObject(obj[prop.substring(0, _index)], prop.substr(_index + 1));
     }
 
@@ -25,3 +25,11 @@ export function transformFilters(filterObject) {
 
     return values;
 }
+
+let ceil = Math.ceil;
+
+Object.defineProperty(Array.prototype, 'chunk', {
+    value: function (n) {
+        return Array(ceil(this.length / n)).fill().map((_, i) => this.slice(i * n, i * n + n));
+    }
+});

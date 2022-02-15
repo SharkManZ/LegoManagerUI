@@ -53,6 +53,7 @@ const useStyles = makeStyles({
         objectFit: 'cover'
     }
 });
+const COLORS_IN_ROW = 6;
 
 function MainTable({rowActions, branch, noPagination = false, fetchRequest, children}) {
     const {enqueueSnackbar} = useSnackbar();
@@ -157,6 +158,12 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
 
                 </TableCell>
             )
+        } else if (column.type === 'colors') {
+            return (
+                <TableCell key={column.key ? column.key : column.field}>
+                    {getColorsValue(row[column.field])}
+                </TableCell>
+            )
         } else {
             return (
                 <TableCell key={column.key ? column.key : column.field}>
@@ -164,6 +171,31 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
                 </TableCell>
             )
         }
+    }
+
+    function getColorsValue(data) {
+        let rowArrays = data.chunk(COLORS_IN_ROW);
+        return (
+            rowArrays.map((row) => (
+                <Stack direction="row" spacing={0.5} paddingBottom={1}>
+                    {row.map((column) => (
+                        <Box sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            '& > :not(style)': {
+                                width: 15,
+                                height: 15,
+                            }
+                        }}>
+                            <Tooltip title={column.name}>
+                                <Paper style={{backgroundColor: '#' + column.hexColor}} elevation={10}/>
+                            </Tooltip>
+                        </Box>
+                    ))
+                    }
+                </Stack>
+            ))
+        )
     }
 
     const onAdd = (event) => {

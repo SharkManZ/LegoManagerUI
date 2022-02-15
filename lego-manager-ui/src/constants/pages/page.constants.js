@@ -110,9 +110,9 @@ export const PAGE_CRUD_CONSTANTS = {
                 sortable: true
             },
             {
-                title: 'Количество цветов',
-                field: 'colorsCount',
-                sortable: false
+                title: 'Цвета',
+                field: 'colors',
+                type: 'colors'
             }
         ]
     },
