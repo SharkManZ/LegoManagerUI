@@ -5,6 +5,7 @@ import {SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {useParams} from "react-router-dom";
 import useCrudActions from "../../components/action/crud.actions";
 import SetPartsForm from "./set.parts.form.component";
+import SetSummary from "./set.summary.component";
 
 const branch = SET_PARTS_BRANCH;
 
@@ -14,6 +15,7 @@ function SetPartsPage() {
 
     return (
         <Box>
+            <SetSummary setId={setId}/>
             <MainTable branch={branch}
                        fetchRequest={{setId: setId}}
                        rowActions={[editAction, deleteAction]}

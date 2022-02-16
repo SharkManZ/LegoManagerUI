@@ -10,7 +10,8 @@ export async function getSets({...params}) {
     if (params.orderBy !== undefined && params.orderBy !== null) {
         requestParams.sorts = [{
             field: params.orderBy,
-            direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'}];
+            direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'
+        }];
     }
     const url = params.fetchRequest && params.fetchRequest.seriesId ?
         `/lego-manager/series/${params.fetchRequest.seriesId}/sets/list` :
@@ -18,7 +19,7 @@ export async function getSets({...params}) {
     const result = await httpClient.post(url, requestParams)
         .then(res => res.data)
         .catch(error => {
-            params.enqueueSnackbar(params.listError + ':' + error, {variant:'error'});
+            params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
             return {
                 body: {
                     data: [],
@@ -54,4 +55,13 @@ export async function saveSet({...params}) {
 export async function deleteSet({...params}) {
     const result = await httpClient.post("/lego-manager/sets/" + params.id + "/delete");
     return result.data;
+}
+
+export async function getSetSummary(setId) {
+    const result = await httpClient.get("/lego-manager/sets/" + setId + "/summary")
+        .then(res => res.data.body)
+        .catch(error => {
+            return null;
+        });
+    return result;
 }

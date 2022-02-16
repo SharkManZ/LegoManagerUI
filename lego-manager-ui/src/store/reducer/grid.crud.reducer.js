@@ -20,7 +20,8 @@ const defaultState = {
     currentRow: null,
     needRefresh: false,
     needManualRefresh: false,
-    filters: null
+    filters: null,
+    fetchFinished: false
 }
 export default function gridCrudReducer(state = defaultState, action) {
     const {branch, type} = action;
@@ -89,7 +90,8 @@ export default function gridCrudReducer(state = defaultState, action) {
                 currentRow: null,
                 rows: [],
                 needRefresh: false,
-                needManualRefresh: false
+                needManualRefresh: false,
+                fetchFinished: false
             }
         }
         case `${branch}/${types.FETCH_DATA}`: {
@@ -97,7 +99,8 @@ export default function gridCrudReducer(state = defaultState, action) {
                 ...state,
                 loading: false,
                 rows: Array.isArray(action.payload) ? action.payload : action.payload.data,
-                totalCount: Array.isArray(action.payload) ? 0 : action.payload.totalCount
+                totalCount: Array.isArray(action.payload) ? 0 : action.payload.totalCount,
+                fetchFinished: true
             }
         }
         case `${branch}/${types.SET_FORM_OPEN}`:
