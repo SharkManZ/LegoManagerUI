@@ -162,11 +162,13 @@ export const PAGE_CRUD_CONSTANTS = {
             {
                 title: 'Номер цвета детали',
                 field: 'colorNumber',
+                additionalField: 'alternateColorNumber',
                 sortable: false
             },
             {
                 title: 'Номер детали',
                 field: 'number',
+                additionalField: 'alternateNumber',
                 sortable: false
             },
             {
