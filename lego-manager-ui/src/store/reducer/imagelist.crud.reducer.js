@@ -1,4 +1,7 @@
 import * as types from '../../constants/crud.action.constants';
+import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
+import {ADD_FORM_ACTION, EDIT_FORM_ACTION} from "../../constants/crud.constants";
+import {DELETE_REQUEST, DELETE_RESPONSE, SAVE_REQUEST, SAVE_RESPONSE} from "../../constants/crud.action.constants";
 const defaultState = {
     rows: [],
     totalCount: 0,
@@ -8,7 +11,9 @@ const defaultState = {
     formOpen: false,
     formTitle: null,
     deleteConfirmOpen: false,
-    actionAnchorEl: null
+    actionAnchorEl: null,
+    currentRow: null,
+    formAction: null
 }
 export default function imageListCrudReducer(state = defaultState, action) {
     const {branch, type} = action;
@@ -55,12 +60,61 @@ export default function imageListCrudReducer(state = defaultState, action) {
         case `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`:
             return {
                 ...state,
-                deleteConfirmOpen: action.payload
+                deleteConfirmOpen: action.payload.deleteConfirmOpen,
+                currentRow: {id: action.payload.id}
             }
         case `${branch}/${types.SET_ACTION_ANCHOR_EL}`:
             return {
                 ...state,
                 actionAnchorEl: action.payload
+            }
+        case `${branch}/${types.ADD_FORM_OPEN}`:
+            return {
+                ...state,
+                formOpen: true,
+                formTitle: PAGE_CRUD_CONSTANTS[branch].addFormTitle,
+                formAction: ADD_FORM_ACTION
+            }
+        case `${branch}/${types.EDIT_FORM_OPEN}`:
+            return {
+                ...state,
+                formOpen: true,
+                formTitle: PAGE_CRUD_CONSTANTS[branch].editFormTitle,
+                formAction: EDIT_FORM_ACTION,
+                currentRow: action.payload,
+                actionAnchorEl: null
+            }
+        case `${branch}/${types.SET_FORM_ACTION}`:
+            return {
+                ...state,
+                formAction: action.payload
+            }
+        case `${branch}/${DELETE_REQUEST}`:
+            return state;
+        case `${branch}/${DELETE_RESPONSE}`:
+            return {
+                ...state,
+                formOpen: false,
+                deleteConfirmOpen: false,
+                actionAnchorEl: null,
+                currentRow: null,
+                page: 0,
+                needRefresh: true,
+                formAction: null
+            }
+        case `${branch}/${SAVE_REQUEST}`:
+            console.log('reducer request');
+            return state;
+        case `${branch}/${SAVE_RESPONSE}`:
+            return {
+                ...state,
+                formOpen: false,
+                deleteConfirmOpen: false,
+                actionAnchorEl: null,
+                currentRow: null,
+                page: 0,
+                needRefresh: true,
+                formAction: null
             }
         default:
             return state;

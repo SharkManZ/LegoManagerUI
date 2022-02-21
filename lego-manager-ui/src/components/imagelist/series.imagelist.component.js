@@ -13,15 +13,24 @@ import {
     Typography
 } from "@mui/material";
 import SeriesCard from "../cards/series.card.component";
-import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setDeleteConfirmOpenAction, setFormOpenAction, setPageAction} from "../../store/reducer/crud.actions";
+import {
+    addFormOpenAction,
+    deleteRequestAction,
+    editFormWithValueOpenAction,
+    setDeleteConfirmOpenAction,
+    setDeleteConfirmOpenWithIdAction,
+    setFormActionAction,
+    setFormOpenAction,
+    setPageAction
+} from "../../store/reducer/crud.actions";
 import {PAGE_CRUD_CONSTANTS} from "../../constants/pages/page.constants";
 import ConfirmDialog from "../dialog/confirm.dialog.component";
 import SearchField from "../fields/search.field.component";
 import PropTypes from "prop-types";
+import {SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
 
-function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete, children}) {
+function SeriesImageList({branch, itemsPerPage, children}) {
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
     const page = useSelector(state => state[branch].page);
@@ -29,8 +38,7 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
     const dialogOpen = useSelector(state => state[branch].formOpen);
     const dialogTitle = useSelector(state => state[branch].formTitle);
     const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
-
-    const [currentId, setCurrentId] = useState();
+    const currentRow = useSelector(state => state[branch].currentRow);
 
     const onPageChange = (event, page) => {
         dispatch(setPageAction(page, branch));
@@ -41,8 +49,23 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
     }
 
     const deleteAction = (id) => {
-        setCurrentId(id);
-        dispatch(setDeleteConfirmOpenAction(true, branch));
+        dispatch(setDeleteConfirmOpenWithIdAction(true, id, branch));
+    }
+
+    const onAdd = (event) => {
+        dispatch(addFormOpenAction(branch));
+    }
+
+    const onEdit = (value) => {
+        dispatch(editFormWithValueOpenAction(branch, value));
+    }
+
+    const onSubmit = () => {
+        dispatch(setFormActionAction(SUBMIT_FORM_ACTION, branch));
+    }
+
+    const onDelete = () => {
+        dispatch(deleteRequestAction({id: currentRow.id}, branch));
     }
 
     return (
@@ -75,16 +98,14 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
                     {children}
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" onClick={() => onSave()}>Сохранить</Button>
+                    <Button variant="contained" onClick={onSubmit}>Сохранить</Button>
                     <Button variant="contained" onClick={onClose}>Отмена</Button>
                 </DialogActions>
             </Dialog>
             <ConfirmDialog
                 open={deleteConfirmOpen}
                 closeDialog={() => dispatch(setDeleteConfirmOpenAction(false, branch))}
-                onConfirm={() => {
-                    onDelete(currentId);
-                }}
+                onConfirm={onDelete}
                 message={PAGE_CRUD_CONSTANTS[branch].deleteFormTitle}
             />
         </div>
@@ -94,10 +115,6 @@ function SeriesImageList({branch, itemsPerPage, onSave, onAdd, onEdit, onDelete,
 SeriesImageList.propTypes = {
     branch: PropTypes.string.isRequired,
     itemsPerPage: PropTypes.number.isRequired,
-    onSave: PropTypes.func.isRequired,
-    onAdd: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
     children: PropTypes.array
 }
 

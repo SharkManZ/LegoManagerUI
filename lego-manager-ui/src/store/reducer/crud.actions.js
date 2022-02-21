@@ -75,10 +75,25 @@ export const editFormOpenAction = (branch) => ({
     payload: null
 })
 
+export const editFormWithValueOpenAction = (branch, value) => ({
+    branch,
+    type: `${branch}/${types.EDIT_FORM_OPEN}`,
+    payload: value
+})
+
 export const setDeleteConfirmOpenAction = (deleteConfirmOpen, branch) => ({
     branch,
     type: `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`,
     payload: deleteConfirmOpen
+})
+
+export const setDeleteConfirmOpenWithIdAction = (deleteConfirmOpen, id, branch) => ({
+    branch,
+    type: `${branch}/${types.SET_DELETE_CONFIRM_OPEN}`,
+    payload: {
+        deleteConfirmOpen: deleteConfirmOpen,
+        id: id
+    }
 })
 
 export const setActionAnchorElAction = (anchorEl, branch) => ({

@@ -10,7 +10,7 @@ import {
 } from "../../constants/pages/page.constants";
 import {DELETE_REQUEST, FETCH_DATA_REQUEST, SAVE_REQUEST} from "../../constants/crud.action.constants";
 import {fetchSetsList, removeSetRequest, saveSetsRequest} from "./sets.saga";
-import {fetchSeriesList} from "./series.saga";
+import {fetchSeriesList, removeSeriesRequest, saveSeriesRequest} from "./series.saga";
 import {fetchColorList, removeColorRequest, saveColorRequest} from "./colors.saga";
 import {fetchPartCategoriesList, removePartCategoryRequest, savePartCategoryRequest} from "./part.categories.saga";
 import {fetchPartsList, removePartRequest, savePartRequest} from "./parts.saga";
@@ -31,6 +31,14 @@ export function* watchColorSave() {
 
 export function* watchSeriesList() {
     yield takeLatest(`${SERIES_BRANCH}/${FETCH_DATA_REQUEST}`, fetchSeriesList)
+}
+
+export function* watchSeriesSave() {
+    yield takeLatest(`${SERIES_BRANCH}/${SAVE_REQUEST}`, saveSeriesRequest)
+}
+
+export function* watchSeriesDelete() {
+    yield takeLatest(`${SERIES_BRANCH}/${DELETE_REQUEST}`, removeSeriesRequest)
 }
 
 export function* watchSetsList() {
@@ -100,6 +108,8 @@ export function* rootSaga() {
         watchSetDelete(),
         watchSetSave(),
         watchSeriesList(),
+        watchSeriesSave(),
+        watchSeriesDelete(),
         watchColorsList(),
         watchColorDelete(),
         watchColorSave(),

@@ -8,7 +8,7 @@ import {useSnackbar} from "notistack";
 import AutocompleteControl from "../../components/fields/autocomplete.control.component";
 import {useParams} from "react-router-dom";
 import {getAllCategories} from "../../service/part.categories.service";
-import PartColor from "../part.colors.page.component";
+import PartColor from "../part.colors/part.colors.page.component";
 import {transformFilters} from "../../utils/object.utils";
 import useCrudActions from "../../components/action/crud.actions";
 import PartsForm from "./parts.form.component";

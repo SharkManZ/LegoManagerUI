@@ -1,5 +1,5 @@
 import {Route, Switch} from "react-router-dom";
-import SeriesPage from "../../pages/series.component";
+import SeriesPage from "../../pages/series/series.component";
 import SetsPage from "../../pages/sets/sets.component";
 import Home from "../../pages/home.component";
 import {Paper} from "@mui/material";
