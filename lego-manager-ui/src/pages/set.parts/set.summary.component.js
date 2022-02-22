@@ -11,6 +11,7 @@ import {useSelector} from "react-redux";
 import {SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
 
 const branch = SET_PARTS_BRANCH;
+
 function SetSummary() {
     const {setId} = useParams();
     const [loading, setLoading] = useState(true);
@@ -33,6 +34,31 @@ function SetSummary() {
         fetchData();
     }, [fetchFinished]);
 
+    function getColorsValue(data) {
+        let rowArrays = data.chunk(20);
+        return (
+            rowArrays.map((row) => (
+                <Stack direction="row" spacing={0.5} paddingBottom={1}>
+                    {row.map((column) => (
+                        <Box sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            '& > :not(style)': {
+                                width: 15,
+                                height: 15,
+                            }
+                        }}>
+                            <Tooltip title={column.name}>
+                                <Paper style={{backgroundColor: '#' + column.hexColor}} elevation={10}/>
+                            </Tooltip>
+                        </Box>
+                    ))
+                    }
+                </Stack>
+            ))
+        )
+    }
+
     return (
         <Box>
             <Grid container alignItems="center" justifyContent="center">
@@ -41,41 +67,47 @@ function SetSummary() {
                         <LinearProgress/>
                     </Box>
                 ) : null}
+                <Grid item xs={4}>
+                    <Paper>
+                        <Stack direction="column" ml={2} mr={2}>
+                            <Stack direction="row">
+                                <Typography color={"goldenrod"} variant="h6" style={{width:'100%'}}>Видов
+                                    деталей:</Typography>
+                                <Typography align="right" color={"goldenrod"} variant="h6">{data ? data.uniquePartsCount : 0}</Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography color={"goldenrod"} variant="h6" style={{width:'100%'}}>
+                                    Деталей</Typography>
+                                <Typography color={"goldenrod"}
+                                            variant="h6">{data ? data.partsCount : 0}</Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography color={"goldenrod"} variant="h6" style={{width:'100%'}}>
+                                    Цветов</Typography>
+                                <Typography color={"goldenrod"}
+                                            variant="h6">{data && data.colors? data.colors.length : 0}</Typography>
+                            </Stack>
+                            {data && data.colors ?
+                                getColorsValue(data.colors) : ""
+                            }
+                        </Stack>
+                    </Paper>
+                </Grid>
                 <CenterGridItem xs={4}>
-                    <Typography color={"goldenrod"} variant="h5">Видов
-                        деталей: {data ? data.uniquePartsCount : 0}</Typography>
+                    <Typography color={"deepskyblue"}
+                                variant="h4">{data ? data.name + '(' + data.number + ')' : ""}</Typography>
                 </CenterGridItem>
                 <CenterGridItem xs={4}>
-                    <Typography color={"deepskyblue"} variant="h4">{data ? data.name : ""}</Typography>
-                </CenterGridItem>
-                <CenterGridItem xs={4}>
-                    <Typography color={"goldenrod"} variant="h5">Деталей: {data ? data.partsCount : 0}</Typography>
                 </CenterGridItem>
             </Grid>
             <Grid container alignItems="center" justifyContent="center">
-                <CenterGridItem xs={12}>
-                    <Typography color={"crimson"} variant="h6">Цвета</Typography>
+                <Grid item={1}/>
+                <CenterGridItem xs={11}>
+
                 </CenterGridItem>
             </Grid>
             <Grid container alignItems="center" justifyContent="center">
-                <Stack direction="row" spacing={1}>
-                    {data ?
-                        data.colors.map((item) => (
-                            <Box sx={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                '& > :not(style)': {
-                                    width: 15,
-                                    height: 15,
-                                }
-                            }}>
-                                <Tooltip title={item.name}>
-                                    <Paper style={{backgroundColor: '#' + item.hexColor}} elevation={10}/>
-                                </Tooltip>
-                            </Box>
-                        )) : ""
-                    }
-                </Stack>
+
             </Grid>
         </Box>
 
