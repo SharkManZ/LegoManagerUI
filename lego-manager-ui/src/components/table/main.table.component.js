@@ -41,7 +41,6 @@ import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
 import PropTypes from "prop-types";
-import {useSnackbar} from "notistack";
 import {SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
 
 const useStyles = makeStyles({
@@ -56,7 +55,6 @@ const useStyles = makeStyles({
 const COLORS_IN_ROW = 6;
 
 function MainTable({rowActions, branch, noPagination = false, fetchRequest, children}) {
-    const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles();
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
@@ -231,7 +229,6 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
             search: search,
             orderBy: orderBy,
             orderDirection: orderDirection,
-            enqueueSnackbar,
             listError: PAGE_CRUD_CONSTANTS[branch].listError,
             fetchRequest: fetchRequest,
             filters: filters

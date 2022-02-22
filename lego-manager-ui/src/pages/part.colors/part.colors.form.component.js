@@ -17,8 +17,8 @@ import {useFormik} from "formik";
 import {saveRequestAction} from "../../store/reducer/crud.actions";
 import {useDispatch, useSelector} from "react-redux";
 import {saveColor} from "../../service/colors.service";
-import {useSnackbar} from "notistack";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
+import {setErrorAction} from "../../store/reducer/app.actions";
 
 const initColorFormValues = {
     id: null,
@@ -30,7 +30,6 @@ const branch = PART_COLORS_BRANCH;
 
 function PartColorsForm({partId, colors, fetchAllColors, colorFetched}) {
     const dispatch = useDispatch();
-    const {enqueueSnackbar} = useSnackbar();
 
     const [selectedColor, setSelectedColor] = useState();
     const [colorFormValues, setColorFormValues] = useState(initColorFormValues);
@@ -75,7 +74,7 @@ function PartColorsForm({partId, colors, fetchAllColors, colorFetched}) {
             setAddedColor(res.body);
             setColorOpen(false);
         }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
+            dispatch(setErrorAction(error))
         });
     }
 

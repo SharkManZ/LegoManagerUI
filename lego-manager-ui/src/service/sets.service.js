@@ -16,21 +16,13 @@ export async function getSets({...params}) {
     const url = params.fetchRequest && params.fetchRequest.seriesId ?
         `/lego-manager/series/${params.fetchRequest.seriesId}/sets/list` :
         "/lego-manager/sets/list";
-    const result = await httpClient.post(url, requestParams)
-        .then(res => res.data)
-        .catch(error => {
-            params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
+    return await httpClient.post(url, requestParams)
+        .then(res => {
             return {
-                body: {
-                    data: [],
-                    totalCount: 0
-                }
+                data: res.data.body.data,
+                totalCount: res.data.body.totalCount
             }
         });
-    return {
-        data: result.body.data,
-        totalCount: result.body.totalCount
-    }
 }
 
 export async function getSetParts({...params}) {
@@ -38,30 +30,21 @@ export async function getSetParts({...params}) {
         search: params.search
     }
 
-    const result = await httpClient.post(`/lego-manager/sets/${params.fetchRequest.setId}/part/list`, requestParams)
-        .then(res => res.data.body)
-        .catch(error => {
-            params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
-            return [];
-        });
-    return result;
+    return await httpClient.post(`/lego-manager/sets/${params.fetchRequest.setId}/part/list`, requestParams)
+        .then(res => res.data.body);
 }
 
 export async function saveSet({...params}) {
-    const result = await httpClient.post("/lego-manager/sets/save", params);
-    return result.data;
+    return await httpClient.post("/lego-manager/sets/save", params)
+        .then(res => res.data);
 }
 
 export async function deleteSet({...params}) {
-    const result = await httpClient.post("/lego-manager/sets/" + params.id + "/delete");
-    return result.data;
+    return await httpClient.post("/lego-manager/sets/" + params.id + "/delete")
+        .then(res => res.data);
 }
 
 export async function getSetSummary(setId) {
-    const result = await httpClient.get("/lego-manager/sets/" + setId + "/summary")
-        .then(res => res.data.body)
-        .catch(error => {
-            return null;
-        });
-    return result;
+    return await httpClient.get("/lego-manager/sets/" + setId + "/summary")
+        .then(res => res.data.body);
 }

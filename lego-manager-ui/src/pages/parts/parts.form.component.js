@@ -3,7 +3,6 @@ import {saveRequestAction} from "../../store/reducer/crud.actions";
 import {useDispatch, useSelector} from "react-redux";
 import React, {useEffect, useState} from "react";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
-import {useParams} from "react-router-dom";
 import {
     Box,
     Button,
@@ -19,7 +18,7 @@ import AutocompleteControl from "../../components/fields/autocomplete.control.co
 import AddIcon from "@mui/icons-material/Add";
 import {PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {savePartCategory} from "../../service/part.categories.service";
-import {useSnackbar} from "notistack";
+import {setErrorAction} from "../../store/reducer/app.actions";
 
 const initCategoryFormValues = {
     id: null,
@@ -29,7 +28,6 @@ const branch = PARTS_BRANCH;
 
 function PartsForm({categories, fetchAllCategories, categoryFetched}) {
     const dispatch = useDispatch();
-    const {enqueueSnackbar} = useSnackbar();
 
     const formAction = useSelector(state => state[branch].formAction);
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -86,7 +84,7 @@ function PartsForm({categories, fetchAllCategories, categoryFetched}) {
             setCategoryOpen(false);
             setAddedCategory(res.body);
         }).catch(error => {
-            enqueueSnackbar(error, {variant: 'error'});
+            dispatch(setErrorAction(error));
         });
     }
 

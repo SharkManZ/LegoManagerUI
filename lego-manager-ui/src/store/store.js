@@ -13,6 +13,7 @@ import {
     SETS_BRANCH
 } from "../constants/pages/page.constants";
 import {rootSaga} from "./saga/root.saga";
+import appReducer from "./reducer/app.reducer";
 
 function branchReducer(reducerFunction, name) {
     return (state, action) => {
@@ -35,7 +36,8 @@ const rootReducer = combineReducers({
     partCategories: branchReducer(gridCrudReducer, PART_CATEGORIES_BRANCH),
     parts: branchReducer(gridCrudReducer, PARTS_BRANCH),
     partColors: branchReducer(gridCrudReducer, PART_COLORS_BRANCH),
-    setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH)
+    setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH),
+    app: appReducer
 })
 
 export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));

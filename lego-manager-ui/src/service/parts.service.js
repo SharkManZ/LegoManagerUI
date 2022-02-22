@@ -15,29 +15,21 @@ export async function getParts({...params}) {
         }];
     }
 
-    const result = await httpClient.post("/lego-manager/parts/list", requestParams)
-        .then(res => res.data)
-        .catch(error => {
-            params.enqueueSnackbar(params.listError + ':' + error, {variant: 'error'});
+    return await httpClient.post("/lego-manager/parts/list", requestParams)
+        .then(res => {
             return {
-                body: {
-                    data: [],
-                    totalCount: 0
-                }
+                data: res.data.body.data,
+                totalCount: res.data.body.totalCount
             }
-        });
-    return {
-        data: result.body.data,
-        totalCount: result.body.totalCount
-    }
+        })
 }
 
 export async function savePart({...params}) {
-    const result = await httpClient.post("/lego-manager/parts/save", params);
-    return result.data;
+    return await httpClient.post("/lego-manager/parts/save", params)
+        .then(res => res.data);
 }
 
 export async function deletePart({...params}) {
-    const result = await httpClient.post("/lego-manager/parts/" + params.id + "/delete");
-    return result.data;
+    return await httpClient.post("/lego-manager/parts/" + params.id + "/delete")
+        .then(res => res.data);
 }

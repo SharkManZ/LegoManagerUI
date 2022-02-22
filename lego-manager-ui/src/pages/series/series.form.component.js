@@ -20,7 +20,6 @@ function SeriesForm() {
             name: ''
         },
         onSubmit: (values => {
-            console.log('saving');
             dispatch(saveRequestAction({id: values.id, name: values.name}, branch));
         })
     });

@@ -26,6 +26,7 @@ function ColorsForm() {
                 name: values.name,
                 hexColor: values.hexColor
             }, branch));
+            formik.setSubmitting(false);
         }
     })
 

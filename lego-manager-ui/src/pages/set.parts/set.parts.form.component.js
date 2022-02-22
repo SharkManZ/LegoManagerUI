@@ -5,13 +5,12 @@ import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../const
 import {Box, Stack, TextField} from "@mui/material";
 import FindTextField from "../../components/fields/find.text.field.component";
 import {searchPartColor} from "../../service/part.colors.service";
-import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import {SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
+
 const branch = SET_PARTS_BRANCH;
 
 function SetPartsForm({setId}) {
-    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const formAction = useSelector(state => state[branch].formAction);
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -74,7 +73,6 @@ function SetPartsForm({setId}) {
             <Stack direction="column" spacing={2} mt={2}>
                 <FindTextField label="Цвет детали" name="partColor"
                                searchFunc={searchPartColor}
-                               searchFuncParams={{enqueueSnackbar}}
                                searchParam="searchValue"
                                evalName={(res) =>
                                    res.part.name + ' (' + res.number +

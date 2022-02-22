@@ -1,6 +1,5 @@
 import MainTable from "../../components/table/main.table.component";
 import {PART_COLORS_BRANCH} from "../../constants/pages/page.constants";
-import {useSnackbar} from "notistack";
 import React, {useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {getAllColors} from "../../service/colors.service";
@@ -10,7 +9,6 @@ import PartColorsForm from "./part.colors.form.component";
 const branch = PART_COLORS_BRANCH;
 
 function PartColor({partId}) {
-    const {enqueueSnackbar} = useSnackbar();
     const {editAction, deleteAction} = useCrudActions(branch);
 
     // grid
@@ -21,7 +19,7 @@ function PartColor({partId}) {
     const fetchAllColors = (byAdd) => {
         setColorFetched(false);
         setColorFetchByAdd(byAdd)
-        getAllColors({enqueueSnackbar})
+        getAllColors()
             .then(res => {
                 setColors(res);
             })

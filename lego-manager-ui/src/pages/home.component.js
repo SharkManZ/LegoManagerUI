@@ -3,8 +3,9 @@ import {Grid} from "@mui/material";
 import TotalCard from "../components/cards/total.card.component";
 import CenterGridItem from "../components/cards/grid.item.component";
 import {getTotals} from "../service/total.service";
-import {useSnackbar} from "notistack";
 import {useHistory} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setErrorAction} from "../store/reducer/app.actions";
 
 const emptyTotals = {
     series: {total: 0, inStock: 0},
@@ -14,17 +15,14 @@ const emptyTotals = {
 }
 
 function Home() {
-    const {enqueueSnackbar} = useSnackbar();
+    const dispatch = useDispatch();
     const [totals, setTotals] = useState(emptyTotals);
     const history = useHistory();
     useEffect(() => {
-        getTotals({enqueueSnackbar, emptyTotals}).then(res => {
-            if (res == null) {
-                enqueueSnackbar('Отсутствуют данные для отображения.', {variant:'error'});
-                return;
-            }
-
+        getTotals().then(res => {
             setTotals(res);
+        }).catch(error => {
+            dispatch(setErrorAction(error));
         });
     }, []);
 

@@ -103,8 +103,10 @@ export default function imageListCrudReducer(state = defaultState, action) {
                 formAction: null
             }
         case `${branch}/${SAVE_REQUEST}`:
-            console.log('reducer request');
-            return state;
+            return {
+                ...state,
+                formAction: null
+            };
         case `${branch}/${SAVE_RESPONSE}`:
             return {
                 ...state,
@@ -113,8 +115,7 @@ export default function imageListCrudReducer(state = defaultState, action) {
                 actionAnchorEl: null,
                 currentRow: null,
                 page: 0,
-                needRefresh: true,
-                formAction: null
+                needRefresh: true
             }
         default:
             return state;

@@ -2,7 +2,6 @@ import {useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDataRequestAction} from "../../store/reducer/crud.actions";
 import SeriesImageList from "../../components/imagelist/series.imagelist.component";
-import {useSnackbar} from "notistack";
 import {SERIES_BRANCH} from "../../constants/pages/page.constants";
 import SeriesForm from "./series.form.component";
 
@@ -11,7 +10,6 @@ const itemsPerPage = 16;
 const branch = SERIES_BRANCH;
 
 function SeriesPage() {
-    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
 
     // grid
@@ -36,8 +34,7 @@ function SeriesPage() {
         dispatch(fetchDataRequestAction({
             page: page > 0 ? page - 1 : 0,
             rowsPerPage: itemsPerPage,
-            search: search,
-            enqueueSnackbar
+            search: search
         }, branch));
     }
 

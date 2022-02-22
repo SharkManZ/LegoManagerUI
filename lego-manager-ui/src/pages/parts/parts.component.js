@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {setActionAnchorElAction, setFiltersAction, setNeedRefreshAction} from "../../store/reducer/crud.actions";
 import {PARTS_BRANCH} from "../../constants/pages/page.constants";
 import React, {useEffect, useState} from "react";
-import {useSnackbar} from "notistack";
 import AutocompleteControl from "../../components/fields/autocomplete.control.component";
 import {useParams} from "react-router-dom";
 import {getAllCategories} from "../../service/part.categories.service";
@@ -25,7 +24,6 @@ const branch = PARTS_BRANCH;
 
 function PartsPage() {
     const {categoryId} = useParams();
-    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const currentRow = useSelector(state => state[branch].currentRow);
     const {editAction, deleteAction} = useCrudActions(branch);
@@ -44,7 +42,7 @@ function PartsPage() {
     const fetchAllCategories = (byAdd) => {
         setCategoryFetched(false);
         setCategoryFetchByAdd(byAdd);
-        getAllCategories({enqueueSnackbar})
+        getAllCategories()
             .then(res => {
                 setCategories(res);
             })

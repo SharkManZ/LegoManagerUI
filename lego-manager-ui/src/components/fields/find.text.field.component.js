@@ -65,7 +65,7 @@ FindTextField.propTypes = {
     itemName: PropTypes.string,
     onSelectItem: PropTypes.func.isRequired,
     searchFunc: PropTypes.func.isRequired,
-    searchFuncParams: PropTypes.object.isRequired,
+    searchFuncParams: PropTypes.object,
     searchParam: PropTypes.string.isRequired,
     evalName: PropTypes.func.isRequired
 }

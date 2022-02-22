@@ -1,11 +1,11 @@
 import httpClient from "./http.client";
 
 export async function saveSetPart({...params}) {
-    const result = await httpClient.post("/lego-manager/set/parts/save", params);
-    return result.data;
+    return await httpClient.post("/lego-manager/set/parts/save", params)
+        .then(res => res.data);
 }
 
 export async function deleteSetPart({...params}) {
-    const result = await httpClient.post("/lego-manager/set/parts/" + params.id + "/delete");
-    return result.data;
+    return await httpClient.post("/lego-manager/set/parts/" + params.id + "/delete")
+        .then(res => res.data);
 }

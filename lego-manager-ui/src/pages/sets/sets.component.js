@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {setActionAnchorElAction, setFiltersAction} from "../../store/reducer/crud.actions";
 import {SETS_BRANCH} from "../../constants/pages/page.constants";
 import {useEffect, useState} from "react";
-import {useSnackbar} from "notistack";
 import {getAllSeries} from "../../service/series.service";
 import AutocompleteControl from "../../components/fields/autocomplete.control.component";
 import {useHistory, useParams} from "react-router-dom";
@@ -28,7 +27,6 @@ const branch = SETS_BRANCH;
 
 function SetsPage() {
     const {seriesId} = useParams();
-    const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
     const history = useHistory();
     const currentRow = useSelector(state => state[branch].currentRow);
@@ -43,7 +41,7 @@ function SetsPage() {
 
     // запрос всех серий - один раз
     useEffect(() => {
-        getAllSeries({enqueueSnackbar})
+        getAllSeries()
             .then(res => {
                 setSeries(res);
             })
