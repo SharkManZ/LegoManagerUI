@@ -1,9 +1,12 @@
 import {Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
+import {setErrorAction} from "../../store/reducer/app.actions";
+import {useDispatch} from "react-redux";
 
 function FindTextField({name, itemId, itemName, onSelectItem,
                            searchFunc, searchFuncParams, searchParam, evalName, textValue, ...otherProps}) {
+    const dispatch = useDispatch();
     const [fieldValue, setFieldValue] = useState(itemName);
     const [localFound, setLocalFound] = useState(itemId !== undefined && itemId !== null);
     const [searchComplete, setSearchComplete] = useState(false);
@@ -30,14 +33,17 @@ function FindTextField({name, itemId, itemName, onSelectItem,
     }
 
     const runSearch = (value) => {
-        searchFuncParams[searchParam] = value;
-        searchFunc(searchFuncParams).then(res => {
+        let params = searchFuncParams ? searchFuncParams : {};
+        params[searchParam] = value;
+        searchFunc(params).then(res => {
             if (res !== undefined) {
                 onSelectItem(res.id);
                 setFoundValue(evalName(res));
                 setLocalFound(true)
             }
             setSearchComplete(true);
+        }).catch(error => {
+            dispatch(setErrorAction(error));
         })
     }
 
