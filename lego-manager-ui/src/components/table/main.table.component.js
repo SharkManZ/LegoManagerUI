@@ -74,7 +74,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
     const filters = useSelector(state => state[branch].filters);
     const columns = PAGE_CRUD_CONSTANTS[branch].columns;
 
-    const onSortChange = (property) => (event) => {
+    const onSortChange = (property) => () => {
         dispatch(setOrderByAction(property, branch));
         dispatch(setOrderDirectionAction(orderDirection === 'asc' ? 'desc' : 'asc', branch));
     }
@@ -88,7 +88,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
         dispatch(setRowsPerPageAction(e.target.value, branch));
     }
 
-    const onClose = (event) => {
+    const onClose = () => {
         dispatch(closeFormAction(branch));
     }
 
@@ -196,7 +196,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
         )
     }
 
-    const onAdd = (event) => {
+    const onAdd = () => {
         dispatch(addFormOpenAction(branch));
     }
 

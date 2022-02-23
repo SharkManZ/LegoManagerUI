@@ -44,7 +44,7 @@ function SeriesImageList({branch, itemsPerPage, children}) {
         dispatch(setPageAction(page, branch));
     }
 
-    const onClose = (event) => {
+    const onClose = () => {
         dispatch(setFormOpenAction(false, null, branch));
     }
 
@@ -52,7 +52,7 @@ function SeriesImageList({branch, itemsPerPage, children}) {
         dispatch(setDeleteConfirmOpenWithIdAction(true, id, branch));
     }
 
-    const onAdd = (event) => {
+    const onAdd = () => {
         dispatch(addFormOpenAction(branch));
     }
 
