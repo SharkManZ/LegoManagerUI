@@ -5,9 +5,6 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-    ImageList,
-    ImageListItem,
-    ListSubheader,
     Pagination,
     Stack,
     Typography
@@ -70,24 +67,23 @@ function SeriesImageList({branch, itemsPerPage, children}) {
 
     return (
         <div>
-            <ImageList gap={30} cols={4} style={{overflow: "hidden", padding: 10}}>
-                <ImageListItem key="subheader" cols={4}>
-                    <ListSubheader component="div">
-                        <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
-                            <Typography variant="h4">Серии наборов</Typography>
-                        </Grid>
-                        <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
-                            <Stack direction="row" style={{width: '100%'}} spacing={2}>
-                                <SearchField branch={branch}/>
-                                <Button variant="outlined" onClick={onAdd}>Добавить</Button>
-                            </Stack>
-                        </Grid>
-                    </ListSubheader>
-                </ImageListItem>
+            <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
+                <Typography variant="h4">Серии наборов</Typography>
+            </Grid>
+            <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"}>
+                <Stack direction="row" style={{width: '100%'}} spacing={2}>
+                    <SearchField branch={branch}/>
+                    <Button variant="outlined" onClick={onAdd}>Добавить</Button>
+                </Stack>
+            </Grid>
+
+            <Grid container mt={2} mb={2}>
                 {data.map((item) => (
-                    <SeriesCard key={item.id} item={item} onEdit={onEdit} onDelete={deleteAction}/>
+                    <Grid xl={4} xs={12} md={6}>
+                        <SeriesCard key={item.id} item={item} onEdit={onEdit} onDelete={deleteAction}/>
+                    </Grid>
                 ))}
-            </ImageList>
+            </Grid>
             <Grid container justifyContent="center">
                 <Pagination count={Math.ceil(totalCount / itemsPerPage)} page={page} onChange={onPageChange}
                             showFirstButton showLastButton/>
