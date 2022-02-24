@@ -27,20 +27,18 @@ function SetSummary() {
     }
 
     useEffect(() => {
-        fetchData();
-    }, [])
-
-    useEffect(() => {
-        fetchData();
+        if (fetchFinished) {
+            fetchData();
+        }
     }, [fetchFinished]);
 
     function getColorsValue(data) {
         let rowArrays = data.chunk(20);
         return (
             rowArrays.map((row) => (
-                <Stack direction="row" spacing={0.5} paddingBottom={1}>
+                <Stack key={row[0].name} direction="row" spacing={0.5} paddingBottom={1}>
                     {row.map((column) => (
-                        <Box sx={{
+                        <Box key={column.name} sx={{
                             display: 'flex',
                             flexWrap: 'wrap',
                             '& > :not(style)': {
@@ -71,21 +69,22 @@ function SetSummary() {
                     <Paper>
                         <Stack direction="column" ml={2} mr={2}>
                             <Stack direction="row">
-                                <Typography color={"goldenrod"} variant="h6" style={{width:'100%'}}>Видов
+                                <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>Видов
                                     деталей:</Typography>
-                                <Typography align="right" color={"goldenrod"} variant="h6">{data ? data.uniquePartsCount : 0}</Typography>
+                                <Typography align="right" color={"goldenrod"}
+                                            variant="h6">{data ? data.uniquePartsCount : 0}</Typography>
                             </Stack>
                             <Stack direction="row">
-                                <Typography color={"goldenrod"} variant="h6" style={{width:'100%'}}>
+                                <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>
                                     Деталей</Typography>
                                 <Typography color={"goldenrod"}
                                             variant="h6">{data ? data.partsCount : 0}</Typography>
                             </Stack>
                             <Stack direction="row">
-                                <Typography color={"goldenrod"} variant="h6" style={{width:'100%'}}>
+                                <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>
                                     Цветов</Typography>
                                 <Typography color={"goldenrod"}
-                                            variant="h6">{data && data.colors? data.colors.length : 0}</Typography>
+                                            variant="h6">{data && data.colors ? data.colors.length : 0}</Typography>
                             </Stack>
                             {data && data.colors ?
                                 getColorsValue(data.colors) : ""

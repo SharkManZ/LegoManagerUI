@@ -27,9 +27,9 @@ export async function getSets({...params}) {
 
 export async function getSetParts({...params}) {
     let requestParams = {
-        search: params.search
+        search: params.search,
+        filters: params.filters
     }
-
     return await httpClient.post(`/lego-manager/sets/${params.fetchRequest.setId}/part/list`, requestParams)
         .then(res => res.data.body);
 }
