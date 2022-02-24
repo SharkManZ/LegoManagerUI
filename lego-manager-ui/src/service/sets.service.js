@@ -48,3 +48,13 @@ export async function getSetSummary(setId) {
     return await httpClient.get("/lego-manager/sets/" + setId + "/summary")
         .then(res => res.data.body);
 }
+
+export async function getSetColors(setId) {
+    return await httpClient.get("/lego-manager/sets/" + setId + "/color/list")
+        .then(res => res.data.body);
+}
+
+export async function getSetPartCategories(setId) {
+    return await httpClient.get("/lego-manager/sets/" + setId + "/partCategories/list")
+        .then(res => res.data.body);
+}

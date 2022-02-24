@@ -1,4 +1,4 @@
-import {Box, Button, Grid, Paper, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
 import MainTable from "../../components/table/main.table.component";
 import React, {useEffect, useState} from "react";
 import {SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
@@ -7,13 +7,12 @@ import useCrudActions from "../../components/action/crud.actions";
 import SetPartsForm from "./set.parts.form.component";
 import SetSummary from "./set.summary.component";
 import AutocompleteControl from "../../components/fields/autocomplete.control.component";
-import {getAllCategories} from "../../service/part.categories.service";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setErrorAction} from "../../store/reducer/app.actions";
-import {getAllColors} from "../../service/colors.service";
 import {setFiltersAction} from "../../store/reducer/crud.actions";
 import {transformFilters} from "../../utils/object.utils";
 import ColorAutocompleteControl from "../../components/fields/color.autocomplete.control.component";
+import {getSetColors, getSetPartCategories} from "../../service/sets.service";
 
 const initFilters = {
     color: {
@@ -37,23 +36,36 @@ function SetPartsPage() {
     const [filterColor, setFilterColor] = useState({});
     const [categories, setCategories] = useState([]);
     const [colors, setColors] = useState([]);
+    const needRefresh = useSelector(state => state[branch].needRefresh);
 
-    useEffect(() => {
-        getAllCategories()
+    const reloadFiltersData = () => {
+        getSetPartCategories(setId)
             .then(res => {
                 setCategories(res);
             })
             .catch(error => {
                 dispatch(setErrorAction(error));
             });
-        getAllColors()
+        getSetColors(setId)
             .then(res => {
                 setColors(res);
             })
             .catch(error => {
                 dispatch(setErrorAction(error));
             });
+    }
+
+    useEffect(() => {
+        reloadFiltersData();
     }, [])
+
+    useEffect(() => {
+        if (needRefresh === false) {
+            return;
+        }
+        console.log('needRefresh ' + needRefresh);
+        reloadFiltersData();
+    }, [needRefresh])
 
     // добавляем к фильтрам категорию, при выборе из списка
     useEffect(() => {
