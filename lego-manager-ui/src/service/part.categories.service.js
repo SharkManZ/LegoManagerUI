@@ -1,4 +1,5 @@
 import httpClient from "./http.client";
+import {BACKEND_ROOT} from "../constants/app.constants";
 
 export async function getPartCategories({...params}) {
     let requestParams = {
@@ -14,7 +15,7 @@ export async function getPartCategories({...params}) {
         }];
     }
 
-    return await httpClient.post("/lego-manager/part/category/list", requestParams)
+    return await httpClient.post(BACKEND_ROOT + "/part/category/list", requestParams)
         .then(res => {
             return {
                 data: res.data.body.data,
@@ -24,16 +25,16 @@ export async function getPartCategories({...params}) {
 }
 
 export async function getAllCategories() {
-    return await httpClient.post("/lego-manager/part/category/list/all")
+    return await httpClient.post(BACKEND_ROOT + "/part/category/list/all")
         .then(res => res.data.body);
 }
 
 export async function savePartCategory({...params}) {
-    return await httpClient.post("/lego-manager/part/category/save", params)
+    return await httpClient.post(BACKEND_ROOT + "/part/category/save", params)
         .then(res => res.data);
 }
 
 export async function deletePartCategory({...params}) {
-    return await httpClient.post("/lego-manager/part/category/" + params.id + "/delete")
+    return await httpClient.post(BACKEND_ROOT + "/part/category/" + params.id + "/delete")
         .then(res => res.data);
 }

@@ -1,4 +1,5 @@
 import httpClient from "./http.client";
+import {BACKEND_ROOT} from "../constants/app.constants";
 
 export async function getSeries({...params}) {
     let requestParams = {
@@ -14,7 +15,7 @@ export async function getSeries({...params}) {
         }];
     }
 
-    return await httpClient.post("/lego-manager/series/list", requestParams)
+    return await httpClient.post(BACKEND_ROOT + "/series/list", requestParams)
         .then(res => {
             return {
                 data: res.data.body.data,
@@ -24,16 +25,16 @@ export async function getSeries({...params}) {
 }
 
 export async function getAllSeries() {
-    return await httpClient.post("/lego-manager/series/list/all")
+    return await httpClient.post(BACKEND_ROOT + "/series/list/all")
         .then(res => res.data.body);
 }
 
 export async function saveSeries({...params}) {
-    return await httpClient.post("/lego-manager/series/save", params)
+    return await httpClient.post(BACKEND_ROOT + "/series/save", params)
         .then(res => res.data);
 }
 
 export async function deleteSeries({...params}) {
-    return await httpClient.post("/lego-manager/series/" + params.id + "/delete")
+    return await httpClient.post(BACKEND_ROOT + "/series/" + params.id + "/delete")
         .then(res => res.data);
 }

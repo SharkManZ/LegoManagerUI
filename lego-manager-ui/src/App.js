@@ -5,20 +5,22 @@ import MainMenu from "./components/root/main.menu.component";
 import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {clearErrorAction} from "./store/reducer/app.actions";
+import {clearMsgAction} from "./store/reducer/app.actions";
+import {ERROR_TYPE, INFO_TYPE} from "./constants/app.constants";
 
 function App() {
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
-    const errorMsg = useSelector(state => state.app.errorMsg);
+    const msg = useSelector(state => state.app.msg);
+    const msgType = useSelector(state => state.app.msgType);
 
     useEffect(() => {
-        if (!errorMsg || errorMsg === null) {
+        if (!msg || msg === null) {
             return;
         }
-        enqueueSnackbar(errorMsg, {variant: 'error'});
-        dispatch(clearErrorAction());
-    }, [errorMsg])
+        enqueueSnackbar(msg, {variant: msgType});
+        dispatch(clearMsgAction());
+    }, [msg])
 
     return (
         <div>

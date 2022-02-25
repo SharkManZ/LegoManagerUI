@@ -1,4 +1,5 @@
 import httpClient from "./http.client";
+import {BACKEND_ROOT} from "../constants/app.constants";
 
 export async function getSets({...params}) {
     let requestParams = {
@@ -14,8 +15,8 @@ export async function getSets({...params}) {
         }];
     }
     const url = params.fetchRequest && params.fetchRequest.seriesId ?
-        `/lego-manager/series/${params.fetchRequest.seriesId}/sets/list` :
-        "/lego-manager/sets/list";
+        BACKEND_ROOT + `/series/${params.fetchRequest.seriesId}/sets/list` :
+        BACKEND_ROOT + "/sets/list";
     return await httpClient.post(url, requestParams)
         .then(res => {
             return {
@@ -30,31 +31,31 @@ export async function getSetParts({...params}) {
         search: params.search,
         filters: params.filters
     }
-    return await httpClient.post(`/lego-manager/sets/${params.fetchRequest.setId}/part/list`, requestParams)
+    return await httpClient.post(BACKEND_ROOT + `/sets/${params.fetchRequest.setId}/part/list`, requestParams)
         .then(res => res.data.body);
 }
 
 export async function saveSet({...params}) {
-    return await httpClient.post("/lego-manager/sets/save", params)
+    return await httpClient.post(BACKEND_ROOT + "/sets/save", params)
         .then(res => res.data);
 }
 
 export async function deleteSet({...params}) {
-    return await httpClient.post("/lego-manager/sets/" + params.id + "/delete")
+    return await httpClient.post(BACKEND_ROOT + "/sets/" + params.id + "/delete")
         .then(res => res.data);
 }
 
 export async function getSetSummary(setId) {
-    return await httpClient.get("/lego-manager/sets/" + setId + "/summary")
+    return await httpClient.get(BACKEND_ROOT + "/sets/" + setId + "/summary")
         .then(res => res.data.body);
 }
 
 export async function getSetColors(setId) {
-    return await httpClient.get("/lego-manager/sets/" + setId + "/color/list")
+    return await httpClient.get(BACKEND_ROOT + "/sets/" + setId + "/color/list")
         .then(res => res.data.body);
 }
 
 export async function getSetPartCategories(setId) {
-    return await httpClient.get("/lego-manager/sets/" + setId + "/partCategories/list")
+    return await httpClient.get(BACKEND_ROOT + "/sets/" + setId + "/partCategories/list")
         .then(res => res.data.body);
 }

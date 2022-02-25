@@ -7,6 +7,9 @@ import {
     SERIES_BRANCH,
     SETS_BRANCH
 } from "../../constants/pages/page.constants";
+import {exportAll} from "../../service/export.service";
+import {useDispatch} from "react-redux";
+import {setInfoAction, setSuccessAction} from "../../store/reducer/app.actions";
 
 const catalogMenu = [
     {title: 'Серии', link: '/' + SERIES_BRANCH},
@@ -14,6 +17,16 @@ const catalogMenu = [
     {title: 'Категории деталей', link: '/' + PART_CATEGORIES_BRANCH},
     {title: 'Виды деталей', link: '/' + PARTS_BRANCH},
     {title: 'Цвета', link: '/' + COLORS_BRANCH}
+]
+const exportMenu = [
+    {
+        title: 'Все', onClick: function (dispatch) {
+            dispatch(setInfoAction("Начат экспорт всех данных"));
+            exportAll().then(res => {
+                dispatch(setSuccessAction("Экспорт всех данных успешно завершен!"));
+            });
+        }
+    }
 ]
 
 function MainMenu() {
@@ -25,6 +38,7 @@ function MainMenu() {
                     <Button>Мои наборы</Button>
                     <Button>Мои детали</Button>
                     <Button>Подбор наборов</Button>
+                    <NavigateButtonMenu text="Экспорт" items={exportMenu}/>
                 </ButtonGroup>
             </Grid>
         </Paper>

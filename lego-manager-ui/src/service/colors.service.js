@@ -1,4 +1,5 @@
 import httpClient from "./http.client";
+import {BACKEND_ROOT} from "../constants/app.constants";
 
 export async function getColors({...params}) {
     let requestParams = {
@@ -14,7 +15,7 @@ export async function getColors({...params}) {
         }];
     }
 
-    return await httpClient.post("/lego-manager/colors/list", requestParams)
+    return await httpClient.post(BACKEND_ROOT + "/colors/list", requestParams)
         .then(res => {
             return {
                 data: res.data.body.data,
@@ -24,17 +25,17 @@ export async function getColors({...params}) {
 }
 
 export async function getAllColors() {
-    return await httpClient.get("/lego-manager/colors/list/all")
+    return await httpClient.get(BACKEND_ROOT + "/colors/list/all")
         .then(res => res.data.body);
 }
 
 
 export async function saveColor({...params}) {
-    return await httpClient.post("/lego-manager/colors/save", params)
+    return await httpClient.post(BACKEND_ROOT + "/colors/save", params)
         .then(res => res.data);
 }
 
 export async function deleteColor({...params}) {
-    return await httpClient.post("/lego-manager/colors/" + params.id + "/delete")
+    return await httpClient.post(BACKEND_ROOT + "/colors/" + params.id + "/delete")
         .then(res => res.data);
 }
