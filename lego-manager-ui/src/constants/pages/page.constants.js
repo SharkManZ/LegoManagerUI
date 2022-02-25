@@ -5,6 +5,7 @@ export const PART_CATEGORIES_BRANCH = "partCategories";
 export const PARTS_BRANCH = "parts";
 export const PART_COLORS_BRANCH = "partColors";
 export const SET_PARTS_BRANCH = "setParts";
+export const USERS_BRANCH = "users";
 
 export const LEGO_IMG_ROOT = "lego-images";
 
@@ -18,7 +19,6 @@ export const PAGE_CRUD_CONSTANTS = {
         addFormTitle: 'Добавление набора',
         editFormTitle: 'Редактирование набора',
         deleteFormTitle: 'Удалить набор',
-        listError: 'Ошибка при получении списка наборов',
         columns: [
             {
                 title: 'Серия',
@@ -51,7 +51,6 @@ export const PAGE_CRUD_CONSTANTS = {
         addFormTitle: 'Добавление цвета',
         editFormTitle: 'Редактирование цвета',
         deleteFormTitle: 'Удалить цвет',
-        listError: 'Ошибка при получении списка цветов',
         columns: [
             {
                 title: 'Название',
@@ -70,7 +69,6 @@ export const PAGE_CRUD_CONSTANTS = {
         addFormTitle: 'Добавление категории детали',
         editFormTitle: 'Редактирование категории детали',
         deleteFormTitle: 'Удалить категорию детали',
-        listError: 'Ошибка при получении списка категорий деталей',
         columns: [
             {
                 title: 'Название',
@@ -83,7 +81,6 @@ export const PAGE_CRUD_CONSTANTS = {
         addFormTitle: 'Добавление детали',
         editFormTitle: 'Редактирование  детали',
         deleteFormTitle: 'Удалить деталь',
-        listError: 'Ошибка при получении списка деталей',
         columns: [
             {
                 title: '',
@@ -120,7 +117,6 @@ export const PAGE_CRUD_CONSTANTS = {
         addFormTitle: 'Добавление цвета детали',
         editFormTitle: 'Редактирование  цвета детали',
         deleteFormTitle: 'Удалить цвет детали',
-        listError: 'Ошибка при получении списка цветов деталей',
         columns: [
             {
                 title: '',
@@ -149,7 +145,6 @@ export const PAGE_CRUD_CONSTANTS = {
         addFormTitle: 'Добавление детали набора',
         editFormTitle: 'Редактирование детали набора',
         deleteFormTitle: 'Удалить деталь набора',
-        listError: 'Ошибка при получении списка деталей набора',
         columns: [
             {
                 title: '',
@@ -186,6 +181,18 @@ export const PAGE_CRUD_CONSTANTS = {
                 field: 'hexColor',
                 type: 'color',
                 sortable: false
+            }
+        ]
+    },
+    users: {
+        addFormTitle: 'Добавление владельца',
+        editFormTitle: 'Редактирование владельца',
+        deleteFormTitle: 'Удалить владельца',
+        columns: [
+            {
+                title: 'Название',
+                field: 'name',
+                sortable: true
             }
         ]
     }

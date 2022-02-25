@@ -5,10 +5,10 @@ import {
     PART_CATEGORIES_BRANCH,
     PARTS_BRANCH,
     SERIES_BRANCH,
-    SETS_BRANCH
+    SETS_BRANCH,
+    USERS_BRANCH
 } from "../../constants/pages/page.constants";
 import {exportAll} from "../../service/export.service";
-import {useDispatch} from "react-redux";
 import {setInfoAction, setSuccessAction} from "../../store/reducer/app.actions";
 
 const catalogMenu = [
@@ -28,6 +28,9 @@ const exportMenu = [
         }
     }
 ]
+const collectionsMenu = [
+    {title: 'Владельцы', link: '/' + USERS_BRANCH}
+]
 
 function MainMenu() {
     return (
@@ -38,6 +41,7 @@ function MainMenu() {
                     <Button>Мои наборы</Button>
                     <Button>Мои детали</Button>
                     <Button>Подбор наборов</Button>
+                    <NavigateButtonMenu text="Коллекция" items={collectionsMenu}/>
                     <NavigateButtonMenu text="Экспорт" items={exportMenu}/>
                 </ButtonGroup>
             </Grid>

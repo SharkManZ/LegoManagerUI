@@ -229,7 +229,6 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
             search: search,
             orderBy: orderBy,
             orderDirection: orderDirection,
-            listError: PAGE_CRUD_CONSTANTS[branch].listError,
             fetchRequest: fetchRequest,
             filters: filters
         }, branch));

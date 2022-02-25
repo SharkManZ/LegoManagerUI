@@ -7,6 +7,7 @@ import ColorsPage from "../../pages/colors/colors.component";
 import PartCategoriesPage from "../../pages/part.categories/part.categories.component";
 import PartsPage from "../../pages/parts/parts.component";
 import SetPartsPage from "../../pages/set.parts/set.parts.page.component";
+import UsersPage from "../../pages/users/users.component";
 
 function MainRoute() {
     return (
@@ -20,6 +21,7 @@ function MainRoute() {
                 <Route exact path="/parts/:categoryId" component={PartsPage}/>
                 <Route exact path="/set/:setId/parts" component={SetPartsPage}/>
                 <Route exact path="/colors" component={ColorsPage}/>
+                <Route exact path="/users" component={UsersPage}/>
                 <Route exact path="/" component={Home}/>
             </Switch>
         </Paper>

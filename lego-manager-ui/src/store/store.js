@@ -10,7 +10,8 @@ import {
     PARTS_BRANCH,
     SERIES_BRANCH,
     SET_PARTS_BRANCH,
-    SETS_BRANCH
+    SETS_BRANCH,
+    USERS_BRANCH
 } from "../constants/pages/page.constants";
 import {rootSaga} from "./saga/root.saga";
 import appReducer from "./reducer/app.reducer";
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
     parts: branchReducer(gridCrudReducer, PARTS_BRANCH),
     partColors: branchReducer(gridCrudReducer, PART_COLORS_BRANCH),
     setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH),
+    users: branchReducer(gridCrudReducer, USERS_BRANCH),
     app: appReducer
 })
 
