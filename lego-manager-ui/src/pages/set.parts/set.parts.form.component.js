@@ -68,6 +68,10 @@ function SetPartsForm({setId}) {
         }
     }, [formAction])
 
+    const afterSearchSuccess = () => {
+        document.getElementById("partsCountField").focus();
+    }
+
     return (
         <Box>
             <Stack direction="column" spacing={2} mt={2}>
@@ -83,9 +87,10 @@ function SetPartsForm({setId}) {
                                itemName={formik.values.partColor.part.name}
                                onSelectItem={onSelectPartColor}
                                textValue={currentPartColorNumber}
+                               afterSearchSuccess={afterSearchSuccess}
                                autoFocus
                 />
-                <TextField required name="count" fullWidth label="Количество" onChange={formik.handleChange}
+                <TextField id="partsCountField" required name="count" fullWidth label="Количество" onChange={formik.handleChange}
                            value={formik.values.count}/>
             </Stack>
         </Box>
