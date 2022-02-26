@@ -1,4 +1,4 @@
-import {CLEAR_MSG, SET_ERROR, SET_INFO, SET_SUCCESS} from "../../constants/app.action.constants";
+import {CLEAR_MSG, SET_ERROR, SET_INFO, SET_SUCCESS, SET_USER} from "../../constants/app.action.constants";
 
 export const setErrorAction = (msg) => ({
     type: SET_ERROR,
@@ -18,4 +18,9 @@ export const setSuccessAction = (msg) => ({
 export const clearMsgAction = () => ({
     type: CLEAR_MSG,
     payload: null
+})
+
+export const setUserAction = (userId) => ({
+    type: SET_USER,
+    payload: userId
 })

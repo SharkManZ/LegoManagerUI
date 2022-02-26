@@ -29,7 +29,9 @@ const exportMenu = [
     }
 ]
 const collectionsMenu = [
-    {title: 'Владельцы', link: '/' + USERS_BRANCH}
+    {title: 'Владельцы', link: '/' + USERS_BRANCH},
+    {title: 'Мои наборы', link: '/'},
+    {title: 'Мои детали', link: '/'},
 ]
 
 function MainMenu() {
@@ -38,10 +40,8 @@ function MainMenu() {
             <Grid container justifyContent="center">
                 <ButtonGroup variant="contained" aria-label="outlined primary button group">
                     <NavigateButtonMenu text="Каталог" items={catalogMenu}/>
-                    <Button>Мои наборы</Button>
-                    <Button>Мои детали</Button>
-                    <Button>Подбор наборов</Button>
                     <NavigateButtonMenu text="Коллекция" items={collectionsMenu}/>
+                    <Button>Подбор наборов</Button>
                     <NavigateButtonMenu text="Экспорт" items={exportMenu}/>
                 </ButtonGroup>
             </Grid>
