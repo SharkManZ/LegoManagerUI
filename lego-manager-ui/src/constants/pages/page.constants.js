@@ -6,6 +6,7 @@ export const PARTS_BRANCH = "parts";
 export const PART_COLORS_BRANCH = "partColors";
 export const SET_PARTS_BRANCH = "setParts";
 export const USERS_BRANCH = "users";
+export const USER_SETS_BRANCH = "userSets";
 
 export const LEGO_IMG_ROOT = "lego-images";
 
@@ -193,6 +194,33 @@ export const PAGE_CRUD_CONSTANTS = {
                 title: 'Название',
                 field: 'name',
                 sortable: true
+            }
+        ]
+    },
+    userSets: {
+        addFormTitle: 'Добавление набора',
+        editFormTitle: 'Редактирование набора',
+        deleteFormTitle: 'Удалить набор',
+        columns: [
+            {
+                title: 'Номер',
+                field: 'set.number',
+                sortable: true
+            },
+            {
+                title: 'Название',
+                field: 'set.name',
+                sortable: true
+            },
+            {
+                title: 'Год выпуска',
+                field: 'set.year',
+                sortable: true
+            },
+            {
+                title: 'Количество',
+                field: 'count',
+                sortable: false
             }
         ]
     }

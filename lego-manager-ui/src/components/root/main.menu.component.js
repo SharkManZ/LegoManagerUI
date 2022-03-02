@@ -5,7 +5,7 @@ import {
     PART_CATEGORIES_BRANCH,
     PARTS_BRANCH,
     SERIES_BRANCH,
-    SETS_BRANCH,
+    SETS_BRANCH, USER_SETS_BRANCH,
     USERS_BRANCH
 } from "../../constants/pages/page.constants";
 import {exportAll} from "../../service/export.service";
@@ -30,7 +30,7 @@ const exportMenu = [
 ]
 const collectionsMenu = [
     {title: 'Владельцы', link: '/' + USERS_BRANCH},
-    {title: 'Мои наборы', link: '/'},
+    {title: 'Мои наборы', link: '/' + USER_SETS_BRANCH},
     {title: 'Мои детали', link: '/'},
 ]
 

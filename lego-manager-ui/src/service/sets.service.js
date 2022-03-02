@@ -59,3 +59,8 @@ export async function getSetPartCategories(setId) {
     return await httpClient.get(BACKEND_ROOT + "/sets/" + setId + "/partCategories/list")
         .then(res => res.data.body);
 }
+
+export async function searchSet({...params}) {
+    return await httpClient.post(BACKEND_ROOT + "/sets/search", params)
+        .then(res => res.data.body);
+}

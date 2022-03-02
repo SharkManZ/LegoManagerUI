@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 function FindTextField({
                            name, itemId, itemName, onSelectItem,
                            searchFunc, searchFuncParams, searchParam, evalName, textValue,
-                           afterSearchSuccess,
+                           afterSearchSuccess, imgPath,
                            ...otherProps
                        }) {
     const classes = useStyles();
@@ -31,7 +31,6 @@ function FindTextField({
     const [foundValue, setFoundValue] = useState();
     const [popoverOpen, setPopoverOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState();
-    const [preventPopover, setPreventPopover] = useState(false);
 
     const onChange = (event) => {
         setFieldValue(event.target.value);
@@ -107,7 +106,7 @@ function FindTextField({
                 <Card>
                     <CardMedia
                         component="img"
-                        image={`/${LEGO_IMG_ROOT}/parts/${fieldValue ? fieldValue : textValue}.png`}
+                        image={`/${LEGO_IMG_ROOT}/${imgPath}/${fieldValue ? fieldValue : textValue}.png`}
                         className={classes.root}
                         onError={addDefaultImg}/>
                     <CardContent>

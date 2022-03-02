@@ -88,6 +88,7 @@ function SetPartsForm({setId}) {
                                onSelectItem={onSelectPartColor}
                                textValue={currentPartColorNumber}
                                afterSearchSuccess={afterSearchSuccess}
+                               imgPath="parts"
                                autoFocus
                 />
                 <TextField id="partsCountField" required name="count" fullWidth label="Количество" onChange={formik.handleChange}
