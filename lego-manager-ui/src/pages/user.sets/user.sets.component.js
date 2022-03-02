@@ -6,6 +6,7 @@ import useCrudActions from "../../components/action/crud.actions";
 import {useEffect} from "react";
 import {setNeedRefreshAction} from "../../store/reducer/crud.actions";
 import UserSetForm from "./user.sets.form.component";
+import UserSetsSummary from "./user.sets.summary.component";
 
 const branch = USER_SETS_BRANCH;
 
@@ -23,18 +24,21 @@ function UserSetsPage() {
 
     return (
         <Box>
-            <Grid container alignItems="center" justifyContent="center" color={"deepskyblue"} mt={3}>
-                <Typography variant="h4">Наборы владельца</Typography>
-            </Grid>
+            {/*<Grid container alignItems="center" justifyContent="center" color={"deepskyblue"} mt={3}>*/}
+            {/*    <Typography variant="h4">Наборы владельца</Typography>*/}
+            {/*</Grid>*/}
             {!currentUser ? (
                 <Grid container alignItems="center" justifyContent="center" mt={3}>
                     <Typography variant="h5">Для отображения наборов необходимо выбрать текущего владельца.</Typography>
                 </Grid>
             ) : (
-                <MainTable rowActions={[editAction, deleteAction]} branch={branch}
-                           fetchRequest={{userId: currentUser}}>
-                    <UserSetForm/>
-                </MainTable>
+                <Box>
+                    <UserSetsSummary/>
+                    <MainTable rowActions={[editAction, deleteAction]} branch={branch}
+                               fetchRequest={{userId: currentUser}}>
+                        <UserSetForm/>
+                    </MainTable>
+                </Box>
             )
             }
         </Box>

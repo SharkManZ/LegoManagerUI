@@ -39,3 +39,8 @@ export async function deleteUser({...params}) {
     return await httpClient.post(BACKEND_ROOT + "/users/" + params.id + "/delete")
         .then(res => res.data);
 }
+
+export async function getUserSetsSummary(userId) {
+    return await httpClient.get(BACKEND_ROOT + "/users/" + userId + "/setsSummary")
+        .then(res => res.data.body);
+}
