@@ -1,4 +1,4 @@
-import {Card, CardContent, CardMedia, Popover, Stack, TextField, Typography} from "@mui/material";
+import {Card, CardContent, CardMedia, Popover, Popper, Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {setErrorAction} from "../../store/reducer/app.actions";
@@ -29,7 +29,7 @@ function FindTextField({
     const [localFound, setLocalFound] = useState(itemId !== undefined && itemId !== null);
     const [searchComplete, setSearchComplete] = useState(false);
     const [foundValue, setFoundValue] = useState();
-    const [popoverOpen, setPopoverOpen] = useState(false);
+    const [popperOpen, setPopperOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState();
 
     const onChange = (event) => {
@@ -38,6 +38,7 @@ function FindTextField({
         setLocalFound(false);
         setFoundValue(null);
         setSearchComplete(false);
+        setPopperOpen(false);
     }
 
     useEffect(() => {
@@ -65,7 +66,7 @@ function FindTextField({
                 if (afterSearchSuccess) {
                     afterSearchSuccess();
                 }
-                setPopoverOpen(true);
+                setPopperOpen(true);
             }
             setSearchComplete(true);
         }).catch(error => {
@@ -91,10 +92,8 @@ function FindTextField({
                        fullWidth
                        {...otherProps}/>
 
-            <Popover id="findTextFieldPopover" open={popoverOpen} anchorEl={anchorEl}
-                     onClose={() => {
-                         setPopoverOpen(false)
-                     }}
+            <Popper style={{zIndex: 1500}} id="findTextFieldPopover" open={popperOpen} anchorEl={anchorEl}
+                    placement="top"
                      anchorOrigin={{
                          vertical: 'top',
                          horizontal: 'center',
@@ -113,7 +112,7 @@ function FindTextField({
                         <Typography>{foundValue}</Typography>
                     </CardContent>
                 </Card>
-            </Popover>
+            </Popper>
         </Stack>
     )
 }
