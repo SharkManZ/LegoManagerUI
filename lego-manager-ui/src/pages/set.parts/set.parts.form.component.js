@@ -26,7 +26,7 @@ function SetPartsForm({setId}) {
                     name: ""
                 }
             },
-            count: 0
+            count: ""
         },
         onSubmit: values => {
             dispatch(saveRequestAction({
