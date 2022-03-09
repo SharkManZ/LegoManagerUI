@@ -42,6 +42,7 @@ import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
 import PropTypes from "prop-types";
 import {SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
+import {addDefaultImg} from "../../utils/common.funcs";
 
 const useStyles = makeStyles({
     root: {
@@ -117,10 +118,6 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
 
     const isImageColumn = (column) => {
         return column.isImage !== undefined && column.isImage;
-    }
-
-    const addDefaultImg = (event) => {
-        event.target.src = "/empty.png";
     }
 
     const getRowColumnCell = (row, column) => {

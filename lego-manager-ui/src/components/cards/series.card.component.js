@@ -6,6 +6,7 @@ import {useState} from "react";
 import {useHistory} from "react-router-dom";
 import {LEGO_IMG_ROOT} from "../../constants/pages/page.constants";
 import PropTypes from "prop-types";
+import {addDefaultImg} from "../../utils/common.funcs";
 
 const useStyles = makeStyles({
     root: {
@@ -26,10 +27,6 @@ function SeriesCard({item, onEdit, onDelete}) {
     const classes = useStyles();
     const [cardZoom, setCardZoom] = useState(false);
     const history = useHistory();
-
-    const addDefaultImg = (event) => {
-        event.target.src = `/empty.png`;
-    }
 
     const changeCardZoom = (value) => {
         setCardZoom(value);

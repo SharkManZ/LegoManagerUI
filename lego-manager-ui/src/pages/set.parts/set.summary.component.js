@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {Grid, Stack, Tooltip, Typography} from "@mui/material";
+import {Card, CardMedia, Grid, Stack, Tooltip, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import {LinearProgress} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
@@ -8,9 +8,18 @@ import PropTypes from "prop-types";
 import CenterGridItem from "../../components/cards/grid.item.component";
 import Paper from "@mui/material/Paper";
 import {useSelector} from "react-redux";
-import {SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
+import {LEGO_IMG_ROOT, SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
+import {addDefaultImg} from "../../utils/common.funcs";
 
 const branch = SET_PARTS_BRANCH;
+const cardStyle = {
+    height: "auto",
+    width: "auto",
+    maxHeight: 150,
+    maxWidth: 200,
+    objectFit: 'cover',
+    margin: "auto"
+};
 
 function SetSummary() {
     const {setId} = useParams();
@@ -97,6 +106,17 @@ function SetSummary() {
                                 variant="h4">{data ? data.name + '(' + data.number + ')' : ""}</Typography>
                 </CenterGridItem>
                 <CenterGridItem xs={4}>
+                    {data ?
+                        (
+                            <Card style={cardStyle}>
+                                <CardMedia
+                                    component="img"
+                                    image={`/${LEGO_IMG_ROOT}/sets/${data.number}.png`}
+                                    style={cardStyle}
+                                    onError={addDefaultImg}/>
+                            </Card>
+                        ) : ""
+                    }
                 </CenterGridItem>
             </Grid>
             <Grid container alignItems="center" justifyContent="center">

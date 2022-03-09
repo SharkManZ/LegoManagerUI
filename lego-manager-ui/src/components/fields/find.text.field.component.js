@@ -5,6 +5,7 @@ import {setErrorAction} from "../../store/reducer/app.actions";
 import {useDispatch} from "react-redux";
 import {LEGO_IMG_ROOT} from "../../constants/pages/page.constants";
 import {makeStyles} from "@mui/styles";
+import {addDefaultImg} from "../../utils/common.funcs";
 
 const useStyles = makeStyles({
     root: {
@@ -76,10 +77,6 @@ function FindTextField({
 
     const getTextColor = () => {
         return localFound ? '#13B633' : (searchComplete ? 'red' : 'black');
-    }
-
-    const addDefaultImg = (event) => {
-        event.target.src = `/empty.png`;
     }
 
     return (
