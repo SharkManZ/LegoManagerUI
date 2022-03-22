@@ -159,18 +159,21 @@ export const PAGE_CRUD_CONSTANTS = {
                 title: 'Номер цвета детали',
                 field: 'colorNumber',
                 additionalField: 'alternateColorNumber',
-                sortable: false
+                sortField: 'partColor.number',
+                sortable: true
             },
             {
                 title: 'Номер детали',
                 field: 'number',
                 additionalField: 'alternateNumber',
-                sortable: false
+                sortField: 'partColor.part.number',
+                sortable: true
             },
             {
                 title: 'Название',
                 field: 'partName',
-                sortable: false
+                sortField: 'partColor.part.name',
+                sortable: true
             },
             {
                 title: 'Количество',
@@ -181,7 +184,8 @@ export const PAGE_CRUD_CONSTANTS = {
                 title: 'Цвет',
                 field: 'hexColor',
                 type: 'color',
-                sortable: false
+                sortField: 'partColor.color.name',
+                sortable: true
             }
         ]
     },

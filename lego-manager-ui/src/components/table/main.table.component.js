@@ -252,13 +252,13 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
                             <TableRow>
                                 {columns.map((column) => (
                                     <TableCell key={column.key ? column.key : column.field}
-                                               sortDirection={orderBy === column.field ? orderDirection : false}>
+                                               sortDirection={orderBy === (column.sortField ? column.sortField : column.field) ? orderDirection : false}>
                                         {column.sortable ?
 
                                             <TableSortLabel
-                                                active={orderBy === column.field}
-                                                direction={orderBy === column.field ? orderDirection : 'asc'}
-                                                onClick={onSortChange(column.field)}
+                                                active={orderBy === column.sortField ? column.sortField : column.field}
+                                                direction={orderBy === (column.sortField ? column.sortField : column.field) ? orderDirection : 'asc'}
+                                                onClick={onSortChange(column.sortField ? column.sortField : column.field)}
                                             >
                                                 {column.title}
                                             </TableSortLabel>
