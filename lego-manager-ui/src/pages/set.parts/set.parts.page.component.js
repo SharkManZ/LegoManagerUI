@@ -15,11 +15,11 @@ import ColorAutocompleteControl from "../../components/fields/color.autocomplete
 import {getSetColors, getSetPartCategories} from "../../service/sets.service";
 
 const initFilters = {
-    color: {
+    "partColor.color.id": {
         operator: '=',
         value: ''
     },
-    partCategory: {
+    "partColor.part.category.id": {
         operator: '=',
         value: null
     }
@@ -70,20 +70,20 @@ function SetPartsPage() {
     // добавляем к фильтрам категорию, при выборе из списка
     useEffect(() => {
         const value = filterCategory ? filterCategory.id : null;
-        const newValue = Object.assign({}, filterFields.partCategory, {value: value});
+        const newValue = Object.assign({}, filterFields["partColor.part.category.id"], {value: value});
         setFilterFields({
             ...filterFields,
-            partCategory: newValue
+            "partColor.part.category.id": newValue
         })
     }, [filterCategory])
 
     // добавляем к фильтрам категорию, при выборе из списка
     useEffect(() => {
         const value = filterColor ? filterColor.id : null;
-        const newValue = Object.assign({}, filterFields.color, {value: value});
+        const newValue = Object.assign({}, filterFields["partColor.color.id"], {value: value});
         setFilterFields({
             ...filterFields,
-            color: newValue
+            "partColor.color.id": newValue
         })
     }, [filterColor])
 
@@ -120,8 +120,7 @@ function SetPartsPage() {
                 <Grid container item xs={9}>
                     <MainTable branch={branch}
                                fetchRequest={{setId: setId}}
-                               rowActions={[editAction, deleteAction]}
-                               noPagination={true}>
+                               rowActions={[editAction, deleteAction]}>
                         <SetPartsForm setId={setId}/>
                     </MainTable>
 

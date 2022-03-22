@@ -28,8 +28,16 @@ export async function getSets({...params}) {
 
 export async function getSetParts({...params}) {
     let requestParams = {
+        page: params.page,
+        size: params.rowsPerPage,
         search: params.search,
         filters: params.filters
+    }
+    if (params.orderBy !== undefined && params.orderBy !== null) {
+        requestParams.sorts = [{
+            field: params.orderBy,
+            direction: params.orderDirection !== undefined ? params.orderDirection : 'asc'
+        }];
     }
     return await httpClient.post(BACKEND_ROOT + `/sets/${params.fetchRequest.setId}/part/list`, requestParams)
         .then(res => res.data.body);
