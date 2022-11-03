@@ -8,6 +8,7 @@ import {
     SET_PARTS_BRANCH,
     SETS_BRANCH,
     USER_SETS_BRANCH,
+    USER_PARTS_BRANCH,
     USERS_BRANCH
 } from "../../constants/pages/page.constants";
 import {DELETE_REQUEST, FETCH_DATA_REQUEST, SAVE_REQUEST} from "../../constants/crud.action.constants";
@@ -20,6 +21,7 @@ import {fetchPartColorList, removePartColorRequest, savePartColorRequest} from "
 import {fetchSetPartsList, removeSetPartRequest, saveSetPartRequest} from "./set.parts.saga";
 import {fetchUsersList, removeUserRequest, saveUserRequest} from "./users.saga";
 import {fetchUserSetsList, removeUserSetRequest, saveUserSetRequest} from "./user.sets.saga";
+import {fetchUserPartsList, removeUserPartRequest, saveUserPartRequest} from "./user.parts.saga";
 
 export function* watchColorsList() {
     yield takeLatest(`${COLORS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchColorList)
@@ -55,6 +57,18 @@ export function* watchUserSetDelete() {
 
 export function* watchUserSetSave() {
     yield takeLatest(`${USER_SETS_BRANCH}/${SAVE_REQUEST}`, saveUserSetRequest)
+}
+
+export function* watchUserPartsList() {
+    yield takeLatest(`${USER_PARTS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchUserPartsList)
+}
+
+export function* watchUserPartDelete() {
+    yield takeLatest(`${USER_PARTS_BRANCH}/${DELETE_REQUEST}`, removeUserPartRequest)
+}
+
+export function* watchUserPartSave() {
+    yield takeLatest(`${USER_PARTS_BRANCH}/${SAVE_REQUEST}`, saveUserPartRequest)
 }
 
 export function* watchSeriesList() {
@@ -147,6 +161,9 @@ export function* rootSaga() {
         watchUserSetsList(),
         watchUserSetDelete(),
         watchUserSetSave(),
+        watchUserPartsList(),
+        watchUserPartDelete(),
+        watchUserPartSave(),
         watchPartCategoriesList(),
         watchPartCategoryDelete(),
         watchPartCategorySave(),

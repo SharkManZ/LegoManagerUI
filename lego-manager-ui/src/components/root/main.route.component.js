@@ -9,6 +9,7 @@ import PartsPage from "../../pages/parts/parts.component";
 import SetPartsPage from "../../pages/set.parts/set.parts.page.component";
 import UsersPage from "../../pages/users/users.component";
 import UserSetsPage from "../../pages/user.sets/user.sets.component";
+import UserPartsPage from "../../pages/user.parts/user.parts.component";
 
 function MainRoute() {
     return (
@@ -24,6 +25,7 @@ function MainRoute() {
                 <Route exact path="/colors" component={ColorsPage}/>
                 <Route exact path="/users" component={UsersPage}/>
                 <Route exact path="/userSets" component={UserSetsPage}/>
+                <Route exact path="/userParts" component={UserPartsPage}/>
                 <Route exact path="/" component={Home}/>
             </Switch>
         </Paper>

@@ -10,7 +10,7 @@ import {
     PARTS_BRANCH,
     SERIES_BRANCH,
     SET_PARTS_BRANCH,
-    SETS_BRANCH,
+    SETS_BRANCH, USER_PARTS_BRANCH,
     USER_SETS_BRANCH,
     USERS_BRANCH
 } from "../constants/pages/page.constants";
@@ -41,6 +41,7 @@ const rootReducer = combineReducers({
     setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH),
     users: branchReducer(gridCrudReducer, USERS_BRANCH),
     userSets: branchReducer(gridCrudReducer, USER_SETS_BRANCH),
+    userParts: branchReducer(gridCrudReducer, USER_PARTS_BRANCH),
     app: appReducer
 })
 
