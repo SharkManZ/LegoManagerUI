@@ -5,7 +5,8 @@ export async function getUserParts({...params}) {
     let requestParams = {
         page: params.page,
         size: params.rowsPerPage,
-        search: params.search
+        search: params.search,
+        onlyIntroduced: params.fetchRequest.onlyIntroduced
     }
 
     if (params.orderBy !== undefined && params.orderBy !== null) {
