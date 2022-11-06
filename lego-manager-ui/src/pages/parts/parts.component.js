@@ -116,7 +116,7 @@ function PartsPage() {
                         <Stack direction="column" mt={2} spacing={3}>
                             <AutocompleteControl options={categories} selectedValue={filterCategories}
                                                  disabled={categoryId !== undefined}
-                                                 label="Серия" setOption={setFilterCategories}/>
+                                                 label="Категория" setOption={setFilterCategories}/>
                         </Stack>
                         <Stack direction="row" mt={2} spacing={2} justifyContent="center">
                             <Button variant="contained" onClick={onFilterApply}>Применить</Button>

@@ -6,6 +6,7 @@ export async function getUserParts({...params}) {
         page: params.page,
         size: params.rowsPerPage,
         search: params.search,
+        filters: params.filters,
         onlyIntroduced: params.fetchRequest.onlyIntroduced
     }
 

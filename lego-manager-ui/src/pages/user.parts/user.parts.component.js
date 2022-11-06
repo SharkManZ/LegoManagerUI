@@ -3,17 +3,39 @@ import MainTable from "../../components/table/main.table.component";
 import {USER_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {useDispatch, useSelector} from "react-redux";
 import useCrudActions from "../../components/action/crud.actions";
-import {useEffect, useState} from "react";
-import {setNeedRefreshAction} from "../../store/reducer/crud.actions";
+import React, {useEffect, useState} from "react";
+import {setFiltersAction, setNeedRefreshAction} from "../../store/reducer/crud.actions";
 import UserPartForm from "./user.parts.form.component";
+import AutocompleteControl from "../../components/fields/autocomplete.control.component";
+import {getAllCategories} from "../../service/part.categories.service";
+import {transformFilters} from "../../utils/object.utils";
+import {getAllColors} from "../../service/colors.service";
+import ColorAutocompleteControl from "../../components/fields/color.autocomplete.control.component";
 
 const branch = USER_PARTS_BRANCH;
+const initFilters = {
+    category: {
+        field: 'categoryId',
+        operator: '=',
+        value: null
+    },
+    color: {
+        field: 'colorId',
+        operator: '=',
+        value: null
+    }
+}
 
 function UserPartsPage() {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state.app.userId);
     const {editAction, deleteAction} = useCrudActions(branch);
     const [onlyIntroduced, setOnlyIntroduced] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [colors, setColors] = useState([]);
+    const [filterFields, setFilterFields] = useState(initFilters);
+    const [filterCategories, setFilterCategories] = useState({});
+    const [filterColor, setFilterColor] = useState({});
 
     useEffect(() => {
         if (!currentUser) {
@@ -22,25 +44,50 @@ function UserPartsPage() {
         dispatch(setNeedRefreshAction(branch));
     }, [currentUser]);
 
+    // запрос всех серий - один раз
+    useEffect(() => {
+        getAllCategories()
+            .then(res => {
+                setCategories(res);
+            })
+        getAllColors()
+            .then(res => {
+                setColors(res);
+            })
+    }, [])
+
+    // добавляем к фильтрам серию, при выборе из списка
+    useEffect(() => {
+        const value = filterCategories ? filterCategories.id : null;
+        const newValue = Object.assign({}, filterFields.category, {value: value});
+        setFilterFields({
+            ...filterFields,
+            category: newValue
+        })
+    }, [filterCategories])
+    useEffect(() => {
+        const value = filterColor ? filterColor.id : null;
+        const newValue = Object.assign({}, filterFields.color, {value: value});
+        setFilterFields({
+            ...filterFields,
+            color: newValue
+        })
+    }, [filterColor])
+
     const handleOnlyIntroduced = (event) => {
         setOnlyIntroduced(event.target.checked);
+        dispatch(setNeedRefreshAction(branch));
     }
 
     const onFilterApply = () => {
-        dispatch(setNeedRefreshAction(branch))
-        // dispatch(setFiltersAction(transformFilters(filterFields), branch));
+        dispatch(setFiltersAction(transformFilters(filterFields), branch));
     }
 
     const clearFilters = () => {
-        // if (seriesId === undefined || seriesId === null) {
-        //     setFilterFields(initFilters);
-        //     setFilterSeries({});
-        //     dispatch(setFiltersAction([], branch));
-        // } else {
-        //     const clearedFilters = Object.assign({}, filterFields, {year: initFilters.year});
-        //     setFilterFields(clearedFilters);
-        //     dispatch(setFiltersAction(transformFilters(clearedFilters), branch));
-        // }
+        setFilterFields(initFilters);
+        setFilterCategories(null);
+        setFilterColor(null);
+        dispatch(setFiltersAction([], branch));
     }
 
     return (
@@ -62,6 +109,10 @@ function UserPartsPage() {
                                     <FormControlLabel control={<Switch checked={onlyIntroduced} onChange={handleOnlyIntroduced}/>}
                                                       label="Только введенные"/>
                                 </FormGroup>
+                                <AutocompleteControl options={categories} selectedValue={filterCategories}
+                                                     label="Категория" setOption={setFilterCategories}/>
+                                <ColorAutocompleteControl options={colors} selectedValue={filterColor}
+                                                          label="Цвет" setOption={setFilterColor}/>
                             </Stack>
                             <Stack direction="row" mt={2} spacing={2} justifyContent="center">
                                 <Button variant="contained" onClick={onFilterApply}>Применить</Button>
