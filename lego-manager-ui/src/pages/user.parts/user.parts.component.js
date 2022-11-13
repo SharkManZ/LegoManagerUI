@@ -1,4 +1,16 @@
-import {Box, Button, FormControlLabel, FormGroup, Grid, Paper, Stack, Switch, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    FormGroup,
+    Grid,
+    MenuItem,
+    Paper,
+    Select,
+    Stack,
+    Switch,
+    Typography
+} from "@mui/material";
 import MainTable from "../../components/table/main.table.component";
 import {USER_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -30,7 +42,7 @@ function UserPartsPage() {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state.app.userId);
     const {editAction, deleteAction} = useCrudActions(branch);
-    const [onlyIntroduced, setOnlyIntroduced] = useState(false);
+    const [requestType, setRequestType] = useState('ALL');
     const [categories, setCategories] = useState([]);
     const [colors, setColors] = useState([]);
     const [filterFields, setFilterFields] = useState(initFilters);
@@ -74,8 +86,8 @@ function UserPartsPage() {
         })
     }, [filterColor])
 
-    const handleOnlyIntroduced = (event) => {
-        setOnlyIntroduced(event.target.checked);
+    const handleRequestType = (event) => {
+        setRequestType(event.target.value);
         dispatch(setNeedRefreshAction(branch));
     }
 
@@ -106,8 +118,11 @@ function UserPartsPage() {
                             <Typography color={"deepskyblue"} variant="h5">Фильтры</Typography>
                             <Stack direction="column" mt={2} spacing={3}>
                                 <FormGroup>
-                                    <FormControlLabel control={<Switch checked={onlyIntroduced} onChange={handleOnlyIntroduced}/>}
-                                                      label="Только введенные"/>
+                                    <Select value={requestType} label="Детали" onChange={handleRequestType}>
+                                        <MenuItem value='ALL'>Все</MenuItem>
+                                        <MenuItem value='ONLY_ADDED'>Только добавленные</MenuItem>
+                                        <MenuItem value='ONLY_NOT_ADDED'>Только не добавленные</MenuItem>
+                                    </Select>
                                 </FormGroup>
                                 <AutocompleteControl options={categories} selectedValue={filterCategories}
                                                      label="Категория" setOption={setFilterCategories}/>
@@ -122,7 +137,7 @@ function UserPartsPage() {
                     </Grid>
                     <Grid container item xs={9}>
                         <MainTable rowActions={[editAction, deleteAction]} branch={branch}
-                                   fetchRequest={{userId: currentUser, onlyIntroduced: onlyIntroduced}}>
+                                   fetchRequest={{userId: currentUser, requestType: requestType}}>
                             <UserPartForm/>
                         </MainTable>
                     </Grid>

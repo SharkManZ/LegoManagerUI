@@ -7,7 +7,7 @@ export async function getUserParts({...params}) {
         size: params.rowsPerPage,
         search: params.search,
         filters: params.filters,
-        onlyIntroduced: params.fetchRequest.onlyIntroduced
+        requestType: params.fetchRequest.requestType
     }
 
     if (params.orderBy !== undefined && params.orderBy !== null) {
