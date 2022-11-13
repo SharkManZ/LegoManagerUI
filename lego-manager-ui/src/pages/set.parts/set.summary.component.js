@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {Card, CardMedia, Grid, Stack, Tooltip, Typography} from "@mui/material";
+import {Backdrop, Button, Card, CardMedia, CircularProgress, Grid, Stack, Tooltip, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import {LinearProgress} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import {useSelector} from "react-redux";
 import {LEGO_IMG_ROOT, SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {addDefaultImg} from "../../utils/common.funcs";
+import {importSetDetails} from "../../service/load.service";
 
 const branch = SET_PARTS_BRANCH;
 const cardStyle = {
@@ -21,10 +22,11 @@ const cardStyle = {
     margin: "auto"
 };
 
-function SetSummary() {
+function SetSummary({missingPartsLoaded}) {
     const {setId} = useParams();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState();
+    const [loaderShow, setLoaderShow] = useState(false);
     const fetchFinished = useSelector(state => state[branch].fetchFinished);
 
     const fetchData = () => {
@@ -66,6 +68,15 @@ function SetSummary() {
         )
     }
 
+    function loadDetails() {
+        setLoaderShow(true);
+        importSetDetails({number: data.number})
+            .then(res => {
+                setLoaderShow(false);
+                missingPartsLoaded(res);
+            });
+    }
+
     return (
         <Box>
             <Grid container alignItems="center" justifyContent="center">
@@ -75,31 +86,34 @@ function SetSummary() {
                     </Box>
                 ) : null}
                 <Grid item xs={4}>
-                    <Paper>
-                        <Stack direction="column" ml={2} mr={2}>
-                            <Stack direction="row">
-                                <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>Видов
-                                    деталей:</Typography>
-                                <Typography align="right" color={"goldenrod"}
-                                            variant="h6">{data ? data.uniquePartsCount : 0}</Typography>
+                    <Stack direction="column" spacing={1}>
+                        <Paper>
+                            <Stack direction="column" ml={2} mr={2}>
+                                <Stack direction="row">
+                                    <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>Видов
+                                        деталей:</Typography>
+                                    <Typography align="right" color={"goldenrod"}
+                                                variant="h6">{data ? data.uniquePartsCount : 0}</Typography>
+                                </Stack>
+                                <Stack direction="row">
+                                    <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>
+                                        Деталей</Typography>
+                                    <Typography color={"goldenrod"}
+                                                variant="h6">{data ? data.partsCount : 0}</Typography>
+                                </Stack>
+                                <Stack direction="row">
+                                    <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>
+                                        Цветов</Typography>
+                                    <Typography color={"goldenrod"}
+                                                variant="h6">{data && data.colors ? data.colors.length : 0}</Typography>
+                                </Stack>
+                                {data && data.colors ?
+                                    getColorsValue(data.colors) : ""
+                                }
                             </Stack>
-                            <Stack direction="row">
-                                <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>
-                                    Деталей</Typography>
-                                <Typography color={"goldenrod"}
-                                            variant="h6">{data ? data.partsCount : 0}</Typography>
-                            </Stack>
-                            <Stack direction="row">
-                                <Typography color={"goldenrod"} variant="h6" style={{width: '100%'}}>
-                                    Цветов</Typography>
-                                <Typography color={"goldenrod"}
-                                            variant="h6">{data && data.colors ? data.colors.length : 0}</Typography>
-                            </Stack>
-                            {data && data.colors ?
-                                getColorsValue(data.colors) : ""
-                            }
-                        </Stack>
-                    </Paper>
+                        </Paper>
+                        <Button variant="contained" onClick={loadDetails}>Импорт деталей</Button>
+                    </Stack>
                 </Grid>
                 <CenterGridItem xs={4}>
                     <Typography color={"deepskyblue"}
@@ -128,6 +142,9 @@ function SetSummary() {
             <Grid container alignItems="center" justifyContent="center">
 
             </Grid>
+            <Backdrop open={loaderShow} sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <CircularProgress color="inherit"/>
+            </Backdrop>
         </Box>
 
     )

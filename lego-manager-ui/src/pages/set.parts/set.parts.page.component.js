@@ -1,4 +1,21 @@
-import {Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Paper,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from "@mui/material";
 import MainTable from "../../components/table/main.table.component";
 import React, {useEffect, useState} from "react";
 import {SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
@@ -36,6 +53,7 @@ function SetPartsPage() {
     const [filterColor, setFilterColor] = useState({});
     const [categories, setCategories] = useState([]);
     const [colors, setColors] = useState([]);
+    const [missingParts, setMissingParts] = useState([]);
     const needRefresh = useSelector(state => state[branch].needRefresh);
 
     const reloadFiltersData = () => {
@@ -98,9 +116,17 @@ function SetPartsPage() {
         dispatch(setFiltersAction([], branch));
     }
 
+    const missingPartsLoaded = (data) => {
+        setMissingParts(data);
+    }
+
+    const closeMissingParts = () => {
+        setMissingParts([]);
+    }
+
     return (
         <Box>
-            <SetSummary setId={setId}/>
+            <SetSummary setId={setId} missingPartsLoaded={missingPartsLoaded}/>
             <Grid container>
                 <Grid container item xs={3} width="100%" pt={2} pb={2}>
                     <Paper style={{width: "100%", textAlign: "center", padding: 10}}>
@@ -123,8 +149,37 @@ function SetPartsPage() {
                                rowActions={[editAction, deleteAction]}>
                         <SetPartsForm setId={setId}/>
                     </MainTable>
-
                 </Grid>
+                <Dialog open={missingParts.length > 0} fullWidth onClose={closeMissingParts}>
+                    <DialogTitle>Не найденные детали набора</DialogTitle>
+                    <DialogContent>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Изображение</TableCell>
+                                        <TableCell>Количество</TableCell>
+                                        <TableCell>Номер</TableCell>
+                                        <TableCell>Название</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {missingParts !== undefined ? missingParts.map((row) => (
+                                        <TableRow>
+                                            <TableCell><img src={"http://" + row.imgUrl}/></TableCell>
+                                            <TableCell>{row.count}</TableCell>
+                                            <TableCell>{row.number}</TableCell>
+                                            <TableCell>{row.name + "<br>" + row.colorNumber}</TableCell>
+                                        </TableRow>
+                                    )) : []}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant="contained" onClick={closeMissingParts}>Закрыть</Button>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </Box>
     )
