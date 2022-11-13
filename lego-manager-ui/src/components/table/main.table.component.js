@@ -124,15 +124,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
         if (isImageColumn(column)) {
             return (
                 <TableCell key={column.key ? column.key : column.field}>
-                    <Box
-                        style={{overflow: "hidden", textAlign: "center"}}>
-                        <img src={`/${column.imageSource}/${row[column.field]}.png`}
-                             alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
-                             loading="lazy"
-                             onError={addDefaultImg}
-                             className={classes.root}
-                        />
-                    </Box>
+                    {getTooltipImageColumn(row, column)}
                 </TableCell>
             )
         } else if (column.type === 'color') {
@@ -166,6 +158,32 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
                 </TableCell>
             )
         }
+    }
+
+    function getTooltipImageColumn(row, column) {
+        if (column.tooltipField) {
+            return (
+                <Tooltip title={row[column.tooltipField]}>
+                    {getImageColumnValue(row, column)}
+                </Tooltip>
+            )
+        } else {
+            return getImageColumnValue(row, column)
+        }
+    }
+
+    function getImageColumnValue(row, column) {
+        return (
+            <Box
+                style={{overflow: "hidden", textAlign: "center"}}>
+                <img src={`/${column.imageSource}/${row[column.field]}.png`}
+                     alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
+                     loading="lazy"
+                     onError={addDefaultImg}
+                     className={classes.root}
+                />
+            </Box>
+        )
     }
 
     function getColorsValue(data) {

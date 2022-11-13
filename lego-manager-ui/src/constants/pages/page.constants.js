@@ -239,6 +239,7 @@ export const PAGE_CRUD_CONSTANTS = {
                 field: 'colorNumber',
                 imageSource: `${LEGO_IMG_ROOT}/parts`,
                 key: 'imgKey',
+                tooltipField: 'colorName',
                 sortable: false,
                 isImage: true
             },
