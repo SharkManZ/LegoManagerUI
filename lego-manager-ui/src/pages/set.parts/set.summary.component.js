@@ -7,10 +7,12 @@ import {getSetSummary} from "../../service/sets.service";
 import PropTypes from "prop-types";
 import CenterGridItem from "../../components/cards/grid.item.component";
 import Paper from "@mui/material/Paper";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {LEGO_IMG_ROOT, SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {addDefaultImg} from "../../utils/common.funcs";
-import {importSetDetails} from "../../service/load.service";
+import {checkSetDetails, importSetDetails} from "../../service/load.service";
+import {setErrorAction, setInfoAction} from "../../store/reducer/app.actions";
+import {setNeedRefreshAction} from "../../store/reducer/crud.actions";
 
 const branch = SET_PARTS_BRANCH;
 const cardStyle = {
@@ -23,6 +25,7 @@ const cardStyle = {
 };
 
 function SetSummary({missingPartsLoaded}) {
+    const dispatch = useDispatch();
     const {setId} = useParams();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState();
@@ -68,13 +71,51 @@ function SetSummary({missingPartsLoaded}) {
         )
     }
 
+    function checkImportDetails() {
+        setLoaderShow(true);
+        checkSetDetails({number: data.number})
+            .then(res => {
+                if (res.length > 0) {
+                    missingPartsLoaded(res);
+                } else {
+                    dispatch(setInfoAction("Не совпадающих деталей не найдено"));
+                }
+            })
+            .catch(error => {
+                dispatch(setErrorAction(error));
+            })
+            .finally(() => {
+                setLoaderShow(false);
+            })
+    }
+
     function loadDetails() {
         setLoaderShow(true);
-        importSetDetails({number: data.number})
+        checkSetDetails({number: data.number})
             .then(res => {
+                if (res.length > 0) {
+                    missingPartsLoaded(res);
+                } else {
+                    setLoaderShow(true);
+                    importSetDetails({number: data.number})
+                        .then(res => {
+                            dispatch(setInfoAction("Завершен импорт деталей набора"));
+                            dispatch(setNeedRefreshAction(branch));
+                        })
+                        .catch(error => {
+                            dispatch(setErrorAction(error));
+                        })
+                        .finally(() => {
+                            setLoaderShow(false);
+                        })
+                }
+            })
+            .catch(error => {
+                dispatch(setErrorAction(error));
+            })
+            .finally(() => {
                 setLoaderShow(false);
-                missingPartsLoaded(res);
-            });
+            })
     }
 
     return (
@@ -112,7 +153,15 @@ function SetSummary({missingPartsLoaded}) {
                                 }
                             </Stack>
                         </Paper>
-                        <Button variant="contained" onClick={loadDetails}>Импорт деталей</Button>
+                        {data && data.partsCount > 0 ?
+                            (
+                                <Button variant="contained" onClick={checkImportDetails}>Проверка деталей</Button>
+                            ) :
+                            (
+                                <Button variant="contained" onClick={loadDetails}>Импорт деталей</Button>
+
+                            )
+                        }
                     </Stack>
                 </Grid>
                 <CenterGridItem xs={4}>
@@ -142,7 +191,7 @@ function SetSummary({missingPartsLoaded}) {
             <Grid container alignItems="center" justifyContent="center">
 
             </Grid>
-            <Backdrop open={loaderShow} sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <Backdrop open={loaderShow} sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}>
                 <CircularProgress color="inherit"/>
             </Backdrop>
         </Box>

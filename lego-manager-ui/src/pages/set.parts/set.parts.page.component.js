@@ -4,7 +4,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
+    DialogTitle, Divider,
     Grid,
     Paper,
     Stack,
@@ -169,7 +169,13 @@ function SetPartsPage() {
                                             <TableCell><img src={"http://" + row.imgUrl}/></TableCell>
                                             <TableCell>{row.count}</TableCell>
                                             <TableCell>{row.number}</TableCell>
-                                            <TableCell>{row.name + "<br>" + row.colorNumber}</TableCell>
+                                            <TableCell>
+                                                <Stack direction="column">
+                                                    {row.name}
+                                                    <Divider/>
+                                                    {row.colorNumber}
+                                                </Stack>
+                                            </TableCell>
                                         </TableRow>
                                     )) : []}
                                 </TableBody>
