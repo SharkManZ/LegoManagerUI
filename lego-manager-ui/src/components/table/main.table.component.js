@@ -109,11 +109,28 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
         if (column.type === 'color') {
             return '';
         }
-        let value = fetchFromObject(row, column.field);
+        let mainValue = fetchFromObject(row, column.field);
+        let additionalValue;
+        let combineValue;
         if (column.additionalField && fetchFromObject(row, column.additionalField)) {
-            value = value + ' (' + fetchFromObject(row, column.additionalField) + ')';
+            additionalValue = fetchFromObject(row, column.additionalField);
+            combineValue = mainValue + ' (' + additionalValue + ')';
+        } else {
+            combineValue = mainValue;
         }
-        return value;
+        if (column.colorDiff) {
+            let color;
+            let secondValue = additionalValue ? additionalValue : 0;
+            if (mainValue < secondValue) {
+                color = column.colorDiff.lower;
+            } else if (mainValue > secondValue) {
+                color = column.colorDiff.greater
+            } else {
+                color = column.colorDiff.equals;
+            }
+            return (<div style={{color: color}}>{combineValue}</div>);
+        }
+        return combineValue;
     }
 
     const isImageColumn = (column) => {

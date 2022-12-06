@@ -122,6 +122,8 @@ function UserPartsPage() {
                                         <MenuItem value='ALL'>Все</MenuItem>
                                         <MenuItem value='ONLY_ADDED'>Только добавленные</MenuItem>
                                         <MenuItem value='ONLY_NOT_ADDED'>Только не добавленные</MenuItem>
+                                        <MenuItem value='NOT_EQUALS'>Только не совпащаюшие</MenuItem>
+                                        <MenuItem value='LOWER_COUNT'>Только потерянные</MenuItem>
                                     </Select>
                                 </FormGroup>
                                 <AutocompleteControl options={categories} selectedValue={filterCategories}

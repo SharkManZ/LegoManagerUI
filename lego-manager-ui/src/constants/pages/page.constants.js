@@ -269,6 +269,11 @@ export const PAGE_CRUD_CONSTANTS = {
                 title: 'Количество',
                 field: 'userCount',
                 additionalField: 'setsCount',
+                colorDiff: {
+                    equals: 'black',
+                    greater: 'green',
+                    lower: 'red'
+                },
                 sortable: true
             }
         ]
