@@ -32,11 +32,11 @@ import ColorAutocompleteControl from "../../components/fields/color.autocomplete
 import {getSetColors, getSetPartCategories} from "../../service/sets.service";
 
 const initFilters = {
-    "partColor.color.id": {
+    "colorId": {
         operator: '=',
         value: ''
     },
-    "partColor.part.category.id": {
+    "categoryId": {
         operator: '=',
         value: null
     }
@@ -88,20 +88,20 @@ function SetPartsPage() {
     // добавляем к фильтрам категорию, при выборе из списка
     useEffect(() => {
         const value = filterCategory ? filterCategory.id : null;
-        const newValue = Object.assign({}, filterFields["partColor.part.category.id"], {value: value});
+        const newValue = Object.assign({}, filterFields["categoryId"], {value: value});
         setFilterFields({
             ...filterFields,
-            "partColor.part.category.id": newValue
+            "categoryId": newValue
         })
     }, [filterCategory])
 
     // добавляем к фильтрам категорию, при выборе из списка
     useEffect(() => {
         const value = filterColor ? filterColor.id : null;
-        const newValue = Object.assign({}, filterFields["partColor.color.id"], {value: value});
+        const newValue = Object.assign({}, filterFields["colorId"], {value: value});
         setFilterFields({
             ...filterFields,
-            "partColor.color.id": newValue
+            "colorId": newValue
         })
     }, [filterColor])
 
