@@ -4,7 +4,7 @@ import TotalCard from "../components/cards/total.card.component";
 import CenterGridItem from "../components/cards/grid.item.component";
 import {getTotals} from "../service/total.service";
 import {useHistory} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setErrorAction} from "../store/reducer/app.actions";
 
 const emptyTotals = {
@@ -17,14 +17,17 @@ const emptyTotals = {
 function Home() {
     const dispatch = useDispatch();
     const [totals, setTotals] = useState(emptyTotals);
+    const currentUser = useSelector(state => state.app.userId);
     const history = useHistory();
     useEffect(() => {
-        getTotals().then(res => {
+        getTotals({
+            userId: currentUser
+        }).then(res => {
             setTotals(res);
         }).catch(error => {
             dispatch(setErrorAction(error));
         });
-    }, []);
+    }, [currentUser]);
 
     return (
         <Grid container direction="row">
