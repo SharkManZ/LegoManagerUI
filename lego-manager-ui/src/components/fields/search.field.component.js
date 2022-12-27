@@ -24,14 +24,14 @@ function SearchField({branch}) {
     const onSearch = (event) => {
         if (event.key === 'Enter') {
             dispatch(setPageAction(0, branch));
-            dispatch(setSearchAction({value: searchValue, equals: equals}, branch));
+            dispatch(setSearchAction(searchValue !== "" ? {value:  searchValue, equals: equals} : null, branch));
         }
     }
 
     const onClear = () => {
         setSearchValue("");
         dispatch(setPageAction(0, branch));
-        dispatch(setSearchAction({value: "", equals: equals}, branch));
+        dispatch(setSearchAction(null, branch));
     }
 
     useEffect(() => {
