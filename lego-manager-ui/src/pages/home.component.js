@@ -31,23 +31,23 @@ function Home() {
 
     return (
         <Grid container direction="row">
-            <CenterGridItem xs={6}>
+            <CenterGridItem item xs={6}>
                 <TotalCard img={"/series_small.jpg"} caption="Серии наборов"
                            totalCount={totals.series.total} inStock={totals.series.inStock}
                            onClick={() => history.push("/series")}
                 />
             </CenterGridItem>
-            <CenterGridItem xs={6}>
+            <CenterGridItem item xs={6}>
                 <TotalCard img={"/sets_small.jpg"} caption="Наборы"
                            totalCount={totals.sets.total} inStock={totals.sets.inStock}
                            onClick={() => history.push("/sets")}
                 />
             </CenterGridItem>
-            <CenterGridItem xs={6}>
+            <CenterGridItem item xs={6}>
                 <TotalCard img={"/diff_parts.png"} caption="Виды деталей"
                            totalCount={totals.diffParts.total} inStock={totals.diffParts.inStock}/>
             </CenterGridItem>
-            <CenterGridItem xs={6}>
+            <CenterGridItem item xs={6}>
                 <TotalCard img={"/parts.png"} caption="Детали"
                            totalCount={totals.parts.total} inStock={totals.parts.inStock}/>
             </CenterGridItem>

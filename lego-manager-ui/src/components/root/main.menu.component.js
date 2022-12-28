@@ -12,15 +12,15 @@ import {exportAll} from "../../service/export.service";
 import {setInfoAction, setSuccessAction} from "../../store/reducer/app.actions";
 
 const catalogMenu = [
-    {title: 'Серии', link: '/' + SERIES_BRANCH},
-    {title: 'Наборы', link: '/' + SETS_BRANCH},
-    {title: 'Категории деталей', link: '/' + PART_CATEGORIES_BRANCH},
-    {title: 'Виды деталей', link: '/' + PARTS_BRANCH},
-    {title: 'Цвета', link: '/' + COLORS_BRANCH}
+    {id: 'seriesPage', title: 'Серии', link: '/' + SERIES_BRANCH},
+    {id: 'setsPage', title: 'Наборы', link: '/' + SETS_BRANCH},
+    {id: 'partCategoriesPage', title: 'Категории деталей', link: '/' + PART_CATEGORIES_BRANCH},
+    {id: 'partsPage', title: 'Виды деталей', link: '/' + PARTS_BRANCH},
+    {id: 'colorsPage', title: 'Цвета', link: '/' + COLORS_BRANCH}
 ]
 const exportMenu = [
     {
-        title: 'Все', onClick: function (dispatch) {
+        id:'exportAllMenu', title: 'Все', onClick: function (dispatch) {
             dispatch(setInfoAction("Начат экспорт всех данных"));
             exportAll().then(res => {
                 dispatch(setSuccessAction("Экспорт всех данных успешно завершен!"));
@@ -29,9 +29,9 @@ const exportMenu = [
     }
 ]
 const collectionsMenu = [
-    {title: 'Владельцы', link: '/' + USERS_BRANCH},
-    {title: 'Мои наборы', link: '/' + USER_SETS_BRANCH},
-    {title: 'Мои детали', link: '/' + USER_PARTS_BRANCH},
+    {id:'usersPage', title: 'Владельцы', link: '/' + USERS_BRANCH},
+    {id:'userSetsPage', title: 'Мои наборы', link: '/' + USER_SETS_BRANCH},
+    {id:'userPartsPage', title: 'Мои детали', link: '/' + USER_PARTS_BRANCH},
 ]
 
 function MainMenu() {

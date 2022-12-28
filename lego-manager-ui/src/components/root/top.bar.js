@@ -48,7 +48,7 @@ function TopBar() {
             <Toolbar>
                 <Grid container justifyContent="center" alignItems="center">
                     <Grid item xs={3}/>
-                    <Grid container xs={6} justifyContent="center" alignItems="center">
+                    <Grid item container xs={6} justifyContent="center" alignItems="center">
                         <img src="/logo.png" alt="Логотип" onClick={navigateToHome}/>
                         <Typography variant="h6" noWrap component="div">
                             Lego Manager

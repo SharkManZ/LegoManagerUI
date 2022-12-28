@@ -6,7 +6,6 @@ import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {clearMsgAction} from "./store/reducer/app.actions";
-import {ERROR_TYPE, INFO_TYPE} from "./constants/app.constants";
 
 function App() {
     const dispatch = useDispatch();
@@ -15,7 +14,7 @@ function App() {
     const msgType = useSelector(state => state.app.msgType);
 
     useEffect(() => {
-        if (!msg || msg === null) {
+        if (!msg) {
             return;
         }
         enqueueSnackbar(msg, {variant: msgType});

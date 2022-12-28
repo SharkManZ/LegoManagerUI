@@ -24,7 +24,7 @@ function CenterGridItem({xs, children}) {
 
 CenterGridItem.propTypes = {
     xs: PropTypes.number.isRequired,
-    children: PropTypes.array.isRequired
+    children: PropTypes.object.isRequired
 }
 
 export default CenterGridItem;

@@ -29,7 +29,7 @@ function NavigateButtonMenu({text, items, ...otherProps}) {
                        anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
                        transformOrigin={{vertical: 'top', horizontal: 'left'}}>
                 {items.map((item) => (
-                    <MenuItem key={item.link} onClick={() => onClick(item)} to={item.link}
+                    <MenuItem key={item.id} onClick={() => onClick(item)} to={item.link}
                               component={Link}>{item.title}</MenuItem>
                 ))}
             </HoverMenu>
