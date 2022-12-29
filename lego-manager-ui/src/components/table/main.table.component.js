@@ -56,6 +56,7 @@ const useStyles = makeStyles({
 const COLORS_IN_ROW = 6;
 
 function MainTable({rowActions, branch, noPagination = false, fetchRequest, children}) {
+    console.log(rowActions);
     const classes = useStyles();
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
@@ -291,7 +292,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
                                         {column.sortable ?
 
                                             <TableSortLabel
-                                                active={orderBy === column.sortField ? column.sortField : column.field}
+                                                active={orderBy === (column.sortField ? column.sortField : column.field)}
                                                 direction={orderBy === (column.sortField ? column.sortField : column.field) ? orderDirection : 'asc'}
                                                 onClick={onSortChange(column.sortField ? column.sortField : column.field)}
                                             >

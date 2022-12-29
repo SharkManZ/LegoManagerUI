@@ -1,4 +1,4 @@
-import {Card, CardContent, CardMedia, Popover, Popper, Stack, TextField, Typography} from "@mui/material";
+import {Card, CardContent, CardMedia, Popper, Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {setErrorAction} from "../../store/reducer/app.actions";
@@ -91,14 +91,14 @@ function FindTextField({
 
             <Popper style={{zIndex: 1500}} id="findTextFieldPopover" open={popperOpen} anchorEl={anchorEl}
                     placement="top"
-                     anchorOrigin={{
-                         vertical: 'top',
-                         horizontal: 'center',
-                     }}
-                     transformOrigin={{
-                         vertical: 'bottom',
-                         horizontal: 'center',
-                     }}>
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}>
                 <Card>
                     <CardMedia
                         component="img"

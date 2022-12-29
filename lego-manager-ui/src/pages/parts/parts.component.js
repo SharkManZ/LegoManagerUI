@@ -125,7 +125,7 @@ function PartsPage() {
                     </Paper>
                 </Grid>
                 <Grid container item xs={9}>
-                    <MainTable rowActions={[{title: 'Цвета', onClick: onColorsAction}, editAction, deleteAction]}
+                    <MainTable rowActions={[{key: 'colors', title: 'Цвета', onClick: onColorsAction}, editAction, deleteAction]}
                                branch={branch}
                                fetchRequest={{categoryId: categoryId}}
                     >

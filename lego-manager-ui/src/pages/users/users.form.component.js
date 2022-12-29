@@ -4,7 +4,7 @@ import {useEffect} from "react";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
 import {useDispatch, useSelector} from "react-redux";
 import {Box, Stack, TextField} from "@mui/material";
-import {COLORS_BRANCH, USERS_BRANCH} from "../../constants/pages/page.constants";
+import {USERS_BRANCH} from "../../constants/pages/page.constants";
 
 const branch = USERS_BRANCH;
 

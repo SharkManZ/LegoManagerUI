@@ -1,5 +1,5 @@
 import {call, put} from "redux-saga/effects";
-import {USER_PARTS_BRANCH, USER_SETS_BRANCH} from "../../constants/pages/page.constants";
+import {USER_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {DELETE_RESPONSE, FETCH_DATA, SAVE_RESPONSE} from "../../constants/crud.action.constants";
 import {SET_ERROR} from "../../constants/app.action.constants";
 import {deleteUserPart, getUserParts, saveUserPart} from "../../service/users.parts.service";

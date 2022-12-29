@@ -19,11 +19,13 @@ function useCrudActions(branch) {
 
     return ({
         editAction: {
+            key: 'editAction',
             title: 'Редактировать',
             onClick: editAction
         },
         deleteAction:
             {
+                key: 'deleteAction',
                 title: 'Удалить',
                 onClick: deleteAction
             }

@@ -79,7 +79,7 @@ function SeriesImageList({branch, itemsPerPage, children}) {
 
             <Grid container mt={2} mb={2}>
                 {data.map((item) => (
-                    <Grid xl={4} xs={12} md={6}>
+                    <Grid key={item.id} item xl={4} xs={12} md={6}>
                         <SeriesCard key={item.id} item={item} onEdit={onEdit} onDelete={deleteAction}/>
                     </Grid>
                 ))}
@@ -111,7 +111,7 @@ function SeriesImageList({branch, itemsPerPage, children}) {
 SeriesImageList.propTypes = {
     branch: PropTypes.string.isRequired,
     itemsPerPage: PropTypes.number.isRequired,
-    children: PropTypes.array
+    children: PropTypes.object
 }
 
 export default SeriesImageList;
