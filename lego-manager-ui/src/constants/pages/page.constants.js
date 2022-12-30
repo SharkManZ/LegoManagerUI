@@ -186,6 +186,7 @@ export const PAGE_CRUD_CONSTANTS = {
                 field: 'hexColor',
                 type: 'color',
                 sortField: 'partColor.color.name',
+                additionalField: 'colorName',
                 sortable: true
             }
         ]

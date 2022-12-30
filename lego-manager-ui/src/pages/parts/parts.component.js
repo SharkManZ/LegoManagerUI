@@ -14,7 +14,7 @@ import PartsForm from "./parts.form.component";
 
 const initFilters = {
     category: {
-        field: 'category.id',
+        field: 'categoryId',
         operator: '=',
         value: null
     }

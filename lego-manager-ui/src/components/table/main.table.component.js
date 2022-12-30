@@ -56,7 +56,6 @@ const useStyles = makeStyles({
 const COLORS_IN_ROW = 6;
 
 function MainTable({rowActions, branch, noPagination = false, fetchRequest, children}) {
-    console.log(rowActions);
     const classes = useStyles();
     const dispatch = useDispatch();
     const totalCount = useSelector(state => state[branch].totalCount);
