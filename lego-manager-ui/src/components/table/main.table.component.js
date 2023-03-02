@@ -190,10 +190,11 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
     }
 
     function getImageColumnValue(row, column) {
+        let fileName = getImageFileName(row, column);
         return (
             <Box
                 style={{overflow: "hidden", textAlign: "center"}}>
-                <img src={`/${column.imageSource}/${row[column.field]}.png`}
+                <img src={`/${column.imageSource}/${fileName}.png`}
                      alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
                      loading="lazy"
                      onError={addDefaultImg}
@@ -201,6 +202,14 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
                 />
             </Box>
         )
+    }
+
+    function getImageFileName(row, column) {
+        if (column.field.includes('+')) {
+            return column.field.split('+').map(val => fetchFromObject(row, val)).join('_');
+        } else {
+            return fetchFromObject(row, column.field);
+        }
     }
 
     function getColorsValue(data) {

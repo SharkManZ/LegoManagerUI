@@ -86,7 +86,7 @@ export const PAGE_CRUD_CONSTANTS = {
         columns: [
             {
                 title: '',
-                field: 'minColorNumber',
+                field: 'number+minColorNumber',
                 imageSource: `${LEGO_IMG_ROOT}/parts`,
                 key: 'imgKey',
                 sortable: false,
@@ -122,7 +122,7 @@ export const PAGE_CRUD_CONSTANTS = {
         columns: [
             {
                 title: '',
-                field: 'number',
+                field: 'part.number+number',
                 imageSource: `${LEGO_IMG_ROOT}/parts`,
                 key: 'imgKey',
                 isImage: true,
@@ -150,7 +150,7 @@ export const PAGE_CRUD_CONSTANTS = {
         columns: [
             {
                 title: '',
-                field: 'colorNumber',
+                field: 'number+colorNumber',
                 imageSource: `${LEGO_IMG_ROOT}/parts`,
                 key: 'imgKey',
                 isImage: true,
@@ -237,7 +237,7 @@ export const PAGE_CRUD_CONSTANTS = {
         columns: [
             {
                 title: '',
-                field: 'colorNumber',
+                field: 'number+colorNumber',
                 imageSource: `${LEGO_IMG_ROOT}/parts`,
                 key: 'imgKey',
                 tooltipField: 'colorName',
