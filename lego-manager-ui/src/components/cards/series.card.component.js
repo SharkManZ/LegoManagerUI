@@ -1,4 +1,4 @@
-import {Box, Card, CardContent, CardMedia, Grid, IconButton, Typography} from "@mui/material";
+import {Box, Card, CardContent, CardMedia, Grid, IconButton, Stack, Typography} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {makeStyles} from "@mui/styles";
@@ -49,6 +49,19 @@ function SeriesCard({item, onEdit, onDelete}) {
             <Card
                   onMouseOver={() => changeCardZoom(true)}
                   onMouseOut={() => changeCardZoom(false)}>
+                <CardContent sx={{ p:1, '&:last-child': { pb: 0 }}}>
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <Stack direction="row" justifyContent="left" width='80%'>
+                            <Typography variant="h7" color="text.secondary">{item.name}</Typography>
+                        </Stack>
+                        <IconButton color="secondary" aria-label="Редактировать" onClick={editClick}>
+                            <EditIcon/>
+                        </IconButton>
+                        <IconButton color="secondary" aria-label="Удалить" onClick={deleteClick}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Box>
+                </CardContent>
                 <CardMedia style={{overflow: "hidden", width: '100%'}}
                            component="img"
                            height="150"
@@ -58,21 +71,13 @@ function SeriesCard({item, onEdit, onDelete}) {
                            className={cardZoom ? classes.cardHovered : classes.root}
                            onClick={onCardClick}
                 />
-                <CardContent style={{overflow: "hidden", width: '100%'}}>
-                    <Grid container ml={2} alignItems="center" justifyContent="center">
+                <CardContent sx={{ p:1, '&:last-child': { pb: 2 }}} style={{overflow: "hidden", width: '100%'}}>
+                    <Grid container alignItems="center" justifyContent="center">
                         <Grid item xs={3}>
                             <Typography variant="h8">Наборов</Typography>
                         </Grid>
                         <Grid container item xs={3} alignItems="center" justifyContent="center">
                             <Typography variant="h7">{item.setsCount}</Typography>
-                        </Grid>
-                        <Grid container item xs={4} alignItems="center" justifyContent="center">
-                            <IconButton color="secondary" aria-label="Редактировать" onClick={editClick}>
-                                <EditIcon/>
-                            </IconButton>
-                            <IconButton color="secondary" aria-label="Удалить" onClick={deleteClick}>
-                                <DeleteIcon/>
-                            </IconButton>
                         </Grid>
                     </Grid>
                 </CardContent>
