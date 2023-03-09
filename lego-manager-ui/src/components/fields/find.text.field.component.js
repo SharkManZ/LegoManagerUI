@@ -1,3 +1,4 @@
+import React from 'react';
 import {Card, CardContent, CardMedia, Popper, Stack, TextField, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import PropTypes from "prop-types";

@@ -1,3 +1,4 @@
+import React from 'react';
 import {Box, Grid, Typography} from "@mui/material";
 import MainTable from "../../components/table/main.table.component";
 import {COLORS_BRANCH} from "../../constants/pages/page.constants";

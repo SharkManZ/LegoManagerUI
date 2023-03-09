@@ -10,6 +10,7 @@
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.1.0",
+    "@reduxjs/toolkit": "^1.9.3",
     "axios": "^0.23.0",
     "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.1",

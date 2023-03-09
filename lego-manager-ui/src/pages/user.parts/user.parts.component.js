@@ -1,16 +1,4 @@
-import {
-    Box,
-    Button,
-    FormControlLabel,
-    FormGroup,
-    Grid,
-    MenuItem,
-    Paper,
-    Select,
-    Stack,
-    Switch,
-    Typography
-} from "@mui/material";
+import {Box, Button, FormGroup, Grid, MenuItem, Paper, Select, Stack, Typography} from "@mui/material";
 import MainTable from "../../components/table/main.table.component";
 import {USER_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {useDispatch, useSelector} from "react-redux";

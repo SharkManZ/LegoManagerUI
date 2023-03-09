@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from "@emotion/styled";
 import {Box, Grid} from "@mui/material";
 import PropTypes from "prop-types";

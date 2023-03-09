@@ -1,3 +1,4 @@
+import React from 'react';
 import {Box, Grid, Typography} from "@mui/material";
 import CenterGridItem from "./grid.item.component";
 import PropTypes from "prop-types";

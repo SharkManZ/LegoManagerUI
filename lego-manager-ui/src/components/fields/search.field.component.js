@@ -1,3 +1,4 @@
+import React from 'react';
 import {IconButton, Stack, TextField, ToggleButton} from "@mui/material";
 import TextSnippet from "@mui/icons-material/TextSnippet";
 import ClearIcon from '@mui/icons-material/Clear';

@@ -1,3 +1,4 @@
+import React from 'react';
 import {Route, Switch} from "react-router-dom";
 import SeriesPage from "../../pages/series/series.component";
 import SetsPage from "../../pages/sets/sets.component";
