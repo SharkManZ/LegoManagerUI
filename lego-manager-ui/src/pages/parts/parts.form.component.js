@@ -18,7 +18,7 @@ import AutocompleteControl from "../../components/fields/autocomplete.control.co
 import AddIcon from "@mui/icons-material/Add";
 import {PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {savePartCategory} from "../../service/part.categories.service";
-import {setErrorAction} from "../../store/reducer/app.actions";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 const initCategoryFormValues = {
     id: null,
@@ -84,7 +84,7 @@ function PartsForm({categories, fetchAllCategories, categoryFetched}) {
             setCategoryOpen(false);
             setAddedCategory(res.body);
         }).catch(error => {
-            dispatch(setErrorAction(error));
+            dispatch(appSlice.actions.setError(error));
         });
     }
 

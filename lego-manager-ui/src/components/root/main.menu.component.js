@@ -6,11 +6,13 @@ import {
     PART_CATEGORIES_BRANCH,
     PARTS_BRANCH,
     SERIES_BRANCH,
-    SETS_BRANCH, USER_PARTS_BRANCH, USER_SETS_BRANCH,
+    SETS_BRANCH,
+    USER_PARTS_BRANCH,
+    USER_SETS_BRANCH,
     USERS_BRANCH
 } from "../../constants/pages/page.constants";
 import {exportAll} from "../../service/export.service";
-import {setInfoAction, setSuccessAction} from "../../store/reducer/app.actions";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 const catalogMenu = [
     {id: 'seriesPage', title: 'Серии', link: '/' + SERIES_BRANCH},
@@ -21,18 +23,18 @@ const catalogMenu = [
 ]
 const exportMenu = [
     {
-        id:'exportAllMenu', title: 'Все', onClick: function (dispatch) {
-            dispatch(setInfoAction("Начат экспорт всех данных"));
+        id: 'exportAllMenu', title: 'Все', onClick: function (dispatch) {
+            dispatch(appSlice.actions.setInfo("Начат экспорт всех данных"));
             exportAll().then(res => {
-                dispatch(setSuccessAction("Экспорт всех данных успешно завершен!"));
+                dispatch(appSlice.actions.setSuccess("Экспорт всех данных успешно завершен!"));
             });
         }
     }
 ]
 const collectionsMenu = [
-    {id:'usersPage', title: 'Владельцы', link: '/' + USERS_BRANCH},
-    {id:'userSetsPage', title: 'Мои наборы', link: '/' + USER_SETS_BRANCH},
-    {id:'userPartsPage', title: 'Мои детали', link: '/' + USER_PARTS_BRANCH},
+    {id: 'usersPage', title: 'Владельцы', link: '/' + USERS_BRANCH},
+    {id: 'userSetsPage', title: 'Мои наборы', link: '/' + USER_SETS_BRANCH},
+    {id: 'userPartsPage', title: 'Мои детали', link: '/' + USER_PARTS_BRANCH},
 ]
 
 function MainMenu() {

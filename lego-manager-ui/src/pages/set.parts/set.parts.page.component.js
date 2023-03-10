@@ -4,7 +4,8 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, Divider,
+    DialogTitle,
+    Divider,
     Grid,
     Paper,
     Stack,
@@ -25,11 +26,11 @@ import SetPartsForm from "./set.parts.form.component";
 import SetSummary from "./set.summary.component";
 import AutocompleteControl from "../../components/fields/autocomplete.control.component";
 import {useDispatch, useSelector} from "react-redux";
-import {setErrorAction} from "../../store/reducer/app.actions";
 import {setFiltersAction} from "../../store/reducer/crud.actions";
 import {transformFilters} from "../../utils/object.utils";
 import ColorAutocompleteControl from "../../components/fields/color.autocomplete.control.component";
 import {getSetColors, getSetPartCategories} from "../../service/sets.service";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 const initFilters = {
     "colorId": {
@@ -62,14 +63,14 @@ function SetPartsPage() {
                 setCategories(res);
             })
             .catch(error => {
-                dispatch(setErrorAction(error));
+                dispatch(appSlice.actions.setError(error));
             });
         getSetColors(setId)
             .then(res => {
                 setColors(res);
             })
             .catch(error => {
-                dispatch(setErrorAction(error));
+                dispatch(appSlice.actions.setError(error));
             });
     }
 

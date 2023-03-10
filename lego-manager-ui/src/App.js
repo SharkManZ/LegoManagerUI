@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Grid} from "@mui/material";
 import TopBar from "./components/root/top.bar";
 import MainRoute from "./components/root/main.route.component";
 import MainMenu from "./components/root/main.menu.component";
 import {useSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
-import {clearMsgAction} from "./store/reducer/app.actions";
+import {appSlice} from "./store/reducer/app.reducer";
 
 function App() {
     const dispatch = useDispatch();
@@ -19,7 +18,7 @@ function App() {
             return;
         }
         enqueueSnackbar(msg, {variant: msgType});
-        dispatch(clearMsgAction());
+        dispatch(appSlice.actions.clearMsg());
     }, [msg])
 
     return (

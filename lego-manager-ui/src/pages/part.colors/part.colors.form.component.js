@@ -18,7 +18,7 @@ import {saveRequestAction} from "../../store/reducer/crud.actions";
 import {useDispatch, useSelector} from "react-redux";
 import {saveColor} from "../../service/colors.service";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
-import {setErrorAction} from "../../store/reducer/app.actions";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 const initColorFormValues = {
     id: null,
@@ -74,7 +74,7 @@ function PartColorsForm({partId, colors, fetchAllColors, colorFetched}) {
             setAddedColor(res.body);
             setColorOpen(false);
         }).catch(error => {
-            dispatch(setErrorAction(error))
+            dispatch(appSlice.actions.setError(error))
         });
     }
 

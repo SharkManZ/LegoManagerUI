@@ -5,7 +5,7 @@ import CenterGridItem from "../components/cards/grid.item.component";
 import {getTotals} from "../service/total.service";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {setErrorAction} from "../store/reducer/app.actions";
+import {appSlice} from "../store/reducer/app.reducer";
 
 const emptyTotals = {
     series: {total: 0, inStock: 0},
@@ -25,7 +25,7 @@ function Home() {
         }).then(res => {
             setTotals(res);
         }).catch(error => {
-            dispatch(setErrorAction(error));
+            dispatch(appSlice.actions.setError(error));
         });
     }, [currentUser]);
 

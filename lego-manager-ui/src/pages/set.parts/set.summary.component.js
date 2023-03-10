@@ -11,8 +11,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {LEGO_IMG_ROOT, SET_PARTS_BRANCH} from "../../constants/pages/page.constants";
 import {addDefaultImg} from "../../utils/common.funcs";
 import {checkSetDetails, importSetDetails} from "../../service/load.service";
-import {setErrorAction, setInfoAction} from "../../store/reducer/app.actions";
 import {setNeedRefreshAction} from "../../store/reducer/crud.actions";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 const branch = SET_PARTS_BRANCH;
 const cardStyle = {
@@ -78,11 +78,11 @@ function SetSummary({missingPartsLoaded}) {
                 if (res.length > 0) {
                     missingPartsLoaded(res);
                 } else {
-                    dispatch(setInfoAction("Не совпадающих деталей не найдено"));
+                    dispatch(appSlice.actions.setInfo("Не совпадающих деталей не найдено"));
                 }
             })
             .catch(error => {
-                dispatch(setErrorAction(error));
+                dispatch(appSlice.actions.setError(error));
             })
             .finally(() => {
                 setLoaderShow(false);
@@ -99,11 +99,11 @@ function SetSummary({missingPartsLoaded}) {
                     setLoaderShow(true);
                     importSetDetails({number: data.number})
                         .then(res => {
-                            dispatch(setInfoAction("Завершен импорт деталей набора"));
+                            dispatch(appSlice.actions.setInfo("Завершен импорт деталей набора"));
                             dispatch(setNeedRefreshAction(branch));
                         })
                         .catch(error => {
-                            dispatch(setErrorAction(error));
+                            dispatch(appSlice.actions.setError(error));
                         })
                         .finally(() => {
                             setLoaderShow(false);
@@ -111,7 +111,7 @@ function SetSummary({missingPartsLoaded}) {
                 }
             })
             .catch(error => {
-                dispatch(setErrorAction(error));
+                dispatch(appSlice.actions.setError(error));
             })
             .finally(() => {
                 setLoaderShow(false);

@@ -7,7 +7,7 @@ import {useHistory} from "react-router-dom";
 import AutocompleteControl from "../fields/autocomplete.control.component";
 import {getAllUsers} from "../../service/users.service";
 import {useDispatch, useSelector} from "react-redux";
-import {setErrorAction, setUserAction} from "../../store/reducer/app.actions";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 function TopBar() {
     const dispatch = useDispatch();
@@ -26,7 +26,7 @@ function TopBar() {
                 setUsers(res);
             })
             .catch(error => {
-                dispatch(setErrorAction(error));
+                dispatch(appSlice.actions.setError(error));
             })
     }
 
@@ -40,7 +40,7 @@ function TopBar() {
 
     useEffect(() => {
         let userId = currentUser ? currentUser.id : null;
-        dispatch(setUserAction(userId));
+        dispatch(appSlice.actions.setUserId(userId));
     }, [currentUser])
 
     return (

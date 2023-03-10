@@ -1,5 +1,4 @@
-import {applyMiddleware, combineReducers, createStore} from "redux";
-import {composeWithDevTools} from "redux-devtools-extension";
+import {combineReducers} from "redux";
 import createSagaMiddleware from 'redux-saga'
 import imageListCrudReducer from "./reducer/imagelist.crud.reducer";
 import gridCrudReducer from "./reducer/grid.crud.reducer";
@@ -10,12 +9,14 @@ import {
     PARTS_BRANCH,
     SERIES_BRANCH,
     SET_PARTS_BRANCH,
-    SETS_BRANCH, USER_PARTS_BRANCH,
+    SETS_BRANCH,
+    USER_PARTS_BRANCH,
     USER_SETS_BRANCH,
     USERS_BRANCH
 } from "../constants/pages/page.constants";
 import {rootSaga} from "./saga/root.saga";
-import appReducer from "./reducer/app.reducer";
+import {configureStore} from "@reduxjs/toolkit";
+import {appSlice} from "./reducer/app.reducer";
 
 function branchReducer(reducerFunction, name) {
     return (state, action) => {
@@ -42,8 +43,14 @@ const rootReducer = combineReducers({
     users: branchReducer(gridCrudReducer, USERS_BRANCH),
     userSets: branchReducer(gridCrudReducer, USER_SETS_BRANCH),
     userParts: branchReducer(gridCrudReducer, USER_PARTS_BRANCH),
-    app: appReducer
+    app: appSlice.reducer
 })
 
-export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));
+export const store = configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => {
+        return getDefaultMiddleware({thunk: false}).prepend(sagaMiddleware);
+    }
+});
+
 sagaMiddleware.run(rootSaga);

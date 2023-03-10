@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Card, CardContent, CardMedia, Popper, Stack, TextField, Typography} from "@mui/material";
-import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {setErrorAction} from "../../store/reducer/app.actions";
 import {useDispatch} from "react-redux";
 import {LEGO_IMG_ROOT} from "../../constants/pages/page.constants";
 import {makeStyles} from "@mui/styles";
 import {addDefaultImg} from "../../utils/common.funcs";
+import {appSlice} from "../../store/reducer/app.reducer";
 
 const useStyles = makeStyles({
     root: {
@@ -72,7 +71,7 @@ function FindTextField({
             }
             setSearchComplete(true);
         }).catch(error => {
-            dispatch(setErrorAction(error));
+            dispatch(appSlice.actions.setErro(error));
         })
     }
 
