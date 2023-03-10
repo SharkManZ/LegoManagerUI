@@ -5,8 +5,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {setActionAnchorElAction} from "../../store/reducer/crud.actions";
 
 function Actions({branch, items}) {
-    const anchorEl = useSelector(state => state[branch].actionAnchorEl);
-    const openPopover = Boolean(anchorEl);
+    const anchorElId = useSelector(state => state[branch].actionAnchorEl);
+    const openPopover = Boolean(anchorElId);
+    const anchorEl = document.getElementById(anchorElId);
     const dispatch = useDispatch();
     return (
         <Popover id="actionPopover"

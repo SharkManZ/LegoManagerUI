@@ -94,7 +94,8 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
     }
 
     const onActionButtonClick = row => (event) => {
-        dispatch(setActionAnchorElAction(event.currentTarget, branch));
+        //console.log(event.currentTarget.id);
+        dispatch(setActionAnchorElAction(event.currentTarget.id, branch));
         dispatch(setCurrentRowAction(row, branch));
     }
 
@@ -326,7 +327,7 @@ function MainTable({rowActions, branch, noPagination = false, fetchRequest, chil
                                             getRowColumnCell(row, column)
                                         ))}
                                         <TableCell align="right" width={100}>
-                                            <Button variant="outlined" onClick={onActionButtonClick(row)}>...</Button>
+                                            <Button id={'actionBtn_' + row.id} variant="outlined" onClick={onActionButtonClick(row)}>...</Button>
                                         </TableCell>
                                     </TableRow>
                                 )) : []}
