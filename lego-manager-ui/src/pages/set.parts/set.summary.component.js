@@ -75,7 +75,7 @@ function SetSummary({missingPartsLoaded}) {
         setLoaderShow(true);
         checkSetDetails({number: data.number})
             .then(res => {
-                if (res.length > 0) {
+                if (res.parts.length > 0) {
                     missingPartsLoaded(res);
                 } else {
                     dispatch(appSlice.actions.setInfo("Не совпадающих деталей не найдено"));
@@ -93,7 +93,7 @@ function SetSummary({missingPartsLoaded}) {
         setLoaderShow(true);
         checkSetDetails({number: data.number})
             .then(res => {
-                if (res.length > 0) {
+                if (res.parts.length > 0) {
                     missingPartsLoaded(res);
                 } else {
                     setLoaderShow(true);

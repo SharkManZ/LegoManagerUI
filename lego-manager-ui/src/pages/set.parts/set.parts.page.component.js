@@ -43,6 +43,12 @@ const initFilters = {
     }
 }
 
+const iniMissingParts = {
+    diffPartsCount: 0,
+    missingDiffPartsCount: 0,
+    parts: []
+}
+
 const branch = SET_PARTS_BRANCH;
 
 function SetPartsPage() {
@@ -54,7 +60,7 @@ function SetPartsPage() {
     const [filterColor, setFilterColor] = useState({});
     const [categories, setCategories] = useState([]);
     const [colors, setColors] = useState([]);
-    const [missingParts, setMissingParts] = useState([]);
+    const [missingParts, setMissingParts] = useState(iniMissingParts);
     const needRefresh = useSelector(state => state[branch].needRefresh);
 
     const reloadFiltersData = () => {
@@ -82,7 +88,6 @@ function SetPartsPage() {
         if (needRefresh === false) {
             return;
         }
-        console.log('needRefresh ' + needRefresh);
         reloadFiltersData();
     }, [needRefresh])
 
@@ -122,7 +127,7 @@ function SetPartsPage() {
     }
 
     const closeMissingParts = () => {
-        setMissingParts([]);
+        setMissingParts(iniMissingParts);
     }
 
     return (
@@ -151,9 +156,18 @@ function SetPartsPage() {
                         <SetPartsForm setId={setId}/>
                     </MainTable>
                 </Grid>
-                <Dialog open={missingParts.length > 0} fullWidth onClose={closeMissingParts}>
+                <Dialog open={missingParts.parts.length > 0} fullWidth onClose={closeMissingParts}>
                     <DialogTitle>Не найденные детали набора</DialogTitle>
                     <DialogContent>
+                        <Grid container padding={2} spacing={2}>
+                            <Grid item xs={6}>
+                                Разных деталей в наборе: {missingParts.diffPartsCount}
+                            </Grid>
+                            <Grid item xs={6}>
+                                Отсутствующих деталей: {missingParts.missingDiffPartsCount}
+                            </Grid>
+
+                        </Grid>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -165,7 +179,7 @@ function SetPartsPage() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {missingParts !== undefined ? missingParts.map((row) => (
+                                    {missingParts !== undefined ? missingParts.parts.map((row) => (
                                         <TableRow>
                                             <TableCell><img src={"http://" + row.imgUrl}/></TableCell>
                                             <TableCell>{row.count}</TableCell>
