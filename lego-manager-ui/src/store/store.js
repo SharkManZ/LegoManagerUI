@@ -18,6 +18,8 @@ import {rootSaga} from "./saga/root.saga";
 import {configureStore} from "@reduxjs/toolkit";
 import {appSlice} from "./reducer/app.reducer";
 import {SET_ACTION_ANCHOR_EL} from "../constants/crud.action.constants";
+import {setupListeners} from "@reduxjs/toolkit/query";
+import {api} from "./api/api";
 
 function branchReducer(reducerFunction, name) {
     return (state, action) => {
@@ -31,27 +33,28 @@ function branchReducer(reducerFunction, name) {
     }
 }
 
-const sagaMiddleware = createSagaMiddleware();
-
-const rootReducer = combineReducers({
-    series: branchReducer(imageListCrudReducer, SERIES_BRANCH),
-    sets: branchReducer(gridCrudReducer, SETS_BRANCH),
-    colors: branchReducer(gridCrudReducer, COLORS_BRANCH),
-    partCategories: branchReducer(gridCrudReducer, PART_CATEGORIES_BRANCH),
-    parts: branchReducer(gridCrudReducer, PARTS_BRANCH),
-    partColors: branchReducer(gridCrudReducer, PART_COLORS_BRANCH),
-    setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH),
-    users: branchReducer(gridCrudReducer, USERS_BRANCH),
-    userSets: branchReducer(gridCrudReducer, USER_SETS_BRANCH),
-    userParts: branchReducer(gridCrudReducer, USER_PARTS_BRANCH),
-    app: appSlice.reducer
-})
+// const sagaMiddleware = createSagaMiddleware();
+//
+// const rootReducer = combineReducers({
+//     series: branchReducer(imageListCrudReducer, SERIES_BRANCH),
+//     sets: branchReducer(gridCrudReducer, SETS_BRANCH),
+//     colors: branchReducer(gridCrudReducer, COLORS_BRANCH),
+//     partCategories: branchReducer(gridCrudReducer, PART_CATEGORIES_BRANCH),
+//     parts: branchReducer(gridCrudReducer, PARTS_BRANCH),
+//     partColors: branchReducer(gridCrudReducer, PART_COLORS_BRANCH),
+//     setParts: branchReducer(gridCrudReducer, SET_PARTS_BRANCH),
+//     users: branchReducer(gridCrudReducer, USERS_BRANCH),
+//     userSets: branchReducer(gridCrudReducer, USER_SETS_BRANCH),
+//     userParts: branchReducer(gridCrudReducer, USER_PARTS_BRANCH),
+//     app: appSlice.reducer
+// })
 
 export const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware({thunk: false}).prepend(sagaMiddleware);
-    }
+    reducer: {
+        app: appSlice.reducer,
+        [api.reducerPath]: api.reducer
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware)
 });
-
-sagaMiddleware.run(rootSaga);
+setupListeners(store.dispatch);
+//sagaMiddleware.run(rootSaga);

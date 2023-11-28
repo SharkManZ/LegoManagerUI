@@ -1,47 +1,33 @@
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Grid, Stack} from "@mui/material";
 import {useHistory} from "react-router-dom";
 import AutocompleteControl from "../fields/autocomplete.control.component";
-import {getAllUsers} from "../../service/users.service";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {appSlice} from "../../store/reducer/app.reducer";
+import {userApi} from "../../api/userApi";
 
 function TopBar() {
     const dispatch = useDispatch();
     const history = useHistory();
-    const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState();
-    const usersNeedRefresh = useSelector(state => state.users.needRefresh);
+    //const usersNeedRefresh = useSelector(state => state.users.needRefresh);
+    const {data: users} = userApi.useGetAllUsersListQuery();
+
+    const selectUser = (value) => {
+        let userId = value ? value.id : null;
+        dispatch(appSlice.actions.setUserId(userId));
+    }
 
     const navigateToHome = () => {
         history.push("/");
     }
 
-    const fetchAllUsers = () => {
-        getAllUsers()
-            .then(res => {
-                setUsers(res);
-            })
-            .catch(error => {
-                dispatch(appSlice.actions.setError(error));
-            })
-    }
-
-    useEffect(() => {
-        fetchAllUsers();
-    }, [])
-
-    useEffect(() => {
-        fetchAllUsers();
-    }, [usersNeedRefresh]);
-
-    useEffect(() => {
-        let userId = currentUser ? currentUser.id : null;
-        dispatch(appSlice.actions.setUserId(userId));
-    }, [currentUser])
+    // useEffect(() => {
+    //     fetchAllUsers();
+    // }, [usersNeedRefresh]);
 
     return (
         <AppBar>
@@ -57,8 +43,8 @@ function TopBar() {
                     <Grid item xs={3}>
                         <Stack direction="row" spacing={1}>
                             <Typography width="100px" variant="h7" noWrap margin="auto">Владелец</Typography>
-                            <AutocompleteControl options={users} selectedValue={currentUser}
-                                                 setOption={setCurrentUser}/>
+                            <AutocompleteControl options={users ? users : []} selectedValue={currentUser}
+                                                 setOption={selectUser}/>
                         </Stack>
                     </Grid>
                 </Grid>
