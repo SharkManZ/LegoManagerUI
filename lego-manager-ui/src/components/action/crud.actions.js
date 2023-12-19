@@ -4,17 +4,18 @@ import {
     setActionAnchorElAction,
     setDeleteConfirmOpenAction
 } from "../../store/reducer/crud.actions";
-
+import {useState} from "react";
+// FIXME удалить, старая реализация
 function useCrudActions(branch) {
     const dispatch = useDispatch();
 
     const editAction = () => {
-        dispatch(editFormOpenAction(branch));
+        //dispatch(editFormOpenAction(branch));
     }
 
     const deleteAction = () => {
-        dispatch(setActionAnchorElAction(null, branch));
-        dispatch(setDeleteConfirmOpenAction(true, branch));
+        //dispatch(setActionAnchorElAction(null, branch));
+        //dispatch(setDeleteConfirmOpenAction(true, branch));
     }
 
     return ({

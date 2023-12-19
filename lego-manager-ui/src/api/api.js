@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {BACKEND_ROOT} from "../../constants/app.constants";
+import {BACKEND_ROOT} from "../constants/app.constants";
 import {enqueueSnackbar} from 'notistack';
 
 const STATUS_OK = 200;
@@ -44,6 +44,7 @@ const customBaseQuery = async (args, api, extraOptions) => {
 export const api = createApi({
     reducerPath: 'api',
     baseQuery: customBaseQuery,
+    keepUnusedDataFor: 1,
     endpoints: (builder) => ({
         // api инжектируются в соответствующих файлах /api
     })

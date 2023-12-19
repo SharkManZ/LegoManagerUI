@@ -19,7 +19,7 @@ import {configureStore} from "@reduxjs/toolkit";
 import {appSlice} from "./reducer/app.reducer";
 import {SET_ACTION_ANCHOR_EL} from "../constants/crud.action.constants";
 import {setupListeners} from "@reduxjs/toolkit/query";
-import {api} from "./api/api";
+import {api} from "../api/api";
 
 function branchReducer(reducerFunction, name) {
     return (state, action) => {

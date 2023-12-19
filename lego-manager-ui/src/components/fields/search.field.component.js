@@ -1,17 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {IconButton, Stack, TextField, ToggleButton} from "@mui/material";
 import TextSnippet from "@mui/icons-material/TextSnippet";
 import ClearIcon from '@mui/icons-material/Clear';
-import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {setPageAction, setSearchAction} from "../../store/reducer/crud.actions";
-import PropTypes from "prop-types";
 
-function SearchField({branch}) {
-    const dispatch = useDispatch();
+function SearchField({onSearchCallback}) {
 
-    const [searchValue, setSearchValue] = useState();
-    const search = useSelector(state => state[branch].search);
+    const [searchValue, setSearchValue] = useState('');
     const [equals, setEquals] = useState(false);
 
     const onSearchChange = (event) => {
@@ -24,22 +18,14 @@ function SearchField({branch}) {
 
     const onSearch = (event) => {
         if (event.key === 'Enter') {
-            dispatch(setPageAction(0, branch));
-            dispatch(setSearchAction(searchValue !== "" ? {value:  searchValue, equals: equals} : null, branch));
+            onSearchCallback(searchValue && searchValue !== "" ? {value: searchValue, equals: equals} : null);
         }
     }
 
     const onClear = () => {
-        setSearchValue("");
-        dispatch(setPageAction(0, branch));
-        dispatch(setSearchAction(null, branch));
+        setSearchValue('');
+        onSearchCallback(null);
     }
-
-    useEffect(() => {
-        if (search && search.value) {
-            setSearchValue(search.value);
-        }
-    }, [])
 
     return (
         <Stack direction="row" style={{width: '100%'}}>
@@ -56,10 +42,6 @@ function SearchField({branch}) {
             />
         </Stack>
     )
-}
-
-SearchField.propTypes = {
-    branch: PropTypes.string.isRequired
 }
 
 export default SearchField;

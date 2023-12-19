@@ -1,18 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useFormik} from "formik";
-import {saveRequestAction} from "../../store/reducer/crud.actions";
-import {useEffect} from "react";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
-import {useDispatch, useSelector} from "react-redux";
 import {Box, Stack, TextField} from "@mui/material";
-import {USERS_BRANCH} from "../../constants/pages/page.constants";
+import {userApi} from "../../api/user.api";
 
-const branch = USERS_BRANCH;
-
-function UsersForm() {
-    const dispatch = useDispatch();
-    const formAction = useSelector(state => state[branch].formAction);
-    const currentRow = useSelector(state => state[branch].currentRow);
+function UsersForm({currentRow, formAction, setDialogOpen, saveCallback}) {
+    const [saveUserQuery] = userApi.useSaveUserMutation();
 
     // crud
     const formik = useFormik({
@@ -21,11 +14,16 @@ function UsersForm() {
             name: ''
         },
         onSubmit: values => {
-            dispatch(saveRequestAction({
+            saveUserQuery({
                 id: values.id,
                 name: values.name
-            }, branch));
-            formik.setSubmitting(false);
+            })
+                .unwrap()
+                .then(() => {
+                    formik.setSubmitting(false);
+                    setDialogOpen(false);
+                    saveCallback();
+                });
         }
     })
 
@@ -33,6 +31,7 @@ function UsersForm() {
         if (formAction === ADD_FORM_ACTION) {
             formik.resetForm();
         } else if (formAction === EDIT_FORM_ACTION) {
+            formik.resetForm();
             formik.setValues(currentRow);
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();

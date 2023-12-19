@@ -7,7 +7,7 @@ import {useHistory} from "react-router-dom";
 import AutocompleteControl from "../fields/autocomplete.control.component";
 import {useDispatch} from "react-redux";
 import {appSlice} from "../../store/reducer/app.reducer";
-import {userApi} from "../../api/userApi";
+import {userApi} from "../../api/user.api";
 
 function TopBar() {
     const dispatch = useDispatch();
