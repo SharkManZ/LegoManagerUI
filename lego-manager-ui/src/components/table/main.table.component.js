@@ -14,8 +14,7 @@ import {
 } from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
 import Actions from "../action/actions.component";
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
+import React, {useEffect, useState} from "react";
 import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
@@ -34,11 +33,20 @@ const useStyles = makeStyles({
 const COLORS_IN_ROW = 6;
 
 function MainTable({
-                       rowActions, addAction, columns, grid, rows, setCurrentRow, noPagination = false,
-                       fetchRequest, children
+                       rowActions,
+                       addAction,
+                       columns,
+                       grid,
+                       queryData,
+                       fetchFunction,
+                       rows,
+                       setCurrentRow,
+                       noPagination = false,
+                       fetchRequest,
+                       children
                    }) {
     const classes = useStyles();
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const loading = false;
     const [anchorElId, setAnchorElId] = useState();
 
@@ -59,19 +67,35 @@ function MainTable({
     // const search = useSelector(state => state[branch].search);
     // const filters = useSelector(state => state[branch].filters);
 
+    /**
+     * Установка значения поиска в параметрах грида.
+     */
     const onSearchCallback = (value) => {
         grid.setSearch(value);
     }
 
+    /**
+     * Установка значения сортировки в параметрах грида.
+     */
     const onSortChange = (property) => () => {
         grid.setOrderBy(property);
         grid.setOrderDirection(grid.orderDirection === 'asc' ? 'desc' : 'asc');
     }
 
+    /**
+     * Нажатие на кнопку действия на строке. Вызов меню действий по строке.
+     */
     const onActionButtonClick = row => (event) => {
         setAnchorElId(event.currentTarget.id);
         setCurrentRow(row);
     }
+
+    /**
+     * Запрос данных грида при изменении перечисленных парамеров.
+     */
+    useEffect(() => {
+        fetchFunction(queryData);
+    }, [queryData.page])
 
     const getColor = (row, column) => {
         if (column.type === 'color') {
@@ -80,6 +104,11 @@ function MainTable({
         return 'white';
     }
 
+    /**
+     * Возвращает значение для текстовой колонки. Поддерживает вывод из основного и дополнительного поля (в скобках).
+     * Поддерживает раскрашивание значения числовой колонки. Сравнивает значение основной и дополнительной колонок.
+     * Раскрашивает в настроенные в зависимости от результата сравнения цвета.
+     */
     const getRowValue = (row, column) => {
         if (column.type === 'color') {
             return '';
@@ -108,10 +137,16 @@ function MainTable({
         return combineValue;
     }
 
+    /**
+     * Проверяет содержит ли колонка изображение.
+     */
     const isImageColumn = (column) => {
         return column.isImage !== undefined && column.isImage;
     }
 
+    /**
+     * Возвращает значение колонки в зависимости от ее типа.
+     */
     const getRowColumnCell = (row, column) => {
         if (isImageColumn(column)) {
             return (
@@ -152,6 +187,9 @@ function MainTable({
         }
     }
 
+    /**
+     * Возвращает содержимое колонки с изображением и хинтом к нему.
+     */
     function getTooltipImageColumn(row, column) {
         if (column.tooltipField) {
             return (
@@ -164,6 +202,9 @@ function MainTable({
         }
     }
 
+    /**
+     * Возвращает содержимое колонки с изображением.
+     */
     function getImageColumnValue(row, column) {
         let fileName = getImageFileName(row, column);
         return (
@@ -179,6 +220,9 @@ function MainTable({
         )
     }
 
+    /**
+     * Возвращает имя файла изображения. Поддерживается формирование имени из одного или нескольких полей данных, перечисленных через +.
+     */
     function getImageFileName(row, column) {
         if (column.field.includes('+')) {
             return column.field.split('+').map(val => fetchFromObject(row, val)).join('_');
@@ -187,6 +231,9 @@ function MainTable({
         }
     }
 
+    /**
+     * Формирование содержимого колонки содержащей перечень цветов. Формирует строки из квадратов соответствующих цветов с хинтом в виде названия цвета.
+     */
     function getColorsValue(data) {
         let rowArrays = data.chunk(COLORS_IN_ROW);
         return (
@@ -225,7 +272,6 @@ function MainTable({
     //     }
     //     fetchData();
     // }, [search, page, rowsPerPage, orderBy, orderDirection, needRefresh, JSON.stringify(filters)])
-
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>

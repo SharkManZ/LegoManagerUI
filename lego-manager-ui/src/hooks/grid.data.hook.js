@@ -6,6 +6,7 @@ function useGridData() {
     const [orderBy, setOrderBy] = useState();
     const [orderDirection, setOrderDirection] = useState('asc');
     const [search, setSearch] = useState();
+    const [currentRow, setCurrentRow] = useState();
 
     return {
         gridData: {
@@ -18,7 +19,9 @@ function useGridData() {
             orderBy,
             setOrderBy,
             orderDirection,
-            setOrderDirection
+            setOrderDirection,
+            currentRow,
+            setCurrentRow
         },
         queryData: {
             size,
@@ -27,8 +30,9 @@ function useGridData() {
             sorts: orderBy ? [{field: orderBy, direction: orderDirection}] : null
         },
         resetGrid: () => {
-            setSize(10);
-            setPage(0)
+            const isReset = page !== 0;
+            setPage(0);
+            return isReset;
         }
     }
 }

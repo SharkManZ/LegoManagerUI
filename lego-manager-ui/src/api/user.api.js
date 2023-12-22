@@ -11,8 +11,7 @@ export const userApi = api.injectEndpoints({
                 url: '/users/list',
                 method: 'POST',
                 body: body
-            }),
-            providesTags: ['Users']
+            })
         }),
         saveUser: builder.mutation({
             query: (body) => ({
@@ -20,14 +19,14 @@ export const userApi = api.injectEndpoints({
                 method: 'POST',
                 body: body
             }),
-            invalidatesTags: ['Users']
+            invalidatesTags: (result) => (result ? ['Users'] : [])
         }),
         deleteUser: builder.mutation({
             query: (body) => ({
                 url: `/users/${body}/delete`,
                 method: 'POST'
             }),
-            invalidatesTags: ['Users']
+            invalidatesTags: (result, error) => (result ? ['Users'] : [])
         })
     })
 })

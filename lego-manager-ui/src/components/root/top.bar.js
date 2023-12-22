@@ -1,7 +1,7 @@
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Grid, Stack} from "@mui/material";
 import {useHistory} from "react-router-dom";
 import AutocompleteControl from "../fields/autocomplete.control.component";
@@ -13,7 +13,6 @@ function TopBar() {
     const dispatch = useDispatch();
     const history = useHistory();
     const [currentUser, setCurrentUser] = useState();
-    //const usersNeedRefresh = useSelector(state => state.users.needRefresh);
     const {data: users} = userApi.useGetAllUsersListQuery();
 
     const selectUser = (value) => {
@@ -25,9 +24,10 @@ function TopBar() {
         history.push("/");
     }
 
-    // useEffect(() => {
-    //     fetchAllUsers();
-    // }, [usersNeedRefresh]);
+    useEffect(() => {
+        console.log('users changed');
+        //setCurrentUser({});
+    }, [users])
 
     return (
         <AppBar>

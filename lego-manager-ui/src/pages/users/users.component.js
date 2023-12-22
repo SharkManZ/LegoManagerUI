@@ -1,60 +1,64 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@mui/material";
+import React from 'react';
+import {Box, Grid, Typography} from "@mui/material";
 import MainTable from "../../components/table/main.table.component";
 import {PAGE_CRUD_CONSTANTS, USERS_BRANCH} from "../../constants/pages/page.constants";
 import UsersForm from "./users.form.component";
 import {userApi} from "../../api/user.api";
 import useGridData from "../../hooks/grid.data.hook";
-import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
-import ConfirmDialog from "../../components/dialog/confirm.dialog.component";
+import useCrudDialog from "../../hooks/crud.dialog.hook";
+import CrudDialogs from "../../components/table/crud.dialogs.component";
 
 const branch = USERS_BRANCH;
 
 function UsersPage() {
     const {gridData, queryData, resetGrid} = useGridData();
-    const {data: users} = userApi.useGetUsersQuery(queryData);
-    const [currentRow, setCurrentRow] = useState();
-    const [dialogTitle, setDialogTitle] = useState('');
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [formAction, setFormAction] = useState();
+    const [fetchUsers, result] = userApi.useLazyGetUsersQuery();
+    const {
+        dialogTitle,
+        dialogOpen,
+        setDialogOpen,
+        deleteDialogOpen,
+        setDeleteDialogOpen,
+        formAction,
+        setFormAction,
+        onAdd,
+        onEdit,
+        onDelete
+    } = useCrudDialog(branch);
     const [deleteUserQuery] = userApi.useDeleteUserMutation();
     const actions = [
         {
             key: 'editAction',
             title: 'Редактировать',
-            onClick: () => {
-                setDialogTitle(PAGE_CRUD_CONSTANTS[branch].editFormTitle);
-                setFormAction(EDIT_FORM_ACTION);
-                setDialogOpen(true);
-            }
+            onClick: onEdit
         },
         {
             key: 'deleteAction',
             title: 'Удалить',
-            onClick: () => {
-                setDeleteDialogOpen(true);
-            }
+            onClick: onDelete
         }
     ]
 
-    const onAdd = () => {
-        setDialogTitle(PAGE_CRUD_CONSTANTS[branch].addFormTitle);
-        setFormAction(ADD_FORM_ACTION);
-        setDialogOpen(true);
-    }
-
-    const onDelete = () => {
-        deleteUserQuery(currentRow.id)
+    /**
+     * Удаление пользователя.
+     */
+    const deleteUser = () => {
+        deleteUserQuery(gridData.currentRow.id)
             .unwrap()
             .then(() => {
                 setDeleteDialogOpen(false);
-                resetGrid();
+                refreshGrid();
             })
     }
 
-    const saveCallback = () => {
-        resetGrid();
+    /**
+     * Обновление грида.
+     */
+    const refreshGrid = () => {
+        let wasReset = resetGrid();
+        if (!wasReset) {
+            fetchUsers(queryData);
+        }
     }
 
     return (
@@ -66,31 +70,23 @@ function UsersPage() {
                 columns={PAGE_CRUD_CONSTANTS[branch].columns}
                 grid={{
                     ...gridData,
-                    total: users?.totalCount || 0
+                    total: result?.data?.totalCount || 0
                 }}
-                rows={users ? users.data : []}
+                queryData={queryData}
+                fetchFunction={fetchUsers}
+                rows={result?.data ? result.data.data : []}
                 rowActions={actions}
                 addAction={onAdd}
-                setCurrentRow={setCurrentRow}
+                setCurrentRow={gridData.setCurrentRow}
                 branch={branch}>
 
             </MainTable>
-            <Dialog open={dialogOpen} fullWidth onClose={() => setDialogOpen(false)}>
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogContent>
-                    <UsersForm currentRow={currentRow} formAction={formAction} setDialogOpen={setDialogOpen} saveCallback={saveCallback}/>
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="contained" onClick={() => setFormAction(SUBMIT_FORM_ACTION)}>Сохранить</Button>
-                    <Button variant="contained" onClick={() => setDialogOpen(false)}>Отмена</Button>
-                </DialogActions>
-            </Dialog>
-            <ConfirmDialog
-                open={deleteDialogOpen}
-                closeDialog={() => setDeleteDialogOpen(false)}
-                onConfirm={onDelete}
-                message={PAGE_CRUD_CONSTANTS[branch].deleteFormTitle}
-            />
+            <CrudDialogs dialogTitle={dialogTitle} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}
+                         setFormAction={setFormAction} onDelete={deleteUser} setDeleteDialogOpen={setDeleteDialogOpen}
+                         deleteDialogOpen={deleteDialogOpen} branch={branch}>
+                <UsersForm currentRow={gridData.currentRow} formAction={formAction} setDialogOpen={setDialogOpen}
+                           saveCallback={refreshGrid}/>
+            </CrudDialogs>
         </Box>
     )
 }
