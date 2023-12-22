@@ -2,10 +2,9 @@ import React, {useEffect, useState} from "react";
 import {Grid} from "@mui/material";
 import TotalCard from "../components/cards/total.card.component";
 import CenterGridItem from "../components/cards/grid.item.component";
-import {getTotals} from "../service/total.service";
 import {useHistory} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {appSlice} from "../store/reducer/app.reducer";
+import {useSelector} from "react-redux";
+import {api} from "../api/api";
 
 const emptyTotals = {
     series: {total: 0, inStock: 0},
@@ -15,18 +14,16 @@ const emptyTotals = {
 }
 
 function Home() {
-    const dispatch = useDispatch();
     const [totals, setTotals] = useState(emptyTotals);
     const currentUser = useSelector(state => state.app.userId);
     const history = useHistory();
+    const [fetchTotals] = api.useLazyGetTotalsQuery();
     useEffect(() => {
-        getTotals({
-            userId: currentUser
-        }).then(res => {
-            setTotals(res);
-        }).catch(error => {
-            dispatch(appSlice.actions.setError(error));
-        });
+        fetchTotals({userId: currentUser})
+            .unwrap()
+            .then((data) => {
+                setTotals(data);
+            })
     }, [currentUser]);
 
     return (

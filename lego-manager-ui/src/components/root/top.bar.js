@@ -25,7 +25,7 @@ function TopBar() {
     }
 
     useEffect(() => {
-        console.log('users changed');
+        //console.log('users changed');
         //setCurrentUser({});
     }, [users])
 

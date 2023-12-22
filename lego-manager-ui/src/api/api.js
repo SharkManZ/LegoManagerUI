@@ -46,6 +46,13 @@ export const api = createApi({
     baseQuery: customBaseQuery,
     keepUnusedDataFor: 1,
     endpoints: (builder) => ({
+        getTotals: builder.query({
+            query: (body) => ({
+                url: '/report/totals',
+                method: 'POST',
+                body: body
+            })
+        })
         // api инжектируются в соответствующих файлах /api
     })
 })
