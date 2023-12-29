@@ -22,7 +22,7 @@ function UsersForm({currentRow, formAction, setDialogOpen, saveCallback}) {
                 .then(() => {
                     formik.setSubmitting(false);
                     setDialogOpen(false);
-                    saveCallback();
+                    saveCallback(true);
                 });
         }
     })

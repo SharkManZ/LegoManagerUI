@@ -26,6 +26,7 @@ function UsersPage() {
         onDelete
     } = useCrudDialog(branch);
     const [deleteUserQuery] = userApi.useDeleteUserMutation();
+
     const actions = [
         {
             key: 'editAction',
@@ -47,16 +48,21 @@ function UsersPage() {
             .unwrap()
             .then(() => {
                 setDeleteDialogOpen(false);
-                refreshGrid();
+                fetchData(true);
             })
     }
 
     /**
-     * Обновление грида.
+     * Обновление грида с возможностью сброса на 1ю страницу.
+     * @param withReset необходимость сброса на 1ю страницу.
      */
-    const refreshGrid = () => {
-        let wasReset = resetGrid();
-        if (!wasReset) {
+    const fetchData = (withReset) => {
+        if (withReset) {
+            let wasReset = resetGrid();
+            if (!wasReset) {
+                fetchUsers(queryData)
+            }
+        } else {
             fetchUsers(queryData);
         }
     }
@@ -73,7 +79,7 @@ function UsersPage() {
                     total: result?.data?.totalCount || 0
                 }}
                 queryData={queryData}
-                fetchFunction={fetchUsers}
+                fetchFunction={fetchData}
                 rows={result?.data ? result.data.data : []}
                 rowActions={actions}
                 addAction={onAdd}
@@ -85,7 +91,7 @@ function UsersPage() {
                          setFormAction={setFormAction} onDelete={deleteUser} setDeleteDialogOpen={setDeleteDialogOpen}
                          deleteDialogOpen={deleteDialogOpen} branch={branch}>
                 <UsersForm currentRow={gridData.currentRow} formAction={formAction} setDialogOpen={setDialogOpen}
-                           saveCallback={refreshGrid}/>
+                           saveCallback={fetchData}/>
             </CrudDialogs>
         </Box>
     )

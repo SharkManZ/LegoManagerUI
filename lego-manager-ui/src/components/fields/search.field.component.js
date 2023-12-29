@@ -3,10 +3,10 @@ import {IconButton, Stack, TextField, ToggleButton} from "@mui/material";
 import TextSnippet from "@mui/icons-material/TextSnippet";
 import ClearIcon from '@mui/icons-material/Clear';
 
-function SearchField({onSearchCallback}) {
+function SearchField({onSearchCallback, search}) {
 
-    const [searchValue, setSearchValue] = useState('');
-    const [equals, setEquals] = useState(false);
+    const [searchValue, setSearchValue] = useState(search?.value || '');
+    const [equals, setEquals] = useState(search?.equals || false);
 
     const onSearchChange = (event) => {
         setSearchValue(event.target.value);

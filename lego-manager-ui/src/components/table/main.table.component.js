@@ -43,10 +43,8 @@ function MainTable({
                        setCurrentRow,
                        noPagination = false,
                        fetchRequest,
-                       children
                    }) {
     const classes = useStyles();
-    //const dispatch = useDispatch();
     const loading = false;
     const [anchorElId, setAnchorElId] = useState();
 
@@ -71,6 +69,7 @@ function MainTable({
      * Установка значения поиска в параметрах грида.
      */
     const onSearchCallback = (value) => {
+        grid.setPage(0);
         grid.setSearch(value);
     }
 
@@ -94,8 +93,8 @@ function MainTable({
      * Запрос данных грида при изменении перечисленных парамеров.
      */
     useEffect(() => {
-        fetchFunction(queryData);
-    }, [queryData.page])
+        fetchFunction(false);
+    }, [queryData.size, queryData.page, queryData.search, JSON.stringify(queryData.sorts)])
 
     const getColor = (row, column) => {
         if (column.type === 'color') {
@@ -277,7 +276,7 @@ function MainTable({
             <Paper sx={{width: '100%', mb: 2}}>
                 <Box m={2} paddingTop={2}>
                     <Stack direction="row" spacing={2}>
-                        <SearchField onSearchCallback={onSearchCallback}/>
+                        <SearchField onSearchCallback={onSearchCallback} search={grid.search}/>
                         {addAction ? (<Button variant="contained" onClick={addAction}>Добавить</Button>) : null}
                     </Stack>
                 </Box>
