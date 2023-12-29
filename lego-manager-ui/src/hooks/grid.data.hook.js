@@ -74,8 +74,7 @@ function useGridData() {
             page,
             search,
             sorts: orderBy ? [{field: orderBy, direction: orderDirection}] : null
-        }
-        ,
+        },
         resetGrid: () => {
             const isReset = page !== 0;
             setPage(0);

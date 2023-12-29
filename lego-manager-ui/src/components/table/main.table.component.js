@@ -1,7 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import {
-    Button,
+    Button, LinearProgress,
     Stack,
     Table,
     TableBody,
@@ -42,10 +42,10 @@ function MainTable({
                        rows,
                        setCurrentRow,
                        noPagination = false,
+                       loading,
                        fetchRequest,
                    }) {
     const classes = useStyles();
-    const loading = false;
     const [anchorElId, setAnchorElId] = useState();
 
 
@@ -280,11 +280,11 @@ function MainTable({
                         {addAction ? (<Button variant="contained" onClick={addAction}>Добавить</Button>) : null}
                     </Stack>
                 </Box>
-                {/*{loading ? (*/}
-                {/*    <Box sx={{width: '100%'}}>*/}
-                {/*        <LinearProgress/>*/}
-                {/*    </Box>*/}
-                {/*) : null}*/}
+                {loading ? (
+                    <Box sx={{width: '100%'}}>
+                        <LinearProgress/>
+                    </Box>
+                ) : null}
 
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 600}}>

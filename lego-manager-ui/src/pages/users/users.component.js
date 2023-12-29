@@ -82,6 +82,7 @@ function UsersPage() {
                 fetchFunction={fetchData}
                 rows={result?.data ? result.data.data : []}
                 rowActions={actions}
+                loading={result?.isLoading}
                 addAction={onAdd}
                 setCurrentRow={gridData.setCurrentRow}
                 branch={branch}>
