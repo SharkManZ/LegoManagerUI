@@ -1,7 +1,8 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import {
-    Button, LinearProgress,
+    Button,
+    LinearProgress,
     Stack,
     Table,
     TableBody,
@@ -9,28 +10,17 @@ import {
     TableHead,
     TablePagination,
     TableRow,
-    TableSortLabel,
-    Tooltip
+    TableSortLabel
 } from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
 import Actions from "../action/actions.component";
 import React, {useEffect, useState} from "react";
-import {fetchFromObject} from "../../utils/object.utils";
-import {makeStyles} from "@mui/styles";
 import SearchField from "../fields/search.field.component";
 import PropTypes from "prop-types";
-import {addDefaultImg} from "../../utils/common.funcs";
-
-const useStyles = makeStyles({
-    root: {
-        height: "auto",
-        width: "auto",
-        maxHeight: 50,
-        maxWidth: 60,
-        objectFit: 'cover'
-    }
-});
-const COLORS_IN_ROW = 6;
+import MainTableStackColorCell from "./main.table.stack.color.cell";
+import MainTableImageCell from "./main.table.image.cell";
+import MainTableColorCell from "./main.table.color.cell";
+import MainTableTextCell from "./main.table.text.cell";
 
 function MainTable({
                        rowActions,
@@ -45,25 +35,8 @@ function MainTable({
                        loading,
                        fetchRequest,
                    }) {
-    const classes = useStyles();
+
     const [anchorElId, setAnchorElId] = useState();
-
-
-    // const totalCount = useSelector(state => state[branch].totalCount);
-    // const loading = useSelector(state => state[branch].loading);
-    // const rows = useSelector(state => state[branch].rows);
-    // const page = useSelector(state => state[branch].page);
-    // const rowsPerPage = useSelector(state => state[branch].rowsPerPage);
-    // const orderDirection = useSelector(state => state[branch].orderDirection);
-    // const orderBy = useSelector(state => state[branch].orderBy);
-    // const dialogOpen = useSelector(state => state[branch].formOpen);
-    // const dialogTitle = useSelector(state => state[branch].formTitle);
-    // const deleteConfirmOpen = useSelector(state => state[branch].deleteConfirmOpen);
-    // const currentRow = useSelector(state => state[branch].currentRow);
-    // const needRefresh = useSelector(state => state[branch].needRefresh);
-    // const prevNeedRefresh = useRef(null);
-    // const search = useSelector(state => state[branch].search);
-    // const filters = useSelector(state => state[branch].filters);
 
     /**
      * Установка значения поиска в параметрах грида.
@@ -96,46 +69,6 @@ function MainTable({
         fetchFunction(false);
     }, [queryData.size, queryData.page, queryData.search, JSON.stringify(queryData.sorts)])
 
-    const getColor = (row, column) => {
-        if (column.type === 'color') {
-            return '#' + fetchFromObject(row, column.field);
-        }
-        return 'white';
-    }
-
-    /**
-     * Возвращает значение для текстовой колонки. Поддерживает вывод из основного и дополнительного поля (в скобках).
-     * Поддерживает раскрашивание значения числовой колонки. Сравнивает значение основной и дополнительной колонок.
-     * Раскрашивает в настроенные в зависимости от результата сравнения цвета.
-     */
-    const getRowValue = (row, column) => {
-        if (column.type === 'color') {
-            return '';
-        }
-        let mainValue = fetchFromObject(row, column.field);
-        let additionalValue;
-        let combineValue;
-        if (column.additionalField && fetchFromObject(row, column.additionalField)) {
-            additionalValue = fetchFromObject(row, column.additionalField);
-            combineValue = mainValue + ' (' + additionalValue + ')';
-        } else {
-            combineValue = mainValue;
-        }
-        if (column.colorDiff) {
-            let color;
-            let secondValue = additionalValue ? additionalValue : 0;
-            if (mainValue < secondValue) {
-                color = column.colorDiff.lower;
-            } else if (mainValue > secondValue) {
-                color = column.colorDiff.greater
-            } else {
-                color = column.colorDiff.equals;
-            }
-            return (<div style={{color: color}}>{combineValue}</div>);
-        }
-        return combineValue;
-    }
-
     /**
      * Проверяет содержит ли колонка изображение.
      */
@@ -149,128 +82,23 @@ function MainTable({
     const getRowColumnCell = (row, column) => {
         if (isImageColumn(column)) {
             return (
-                <TableCell key={column.key ? column.key : column.field}>
-                    {getTooltipImageColumn(row, column)}
-                </TableCell>
+                <MainTableImageCell row={row} column={column}/>
             )
         } else if (column.type === 'color') {
             return (
-                <TableCell key={column.key ? column.key : column.field} width="10%">
-                    <Box sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        '& > :not(style)': {
-                            width: 150,
-                            height: 40,
-                        }
-                    }}>
-                        <Tooltip title={column.additionalField ? fetchFromObject(row, column.additionalField) : ""}>
-                            <Paper style={{backgroundColor: getColor(row, column)}} elevation={10}/>
-                        </Tooltip>
-                    </Box>
-
-                </TableCell>
+                <MainTableColorCell row={row} column={column}/>
             )
         } else if (column.type === 'colors') {
             return (
-                <TableCell key={column.key ? column.key : column.field}>
-                    {getColorsValue(row[column.field])}
-                </TableCell>
+                <MainTableStackColorCell row={row} column={column}/>
             )
         } else {
             return (
-                <TableCell key={column.key ? column.key : column.field}>
-                    {getRowValue(row, column)}
-                </TableCell>
+                <MainTableTextCell row={row} column={column}/>
             )
         }
     }
 
-    /**
-     * Возвращает содержимое колонки с изображением и хинтом к нему.
-     */
-    function getTooltipImageColumn(row, column) {
-        if (column.tooltipField) {
-            return (
-                <Tooltip title={row[column.tooltipField]}>
-                    {getImageColumnValue(row, column)}
-                </Tooltip>
-            )
-        } else {
-            return getImageColumnValue(row, column)
-        }
-    }
-
-    /**
-     * Возвращает содержимое колонки с изображением.
-     */
-    function getImageColumnValue(row, column) {
-        let fileName = getImageFileName(row, column);
-        return (
-            <Box
-                style={{overflow: "hidden", textAlign: "center"}}>
-                <img src={`/${column.imageSource}/${fileName}.png`}
-                     alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
-                     loading="lazy"
-                     onError={addDefaultImg}
-                     className={classes.root}
-                />
-            </Box>
-        )
-    }
-
-    /**
-     * Возвращает имя файла изображения. Поддерживается формирование имени из одного или нескольких полей данных, перечисленных через +.
-     */
-    function getImageFileName(row, column) {
-        if (column.field.includes('+')) {
-            return column.field.split('+').map(val => fetchFromObject(row, val)).join('_');
-        } else {
-            return fetchFromObject(row, column.field);
-        }
-    }
-
-    /**
-     * Формирование содержимого колонки содержащей перечень цветов. Формирует строки из квадратов соответствующих цветов с хинтом в виде названия цвета.
-     */
-    function getColorsValue(data) {
-        let rowArrays = data.chunk(COLORS_IN_ROW);
-        return (
-            rowArrays.map((row) => (
-                <Stack direction="row" spacing={0.5} paddingBottom={1}>
-                    {row.map((column) => (
-                        <Box sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            '& > :not(style)': {
-                                width: 15,
-                                height: 15,
-                            }
-                        }}>
-                            <Tooltip title={column.name}>
-                                <Paper style={{backgroundColor: '#' + column.hexColor}} elevation={10}/>
-                            </Tooltip>
-                        </Box>
-                    ))
-                    }
-                </Stack>
-            ))
-        )
-    }
-
-    // // запрос данных при изменении поиска, страницы, кол-ва элементов на странице, сортировки
-    // useEffect(() => {
-    //
-    //     // обновление данных из-за изменения признака необходимости обновить
-    //     if (needRefresh !== prevNeedRefresh.current) {
-    //         if (prevNeedRefresh.current && needRefresh === false) {
-    //             prevNeedRefresh.current = needRefresh;
-    //             return;
-    //         }
-    //         prevNeedRefresh.current = needRefresh;
-    //     }
-    //     fetchData();
-    // }, [search, page, rowsPerPage, orderBy, orderDirection, needRefresh, JSON.stringify(filters)])
     return (
         <Box sx={{width: '100%'}}>
             <Paper sx={{width: '100%', mb: 2}}>
