@@ -3,13 +3,13 @@ import {addDefaultImg} from "../../utils/common.funcs";
 import React from "react";
 import {fetchFromObject} from "../../utils/object.utils";
 import {makeStyles} from "@mui/styles";
-import {Tooltip} from "@mui/material";
+import {TableCell, Tooltip} from "@mui/material";
 
 const useStyles = makeStyles({
     root: {
         height: "auto",
         width: "auto",
-        maxHeight: 50,
+        maxHeight: 40,
         maxWidth: 60,
         objectFit: 'cover'
     }
@@ -33,15 +33,17 @@ function MainTableImageCell({row, column}) {
 
     function getCellData() {
         return (
-            <Box
-                style={{overflow: "hidden", textAlign: "center"}}>
-                <img src={`/${column.imageSource}/${fileName}.png`}
-                     alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
-                     loading="lazy"
-                     onError={addDefaultImg}
-                     className={classes.root}
-                />
-            </Box>
+            <TableCell>
+                <Box
+                    style={{textAlign: "center"}}>
+                    <img src={`/${column.imageSource}/${fileName}.png`}
+                         alt={`Деталь /${column.imageSource}/${row[column.field]}.png`}
+                         loading="lazy"
+                         onError={addDefaultImg}
+                         className={classes.root}
+                    />
+                </Box>
+            </TableCell>
         )
     }
 

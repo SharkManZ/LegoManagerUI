@@ -1,39 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {useSelector} from "react-redux";
 import Box from "@mui/material/Box";
 import {Grid, Stack, Typography} from "@mui/material";
 import {LinearProgress} from "@material-ui/core";
 import Paper from "@mui/material/Paper";
 import CenterGridItem from "../../components/cards/grid.item.component";
-import {USER_SETS_BRANCH} from "../../constants/pages/page.constants";
-import {getUserSetsSummary} from "../../service/users.service";
-
-const branch = USER_SETS_BRANCH;
+import {userApi} from "../../api/user.api";
 
 function UserSetsSummary() {
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState();
-    const fetchFinished = useSelector(state => state[branch].fetchFinished);
-    const currentUser = useSelector(state => state.app.userId);
-
-    const fetchData = () => {
-        setLoading(true);
-        getUserSetsSummary(currentUser).then(res => {
-            setData(res);
-            setLoading(false);
-        });
-    }
-
-    useEffect(() => {
-        if (currentUser && fetchFinished) {
-            fetchData();
-        }
-    }, [fetchFinished]);
+    const userId = useSelector(state => state.app.userId);
+    const {data, isLoading} = userApi.useGetUserSetsSummaryQuery(userId);
 
     return (
         <Box>
             <Grid container alignItems="center" justifyContent="center">
-                {loading ? (
+                {isLoading ? (
                     <Box sx={{width: '100%'}}>
                         <LinearProgress/>
                     </Box>

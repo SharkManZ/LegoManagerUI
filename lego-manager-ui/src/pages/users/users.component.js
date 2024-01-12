@@ -52,10 +52,6 @@ function UsersPage() {
             })
     }
 
-    /**
-     * Обновление грида с возможностью сброса на 1ю страницу.
-     * @param withReset необходимость сброса на 1ю страницу.
-     */
     const fetchData = (withReset) => {
         if (withReset) {
             let wasReset = resetGrid();

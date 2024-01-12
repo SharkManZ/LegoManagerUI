@@ -1,23 +1,17 @@
-import {useDispatch, useSelector} from "react-redux";
-import {USER_SETS_BRANCH} from "../../constants/pages/page.constants";
 import {Box, Stack, TextField} from "@mui/material";
 import FindTextField from "../../components/fields/find.text.field.component";
 import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
-import {saveRequestAction} from "../../store/reducer/crud.actions";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
 import {searchSet} from "../../service/sets.service";
+import {userSetApi} from "../../api/user.sets.api";
+import {useSelector} from "react-redux";
 
-const branch = USER_SETS_BRANCH;
-
-function UserSetForm() {
-    const dispatch = useDispatch();
-    const currentUser = useSelector(state => state.app.userId);
-    const formAction = useSelector(state => state[branch].formAction);
-    const currentRow = useSelector(state => state[branch].currentRow);
+function UserSetForm({currentRow, formAction, setDialogOpen, saveCallback}) {
+    const [saveUserSetQuery] = userSetApi.useSaveUserSetMutation();
     const [currentSetNumber, setCurrentSetNumber] = useState();
+    const userId = useSelector(state => state.app.userId);
 
-    // crud
     const formik = useFormik({
         initialValues: {
             id: null,
@@ -28,12 +22,18 @@ function UserSetForm() {
             count: 0
         },
         onSubmit: values => {
-            dispatch(saveRequestAction({
+            saveUserSetQuery({
                 id: values.id,
                 count: values.count,
                 set: {id: values.set.id},
-                user: {id: currentUser}
-            }, branch));
+                user: {id: userId}
+            })
+                .unwrap()
+                .then(() => {
+                    formik.setSubmitting(false);
+                    setDialogOpen(false);
+                    saveCallback(true);
+                })
         }
     })
 
@@ -41,6 +41,7 @@ function UserSetForm() {
         if (formAction === ADD_FORM_ACTION) {
             formik.resetForm();
         } else if (formAction === EDIT_FORM_ACTION) {
+            formik.resetForm();
             formik.setValues({
                 id: currentRow.id,
                 count: currentRow.count,

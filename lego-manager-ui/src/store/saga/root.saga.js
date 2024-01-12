@@ -7,9 +7,7 @@ import {
     SERIES_BRANCH,
     SET_PARTS_BRANCH,
     SETS_BRANCH,
-    USER_SETS_BRANCH,
-    USER_PARTS_BRANCH,
-    USERS_BRANCH
+    USER_PARTS_BRANCH
 } from "../../constants/pages/page.constants";
 import {DELETE_REQUEST, FETCH_DATA_REQUEST, SAVE_REQUEST} from "../../constants/crud.action.constants";
 import {fetchSetsList, removeSetRequest, saveSetsRequest} from "./sets.saga";
@@ -19,8 +17,6 @@ import {fetchPartCategoriesList, removePartCategoryRequest, savePartCategoryRequ
 import {fetchPartsList, removePartRequest, savePartRequest} from "./parts.saga";
 import {fetchPartColorList, removePartColorRequest, savePartColorRequest} from "./part.colors.saga";
 import {fetchSetPartsList, removeSetPartRequest, saveSetPartRequest} from "./set.parts.saga";
-import {fetchUsersList, removeUserRequest, saveUserRequest} from "./users.saga";
-import {fetchUserSetsList, removeUserSetRequest, saveUserSetRequest} from "./user.sets.saga";
 import {fetchUserPartsList, removeUserPartRequest, saveUserPartRequest} from "./user.parts.saga";
 
 export function* watchColorsList() {
@@ -33,30 +29,6 @@ export function* watchColorDelete() {
 
 export function* watchColorSave() {
     yield takeLatest(`${COLORS_BRANCH}/${SAVE_REQUEST}`, saveColorRequest)
-}
-
-export function* watchUsersList() {
-    yield takeLatest(`${USERS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchUsersList)
-}
-
-export function* watchUserDelete() {
-    yield takeLatest(`${USERS_BRANCH}/${DELETE_REQUEST}`, removeUserRequest)
-}
-
-export function* watchUserSave() {
-    yield takeLatest(`${USERS_BRANCH}/${SAVE_REQUEST}`, saveUserRequest)
-}
-
-export function* watchUserSetsList() {
-    yield takeLatest(`${USER_SETS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchUserSetsList)
-}
-
-export function* watchUserSetDelete() {
-    yield takeLatest(`${USER_SETS_BRANCH}/${DELETE_REQUEST}`, removeUserSetRequest)
-}
-
-export function* watchUserSetSave() {
-    yield takeLatest(`${USER_SETS_BRANCH}/${SAVE_REQUEST}`, saveUserSetRequest)
 }
 
 export function* watchUserPartsList() {
@@ -155,12 +127,6 @@ export function* rootSaga() {
         watchColorsList(),
         watchColorDelete(),
         watchColorSave(),
-        watchUsersList(),
-        watchUserDelete(),
-        watchUserSave(),
-        watchUserSetsList(),
-        watchUserSetDelete(),
-        watchUserSetSave(),
         watchUserPartsList(),
         watchUserPartDelete(),
         watchUserPartSave(),

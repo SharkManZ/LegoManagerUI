@@ -209,6 +209,14 @@ export const PAGE_CRUD_CONSTANTS = {
         deleteFormTitle: 'Удалить набор',
         columns: [
             {
+                title: '',
+                field: 'set.number',
+                imageSource: `${LEGO_IMG_ROOT}/sets`,
+                key: 'imgKey',
+                sortable: false,
+                isImage: true
+            },
+            {
                 title: 'Номер',
                 field: 'set.number',
                 sortable: true
