@@ -17,7 +17,7 @@ import {
 import AutocompleteControl from "../../components/fields/autocomplete.control.component";
 import AddIcon from "@mui/icons-material/Add";
 import {PARTS_BRANCH} from "../../constants/pages/page.constants";
-import {savePartCategory} from "../../service/part.categories.service";
+// import {savePartCategory} from "../../service/part.categories.service";
 import {appSlice} from "../../store/reducer/app.reducer";
 
 const initCategoryFormValues = {
@@ -76,16 +76,16 @@ function PartsForm({categories, fetchAllCategories, categoryFetched}) {
     }
 
     const onCategorySave = () => {
-        savePartCategory({
-            id: categoryFormValues.id,
-            name: categoryFormValues.categoryName
-        }).then(res => {
-            fetchAllCategories(true);
-            setCategoryOpen(false);
-            setAddedCategory(res.body);
-        }).catch(error => {
-            dispatch(appSlice.actions.setError(error));
-        });
+        // savePartCategory({
+        //     id: categoryFormValues.id,
+        //     name: categoryFormValues.categoryName
+        // }).then(res => {
+        //     fetchAllCategories(true);
+        //     setCategoryOpen(false);
+        //     setAddedCategory(res.body);
+        // }).catch(error => {
+        //     dispatch(appSlice.actions.setError(error));
+        // });
     }
 
     useEffect(() => {

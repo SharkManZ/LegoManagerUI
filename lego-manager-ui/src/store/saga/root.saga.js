@@ -1,7 +1,6 @@
 import {all, takeLatest} from 'redux-saga/effects'
 import {
     COLORS_BRANCH,
-    PART_CATEGORIES_BRANCH,
     PART_COLORS_BRANCH,
     PARTS_BRANCH,
     SERIES_BRANCH,
@@ -13,7 +12,6 @@ import {DELETE_REQUEST, FETCH_DATA_REQUEST, SAVE_REQUEST} from "../../constants/
 import {fetchSetsList, removeSetRequest, saveSetsRequest} from "./sets.saga";
 import {fetchSeriesList, removeSeriesRequest, saveSeriesRequest} from "./series.saga";
 import {fetchColorList, removeColorRequest, saveColorRequest} from "./colors.saga";
-import {fetchPartCategoriesList, removePartCategoryRequest, savePartCategoryRequest} from "./part.categories.saga";
 import {fetchPartsList, removePartRequest, savePartRequest} from "./parts.saga";
 import {fetchPartColorList, removePartColorRequest, savePartColorRequest} from "./part.colors.saga";
 import {fetchSetPartsList, removeSetPartRequest, saveSetPartRequest} from "./set.parts.saga";
@@ -67,18 +65,6 @@ export function* watchSetSave() {
     yield takeLatest(`${SETS_BRANCH}/${SAVE_REQUEST}`, saveSetsRequest)
 }
 
-export function* watchPartCategoriesList() {
-    yield takeLatest(`${PART_CATEGORIES_BRANCH}/${FETCH_DATA_REQUEST}`, fetchPartCategoriesList)
-}
-
-export function* watchPartCategoryDelete() {
-    yield takeLatest(`${PART_CATEGORIES_BRANCH}/${DELETE_REQUEST}`, removePartCategoryRequest)
-}
-
-export function* watchPartCategorySave() {
-    yield takeLatest(`${PART_CATEGORIES_BRANCH}/${SAVE_REQUEST}`, savePartCategoryRequest)
-}
-
 export function* watchPartsList() {
     yield takeLatest(`${PARTS_BRANCH}/${FETCH_DATA_REQUEST}`, fetchPartsList)
 }
@@ -130,9 +116,6 @@ export function* rootSaga() {
         watchUserPartsList(),
         watchUserPartDelete(),
         watchUserPartSave(),
-        watchPartCategoriesList(),
-        watchPartCategoryDelete(),
-        watchPartCategorySave(),
         watchPartsList(),
         watchPartDelete(),
         watchPartSave(),

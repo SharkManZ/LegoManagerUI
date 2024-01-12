@@ -1,30 +1,31 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useFormik} from "formik";
-import {saveRequestAction} from "../../store/reducer/crud.actions";
-import {useEffect} from "react";
 import {ADD_FORM_ACTION, EDIT_FORM_ACTION, SUBMIT_FORM_ACTION} from "../../constants/crud.constants";
-import {useDispatch, useSelector} from "react-redux";
 import {Box, Stack, TextField} from "@mui/material";
 import {PART_CATEGORIES_BRANCH} from "../../constants/pages/page.constants";
+import {partCategoryApi} from "../../api/part.category.api";
 
 const branch = PART_CATEGORIES_BRANCH;
 
-function PartCategoriesForm() {
-    const dispatch = useDispatch();
-    const formAction = useSelector(state => state[branch].formAction);
-    const currentRow = useSelector(state => state[branch].currentRow);
+function PartCategoriesForm({currentRow, formAction, setDialogOpen, saveCallback}) {
+    const [savePartCategoryQuery] = partCategoryApi.useSaveMutation();
 
-    // crud
     const formik = useFormik({
         initialValues: {
             id: null,
             name: ''
         },
         onSubmit: values => {
-            dispatch(saveRequestAction({
+            savePartCategoryQuery({
                 id: values.id,
                 name: values.name
-            }, branch));
+            })
+                .unwrap()
+                .then(() => {
+                    formik.setSubmitting(false);
+                    setDialogOpen(false);
+                    saveCallback(true);
+                })
         }
     })
 
@@ -32,6 +33,7 @@ function PartCategoriesForm() {
         if (formAction === ADD_FORM_ACTION) {
             formik.resetForm();
         } else if (formAction === EDIT_FORM_ACTION) {
+            formik.resetForm();
             formik.setValues(currentRow);
         } else if (formAction === SUBMIT_FORM_ACTION) {
             formik.submitForm();
